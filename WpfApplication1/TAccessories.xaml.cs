@@ -579,7 +579,7 @@ namespace TreeCadN
             string[] kolonki= ps.kolonki.Split(';');
             foreach (string kolonka in kolonki )
             {
-                g3.RowHeaderWidth = 122;
+        
                 MessageBox.Show(otdelka.Width.ToString());
             
             }
