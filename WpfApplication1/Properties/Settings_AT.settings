@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TreeCadN.Properties" GeneratedClassName="Settings_AT">
+  <Profiles />
+  <Settings>
+    <Setting Name="Top" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-100</Value>
+    </Setting>
+    <Setting Name="Left" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-100</Value>
+    </Setting>
+    <Setting Name="Height" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="Width" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">800</Value>
+    </Setting>
+    <Setting Name="SizeToContent" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="kolonki" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1*;1*;1*;1*;1*;1*;1*;1*;1*;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

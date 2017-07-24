@@ -1,0 +1,66 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TreeCadN.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Top1" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-100</Value>
+    </Setting>
+    <Setting Name="Top2" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-100</Value>
+    </Setting>
+    <Setting Name="Left1" Type="System.Double" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Left2" Type="System.Double" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="tabControl1" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Width2" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">800</Value>
+    </Setting>
+    <Setting Name="Height2" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="SizeToContent1" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ColumnDefinitions1" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">250</Value>
+    </Setting>
+    <Setting Name="Top3" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-100</Value>
+    </Setting>
+    <Setting Name="Left3" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="rejim" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Width3" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="Height3" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
+    <Setting Name="SizeToContent3" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Height4" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">400</Value>
+    </Setting>
+    <Setting Name="Width4" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="SizeToContent4" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Left4" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Top4" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-100</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

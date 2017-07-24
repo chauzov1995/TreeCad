@@ -1,0 +1,226 @@
+﻿<Window x:Class="TreeCadN.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              Title="Отделка" Height="465" Width="970" ResizeMode="CanMinimize" Closing="Window_Closing" KeyUp="Window_KeyUp" Icon="Foto/favicons.png" >
+
+
+    <Window.Resources>
+        <Style x:Key="myListboxStyle">
+            <Style.Resources>
+                <!-- Item TextColor -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#FF000000" />
+                <!-- Background of selected item when focussed -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FFABCDFF" />
+                <!-- Background of selected item when not focussed -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#FFdddddd" />
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+
+
+    <Grid x:Name="grid1" >
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF616161" Offset="0"/>
+                <GradientStop Color="#FFCDCDCD" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="290"/>
+            <ColumnDefinition Width="380"/>
+            <ColumnDefinition Width="290"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+
+            <ComboBox TextSearch.TextPath="NAME" IsEditable="True" x:Name="comboBox2" Margin="0,10,5,0" VerticalAlignment="Top" Width="280"  Height="23" SelectionChanged="comboBox2_SelectionChanged" HorizontalAlignment="Right" ToolTip="Группы отделки">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding NAME}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <StackPanel Orientation="Horizontal" Margin="0,5,5,0" HorizontalAlignment="Right">
+                <TextBox TabIndex="0" x:Name="textBox1"  Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="195.1" TextChanged="textBox1_TextChanged_1" PreviewTextInput="textBox1_PreviewTextInput" ToolTip="Фильтр"  />
+                <Button TabIndex="2" x:Name="button18" Content="Очистить" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="80" Height="23" Click="button18_Click" />
+            </StackPanel>
+            <ListView TabIndex="1"  Style="{StaticResource myListboxStyle}"   x:Name="listView1" ItemsSource="{Binding idselect}"     ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,5,5,0"  Grid.Column="0" ToolTip="Выберите текстуру" Background="#E5FFFFFF" Height="359" Width="280" HorizontalAlignment="Right" BorderThickness="0" MouseUp="listView1_MouseUp" SelectionChanged="listView1_SelectionChanged_1"     >
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" Height="54" >
+                            <StackPanel Orientation="Horizontal" ToolTip="{Binding NAME}" Margin="0,2,0,0" Height="50" >
+                                <Border BorderThickness="1" BorderBrush="#FF707070" >
+                                    <Image Source="{Binding textura_otris}" Height="50" Width="50"  Stretch="Fill" />
+                                </Border>
+
+
+
+                                <TextBlock Text="{Binding NAME}" Margin="5,5,5,0"  TextWrapping="Wrap" Width="200" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="5,395,0,0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280">
+            <Button x:Name="button16" Content="Последняя"  Width="85" ToolTip="Применить последнюю отделку" Click="button16_Click" />
+            <Button x:Name="button5" Content="Ок"  Width="90" Click="button5_Click" ToolTip="Применить отделку" Margin="10,0,0,0" Height="30" VerticalAlignment="Bottom"/>
+            <Button x:Name="button6" Content="Отмена" Width="85"  Click="button6_Click" ToolTip="Отмена"  IsCancel="True" Margin="10,0,0,0"/>
+        </StackPanel>
+        <TabControl x:Name="tabControl1" HorizontalAlignment="Left" Height="380" Margin="5,10,0,0" VerticalAlignment="Top" Width="280" Padding="0"  Background="#E5FFFFFF" BorderThickness="0" Grid.Column="2">
+            <TabItem Header="История" Width="135" Padding="0" Margin="0" Height="25">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                        <GradientStop Color="#FFB8B8B8" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <StackPanel Orientation="Vertical">
+
+                    <ListBox x:Name="listBox1" Style="{StaticResource myListboxStyle}" VerticalAlignment="Top" SelectionChanged="listBox1_SelectionChanged" Margin="0,10,0,0" Height="283" IsHitTestVisible="True" BorderBrush="{x:Null}"  ToolTip="Нажмите на цифру, чтобы выбрать набор текстур из списка" Background="{x:Null}" BorderThickness="0" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+
+
+                                <StackPanel Orientation="Vertical"   Height="54"    >
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0" Height="50" >
+                                        <Border BorderBrush="#FF707070" BorderThickness="1">
+                                            <Image Source="{Binding textura1_otris}" Width="50" Height="50" Stretch="Fill"/>
+                                        </Border>
+                                        <StackPanel Height="50" Width="4"/>
+                                        <Border BorderBrush="#FF707070" BorderThickness="1">
+                                            <Image Source="{Binding textura2_otris}" Width="50" Height="50" Stretch="Fill"/>
+                                        </Border>
+                                        <StackPanel Orientation="Vertical"  Width="164"  >
+
+                                            <TextBlock Text="{Binding Name1}" Margin="5,5,5,0"  Foreground="{Binding cheked}"   />
+                                            <TextBlock Text="{Binding Name2}" Margin="5,5,5,0"  Foreground="{Binding cheked}" />
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                </StackPanel>
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Очистить историю" x:Name="button10"   Click="button10_Click"  ToolTip="Очистить историю" Margin="75,10,0,10" Width="130"  />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Избранное" Width="135" Margin="0" Padding="0" Height="25">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                        <GradientStop Color="#FFB8B8B8" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="button7" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="50" Height="50" Padding="0" Click="button7_Click"  ToolTip="Добавить в избранное"  BorderThickness="0">
+                            <Image x:Name="image5" Source="Foto/zakl.png"  />
+                        </Button>
+                        <Button x:Name="button15" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="50" Height="50" Padding="0" Click="button15_Click"  ToolTip="Удалить из избранного"  BorderThickness="0">
+                            <Image Source="Foto/zakl-minus.png"    />
+                        </Button>
+                    </StackPanel>
+                    <ListBox x:Name="listBox2" Style="{StaticResource myListboxStyle}" Height="283" Margin="0,10,0,0" VerticalAlignment="Top"  SelectionChanged="listBox2_SelectionChanged" BorderBrush="{x:Null}"  ToolTip="Нажмите на цифру, чтобы выбрать набор текстур из списка" Background="{x:Null}" BorderThickness="0" >
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+
+
+                                <StackPanel Orientation="Vertical"   Height="54"  >
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0" Height="50" >
+                                        <Border BorderBrush="#FF707070" BorderThickness="1">
+                                            <Image Source="{Binding textura1_otris}" Width="50" Height="50" Stretch="Fill"/>
+                                        </Border>
+                                        <StackPanel Height="50" Width="4"/>
+                                        <Border BorderBrush="#FF707070" BorderThickness="1">
+                                            <Image Source="{Binding textura2_otris}" Width="50" Height="50" Stretch="Fill"/>
+                                        </Border>
+                                        <StackPanel Orientation="Vertical"  Width="164"   >
+
+                                            <TextBlock Text="{Binding Name1}" Margin="5,5,5,0" Foreground="{Binding cheked}"   />
+                                            <TextBlock Text="{Binding Name2}" Margin="5,5,5,0" Foreground="{Binding cheked}"  />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        <StackPanel HorizontalAlignment="Left" Height="120" Margin="5,305,0,0" VerticalAlignment="Top" Width="370" Background="#E5FFFFFF" Grid.Column="1">
+
+            <TextBlock Margin="0" TextWrapping="Wrap" Text="-Дополнительно-" Height="26" Width="156" FontSize="18"  FontWeight="Bold"/>
+            <CheckBox TabIndex="12" x:Name="checkBox3" Content="Нестандартный цвет" Margin="0" Click="checkBox3_Click"  Height="17" Width="360"/>
+
+            <TextBox TabIndex="13" x:Name="textBox2" Height="20" Margin="0" TextWrapping="Wrap" PreviewTextInput="textBox2_PreviewTextInput" Width="360" />
+            <TextBlock Margin="0" TextWrapping="Wrap" Text="Эффект отделки" Height="17" Width="360"/>
+
+            <ComboBox TabIndex="14" TextSearch.TextPath="NAME" IsTextSearchEnabled="True" x:Name="comboBox1" Margin="0" Width="360"  Height="23" IsEditable="True" FocusableChanged="comboBox1_FocusableChanged" SelectionChanged="comboBox1_SelectionChanged" TextInput="comboBox1_TextInput" MouseUp="comboBox1_MouseUp" IsEnabledChanged="comboBox1_IsEnabledChanged" DataContextChanged="comboBox1_DataContextChanged" >
+
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding NAME}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="285" Margin="5,10,0,0" VerticalAlignment="Top" Width="370" Grid.Column="1">
+
+            <StackPanel x:Name="g1" Orientation="Vertical" HorizontalAlignment="Left" Height="285" VerticalAlignment="Top" Width="160" Background="#E5FFFFFF" >
+                <TextBlock Margin="0" TextWrapping="Wrap" Text="-Внешняя-" Height="34" Width="150" FontSize="18" TextAlignment="Center" FontWeight="Bold"/>
+                <TextBlock x:Name="label7" Text="Выбирите отделку" Margin="0" Width="150" LineHeight="6" TextAlignment="Center" TextWrapping="Wrap" Height="38"/>
+                <Button TabIndex="3" AllowDrop="True" x:Name="button1" Margin="5,5,5,0"  Width="150" Height="150" Click="button1_Click" ToolTip="Выбирите текстуру для внешней отделки" Padding="0" Drop="button1_Drop" >
+                    <Image x:Name="image1"  Stretch="UniformToFill"/>
+                </Button>
+                <Button TabIndex="4" x:Name="button3" Margin="0,2,0,0" Width="50" Height="50" Click="button3_Click" ToolTip="Поворот текстуры" Padding="0"  BorderThickness="0">
+                    <Image x:Name="image3"  Stretch="UniformToFill"/>
+                </Button>
+
+
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="285" Margin="0,0,0,0" VerticalAlignment="Top" Width="50">
+                <Button TabIndex="5" x:Name="button17" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50" Click="button17_Click" ToolTip="Очистить выбранную сторону"  Padding="0" BorderThickness="0">
+                    <Image   x:Name="image17" Source="Foto/clear.png" />
+                </Button>
+                <Button TabIndex="6" x:Name="button11"   HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50" Click="button11_Click" ToolTip="Одинаковая отделка"  Padding="0" BorderThickness="0">
+                    <Image x:Name="image6"   />
+                </Button>
+                <Button TabIndex="7" x:Name="button12" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50" Click="button12_Click" ToolTip="Поменять местами"  Padding="0" BorderThickness="0">
+                    <Image  x:Name="image7" Source="Foto/tek1.png" />
+                </Button>
+                <Button TabIndex="8" x:Name="button13"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50" Click="button13_Click" ToolTip="Скопировать внешнюю отделку"  Padding="0" BorderThickness="0">
+                    <Image x:Name="image8" Source="Foto/tek5.png"  />
+
+                </Button>
+                <Button TabIndex="9" x:Name="button14" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50" Click="button14_Click" ToolTip="Скопировать внутреннюю отделку"  BorderThickness="0" Padding="0">
+                    <Image x:Name="image9" Source="Foto/tek6.png" />
+                </Button>
+            </StackPanel>
+            <StackPanel x:Name="g2" Orientation="Vertical" HorizontalAlignment="Left" Height="285" Margin="0,0,0,0" VerticalAlignment="Top" Width="160" Background="#FFABCDFF" >
+                <TextBlock Margin="0" TextWrapping="Wrap" Text="-Внутренняя-" Height="34" Width="150" FontSize="18" TextAlignment="Center" FontWeight="Bold"/>
+                <TextBlock x:Name="label8" Text="Выбирите отделку" Margin="0" Width="150" LineHeight="6" TextAlignment="Center" TextWrapping="Wrap" Height="38"/>
+                <Button TabIndex="10" x:Name="button2" Margin="0,5,0,0" Click="button2_Click" ToolTip="Выбирите текстуру для внешней отделки" Padding="0" Width="150" Height="150" >
+                    <Image x:Name="image2"  Stretch="UniformToFill"/>
+                </Button>
+                <Button TabIndex="11" x:Name="button4" Margin="0,2,0,0" Width="50" Height="50" Click="button4_Click" ToolTip="Поворот текстуры" Padding="0"  BorderThickness="0">
+                    <Image x:Name="image4"  Stretch="UniformToFill"/>
+                </Button>
+
+
+            </StackPanel>
+
+        </StackPanel>
+
+
+
+    </Grid>
+</Window>

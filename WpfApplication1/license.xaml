@@ -1,0 +1,76 @@
+﻿<Window x:Class="TreeCadN.license"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Лицензирование 3CAD" Height="403" Width="742" Icon="Foto/favicons.png" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+    <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Vertical" Width="586">
+            <Border BorderBrush="#e5e5e5" BorderThickness="0,0,1,0">
+                <StackPanel  Height="50" Orientation="Horizontal">
+                    <Image Source="Foto/logo.png" Height="32"   Margin="20 0 0 0" />
+
+                </StackPanel >
+            </Border>
+            <Border BorderBrush="#e5e5e5"   BorderThickness="0,1,1,0">
+                <Grid  Height="50" Margin="0,0,-1,0">
+                    <TextBlock Margin="20,6,290,8"  FontSize="24" Foreground="#FF7A7A7A" Width="275"><Run Text="Лицензирование 3CAD"/></TextBlock>
+                    <TextBlock x:Name="idclienta" Margin="296,6,10,8"  FontSize="24" Foreground="#FF7A7A7A" HorizontalAlignment="Right"></TextBlock>
+                </Grid>
+            </Border>
+
+            <StackPanel Orientation="Vertical" >
+                <Border BorderBrush="#e5e5e5"   BorderThickness="0,1,1,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border BorderBrush="#e5e5e5"   BorderThickness="0,0,1,0">
+                            <TextBlock Text="Модуль" Margin="0 16 0 0"  Width="310" TextAlignment="Center"/>
+                        </Border>
+                        <Border BorderBrush="#e5e5e5"   BorderThickness="0,0,1,0">
+                            <TextBlock   Width="75" TextAlignment="Center" TextWrapping="Wrap" >
+                           Абонентская плата,<LineBreak/>евро/меc
+                            </TextBlock>
+                        </Border>
+                        <Border BorderBrush="#e5e5e5"   BorderThickness="0,0,1,0">
+                            <TextBlock Text="Состояние" Margin="0 16 0 0" Width="90" TextAlignment="Center" />
+                        </Border>
+
+                        <TextBlock Text="Изменить" Margin="0 16 0 0" Width="100"  Tag="{Binding id}"   TextAlignment="Center"  />
+
+                    </StackPanel>
+
+                </Border>
+
+
+
+
+                <ListBox x:Name="lvUsers" BorderThickness="0,0,1,0" FontSize="12" BorderBrush="#FFE5E5E5" Height="226" >
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Height="30">
+                                <TextBlock Text="{Binding lic}"  Width="290" Margin="20 0 0 0" Padding="0 6 0 0"/>
+                                <TextBlock Text="{Binding price}" Width="75" TextWrapping="Wrap" Padding="0 6 0 0"  FontWeight="Normal" FontSize="12" TextAlignment="Center"/>
+                                <TextBlock Text="{Binding sost}" Width="90" Foreground="{Binding color_sost}" Padding="0 6 0 0" TextAlignment="Center"  />
+                                <Button Content="{Binding button}" Width="100" Click="Button_Click" Tag="{Binding id}" Height="26"   Background="#FFD8D8D8" Foreground="Black"  BorderThickness="0"/>
+                            </StackPanel>
+
+
+
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+
+                </ListBox>
+            </StackPanel>
+
+
+        </StackPanel>
+        <StackPanel  Margin="0,0,20,0" Width="150">
+            <Button x:Name="btn_zhivoy" Margin="0 4 0 0"   Height="30" Content="&quot;Я живой&quot;" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" Click="btn_zhivoy_Click"/>
+          <Button x:Name="proxy_setting"  Margin="0,4,0,0"  Height="30" Content="Настройка прокси" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" Click="proxy_setting_Click"/>
+            <Button x:Name="btnShowSelectedItem"    Height="30" Content="Подтвердить" Click="btnShowSelectedItem_Click" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" IsDefault="True" Margin="0,240,0,0"/>
+
+
+            <Button x:Name="btnSelectLast"  Height="30" Content="Отмена" Click="btnSelectLast_Click" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" IsCancel="True" Margin="0,4,0,0"   VerticalAlignment="Bottom" VerticalContentAlignment="Stretch"/>
+
+            
+        </StackPanel>
+    </StackPanel>
+</Window>

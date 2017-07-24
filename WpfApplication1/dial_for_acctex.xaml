@@ -1,0 +1,78 @@
+﻿<Window x:Class="TreeCadN.dial_for_acctex"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Редактирование" Height="259" Width="900" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp" Closing="Window_Closing">
+    <Grid Background="#FFE4EEF7"   >
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="90"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="156"/>
+            <ColumnDefinition Width="41"/>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="70"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="40"/>
+
+
+
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="3" Margin="0" Grid.Row="6" Grid.ColumnSpan="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="73*"/>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="90"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Сохранить" Margin="0,5,10,5" Click="Button_Click_2" TabIndex="10" Grid.Column="1"/>
+            <Button Content="Отмена" Click="Button_Click_1" Grid.Column="2" Margin="0,5,5,5" TabIndex="9" IsCancel="True"/>
+
+        </Grid>
+        <ComboBox x:Name="combo2"  TextSearch.TextPath="nameotd" Margin="5" Grid.Row="3" IsEditable="True" Grid.Column="6" TabIndex="6" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding nameotd}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ComboBox 
+                            
+            
+                    
+                    x:Name="combo1"  TextSearch.TextPath="nameotd" Margin="5" IsEditable="True" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" TabIndex="5" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding nameotd}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBox x:Name="rsktb1" Margin="5" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" PreviewTextInput="rsktb1_PreviewTextInput_1" TabIndex="1" PreviewKeyDown="rsktb1_PreviewKeyDown" IsReadOnly="True" Foreground="#FF838383" VerticalAlignment="Top"/>
+        <TextBox x:Name="rsktb4" Margin="5" TextWrapping="Wrap" Grid.Row="3" Grid.ColumnSpan="3" Grid.RowSpan="4" TabIndex="4"/>
+        <TextBlock x:Name="rsktblo1" Margin="5,0" TextWrapping="Wrap" Grid.Row="0" VerticalAlignment="Bottom" Height="16"><Run Text="Арктикул"/><Run Language="ru-ru" Text=" "/></TextBlock>
+        <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Отделка" Grid.Row="2" VerticalAlignment="Bottom" Height="16" Grid.Column="3" Grid.ColumnSpan="2"/>
+        <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Название" Grid.Row="0" Grid.Column="2" VerticalAlignment="Bottom" Height="16" Grid.ColumnSpan="4"/>
+        <TextBox x:Name="rsktb2" Margin="5" TextWrapping="Wrap" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" TabIndex="2"/>
+        <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Ед. изм." Grid.Row="2" Grid.Column="6" VerticalAlignment="Bottom" Height="16"/>
+        <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Примечание" Grid.Row="2" VerticalAlignment="Bottom" Height="16" Grid.ColumnSpan="2"/>
+        <TextBlock Margin="5,0" TextWrapping="Wrap" Text="№п.п." Grid.Row="0" VerticalAlignment="Bottom" Height="16" Grid.Column="1"/>
+        <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Кол-во" Grid.Row="0" Grid.Column="6" VerticalAlignment="Bottom" Height="16"/>
+        <TextBox x:Name="rsktb3" Margin="5" TextWrapping="Wrap" Grid.Row="1" Grid.Column="6" PreviewTextInput="rsktb3_PreviewTextInput" TabIndex="3" PreviewKeyDown="rsktb3_PreviewKeyDown" VerticalAlignment="Top"/>
+        <TextBlock Margin="4,5" TextWrapping="Wrap" Text="Х" Grid.Row="1" Grid.Column="5" HorizontalAlignment="Center" Width="7"/>
+        <TextBlock x:Name="rsktblo1_Copy" Margin="5" TextWrapping="Wrap" Grid.Row="1" VerticalAlignment="Top" Height="23" FontWeight="Bold"><Run Text="Арктикул"/><Run Language="ru-ru" Text=" "/></TextBlock>
+        <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Базовая цена" Grid.Row="4" VerticalAlignment="Bottom" Height="16" Grid.Column="3"/>
+        <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Цена ред." Grid.Row="4" VerticalAlignment="Bottom" Height="16" Grid.Column="4" Grid.ColumnSpan="3"/>
+        <TextBox x:Name="rsktb3_Copy" Margin="5" TextWrapping="Wrap" Grid.Row="5" Grid.Column="3" PreviewTextInput="rsktb3_Copy_PreviewTextInput" TabIndex="7" PreviewKeyDown="rsktb3_Copy_PreviewKeyDown"/>
+        <TextBox x:Name="rsktb3_Copy1" Margin="5" TextWrapping="Wrap" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3" PreviewTextInput="rsktb3_Copy1_PreviewTextInput" TabIndex="8" PreviewKeyDown="rsktb3_Copy1_PreviewKeyDown"/>
+
+
+
+    </Grid>
+</Window>

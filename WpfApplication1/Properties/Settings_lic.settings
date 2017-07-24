@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TreeCadN.Properties" GeneratedClassName="Settings_lic">
+  <Profiles />
+  <Settings>
+    <Setting Name="mod" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0000000</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

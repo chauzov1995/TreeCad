@@ -1,0 +1,20 @@
+﻿<Window x:Class="TreeCadN.Update"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Обновления" Height="600" Width="1000" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Icon="Foto/favicons.png" >
+    <Grid>
+
+        <WebBrowser x:Name="WB1" Height="470" Margin="2,57,1,0" VerticalAlignment="Top" Source="http://ecad.giulianovars.ru/php/upd/dll_load.php" Width="991" />
+
+
+        <Button Background="#FFE42C3E" Foreground="White" FontSize="14" Content="Закрыть" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="130"  Height="30
+                " Click="Button_Click"/>
+        <Label x:Name="lb1" Content="Самое время обновиться..." HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="24"/>
+        <Image HorizontalAlignment="Left" Height="30" Margin="588,15,0,0" VerticalAlignment="Top" Width="169" Source="Foto/logo.png"/>
+        <Button x:Name="b2" Background="#FFE42C3E" Foreground="White" FontSize="14" Content="Не показывать снова" HorizontalAlignment="Right" Margin="0,0,145,10" VerticalAlignment="Bottom" Width="195"  Height="30                 " Click="b2_Click"/>
+        <TextBlock Margin="10,0,639,15" FontSize="14" VerticalAlignment="Bottom">
+      <Hyperlink x:Name="___DispatcherUnhandledException" NavigateUri="http://dealers.giulianovars.ru/3cad_install" RequestNavigate="___DispatcherUnhandledException_RequestNavigate">Как обновиться?</Hyperlink>
+        </TextBlock>
+        <Label x:Name="lb5" Content="" HorizontalAlignment="Right" Margin="0,0,345,10" VerticalAlignment="Bottom" FontSize="14"/>
+    </Grid>
+</Window>
