@@ -441,6 +441,12 @@ namespace TreeCadN
 
             if (perv) pervload();
 
+           
+            TekOtdelka[0].index5 = razr_odinak;//Флаг, 1-одинаковая отделака обеих пластей, при этом назначать разную отделку нельзя
+            TekOtdelka[0].index10 = razr_group;// спис разреш групп для отделки
+
+
+
 
             if (TekOtdelka[0].index5 == "1")
             {

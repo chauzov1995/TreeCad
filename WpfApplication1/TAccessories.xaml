@@ -27,24 +27,24 @@
 
             <ListView.View>
                 <GridView >
-                    <GridViewColumn   DisplayMemberBinding="{Binding GroupName}"  >
+                    <GridViewColumn x:Name="st11"   DisplayMemberBinding="{Binding GroupName}"  >
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="GroupName" Click="lvUsersColumnHeader_Click">Группа</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Article}"   >
+                    <GridViewColumn x:Name="st12" DisplayMemberBinding="{Binding Article}"   >
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader MinWidth="20" Tag="Article" Click="lvUsersColumnHeader_Click">Артикул</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="Article" Click="lvUsersColumnHeader_Click">Артикул</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn   DisplayMemberBinding="{Binding TName}"     >
+                    <GridViewColumn x:Name="st13"   DisplayMemberBinding="{Binding TName}"     >
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader MinWidth="20" Tag="TName" Click="lvUsersColumnHeader_Click">Название</GridViewColumnHeader>
+                            <GridViewColumnHeader  Tag="TName" Click="lvUsersColumnHeader_Click">Название</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn    DisplayMemberBinding="{Binding UnitsId}"    >
+                    <GridViewColumn x:Name="st14"    DisplayMemberBinding="{Binding UnitsId}"    >
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader MinWidth="20" Tag="UnitsId" Click="lvUsersColumnHeader_Click">Ед. изм.</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="UnitsId" Click="lvUsersColumnHeader_Click">Ед. изм.</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                 </GridView >
@@ -97,10 +97,10 @@
         <DataGrid x:Name="g3" Grid.Row="2"  Margin="5,10,5,5" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" Grid.ColumnSpan="3" AllowDrop="True" CellEditEnding="g3_CellEditEnding_1" BeginningEdit="g3_BeginningEdit_1" PreparingCellForEdit="g3_PreparingCellForEdit" PreviewTextInput="g3_PreviewTextInput" MouseUp="g3_MouseUp" RowEditEnding="g3_RowEditEnding"   >
             <DataGrid.Columns>
 
-                <DataGridTextColumn Header="№п.п." Binding="{Binding nom_pp}" Width="60"  />
-                <DataGridTextColumn Header="Артикул" Binding="{Binding Article}" Width="60"  />
-                <DataGridTextColumn Header="Название"  Binding="{Binding TName}"  Width="*"  />
-                <DataGridTextColumn Header="Примечание"  Binding="{Binding Prim}"  Width="*" />
+                <DataGridTextColumn x:Name="st1"  Header="№п.п." Binding="{Binding nom_pp}" Width="60"  />
+                <DataGridTextColumn x:Name="st2" Header="Артикул" Binding="{Binding Article}" Width="60"  />
+                <DataGridTextColumn x:Name="st3" Header="Название"  Binding="{Binding TName}"  Width="*"  />
+                <DataGridTextColumn x:Name="st4" Header="Примечание"  Binding="{Binding Prim}"  Width="*" />
                 <DataGridComboBoxColumn Width="150" x:Name="otdelka"  Header="Отделка"
                          SelectedValueBinding="{Binding OTD}" 
                     SelectedValuePath="ID"
@@ -111,10 +111,10 @@
                     DisplayMemberPath="nameotd"  />
 
 
-                <DataGridTextColumn Header="Кол-во"  Binding="{Binding kolvo}"   Width="60" />
-                <DataGridTextColumn Header="Базовая цена"  Binding="{Binding baseprice, StringFormat='0.00'}"  Width="60" />
-                <DataGridTextColumn Header="Цена ред."  Binding="{Binding priceredak, StringFormat='0.00'}"   Width="60" />
-                <DataGridCheckBoxColumn Header="Выведено"  Binding="{Binding vived}"   Width="60"  />
+                <DataGridTextColumn x:Name="st7" Header="Кол-во"  Binding="{Binding kolvo}"   Width="60" />
+                <DataGridTextColumn x:Name="st8" Header="Базовая цена"  Binding="{Binding baseprice, StringFormat='0.00'}"  Width="60" />
+                <DataGridTextColumn x:Name="st9" Header="Цена ред."  Binding="{Binding priceredak, StringFormat='0.00'}"   Width="60" />
+                <DataGridCheckBoxColumn  Header="Выведено"  Binding="{Binding vived}"   Width="*"  />
 
             </DataGrid.Columns>
             <DataGrid.ContextMenu>

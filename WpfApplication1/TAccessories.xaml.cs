@@ -213,9 +213,9 @@ namespace TreeCadN
 
             MenuItem root = new MenuItem() { Title = "Все", type = "at*" };
             MenuItem childItem1 = new MenuItem() { Title = "Аксессуары", type = "a*" };
-          
+
             OleDbDataReader readertreeeacc = BD.conn("select T.MATID,MATNAME from TMAT T, TPrice1 T1 where T1.MATID = T.MATID  group by T.MATID,T.MATNAME ORDER BY T.MATNAME ASC");
-            
+
             while (readertreeeacc.Read())
             {
                 childItem1.Items.Add(new MenuItem()
@@ -382,7 +382,7 @@ namespace TreeCadN
             tb1.Text = "";
             tb2.Text = "";
             tb1.Focus();
-        
+
         }
 
 
@@ -447,12 +447,12 @@ namespace TreeCadN
                             if ((tv1.SelectedItem as MenuItem).type == "t*" ||
                                 (tv1.SelectedItem as MenuItem).type == "a*")
                             {//если выбрали в названии
-                            //   MessageBox.Show((e.Item ).ToString());
+                             //   MessageBox.Show((e.Item ).ToString());
 
 
-                              if ((e.Item as texnika).type == "a" && (tv1.SelectedItem as MenuItem).type == "a*") e.Accepted = true;
+                                if ((e.Item as texnika).type == "a" && (tv1.SelectedItem as MenuItem).type == "a*") e.Accepted = true;
 
-                               if ((e.Item as texnika).type == "t" && (tv1.SelectedItem as MenuItem).type == "t*") e.Accepted = true;
+                                if ((e.Item as texnika).type == "t" && (tv1.SelectedItem as MenuItem).type == "t*") e.Accepted = true;
 
 
                             }
@@ -576,13 +576,23 @@ namespace TreeCadN
                 this.Width = ps.Width;
                 this.Height = ps.Height;
             }
-            string[] kolonki= ps.kolonki.Split(';');
-            foreach (string kolonka in kolonki )
-            {
-        
-                MessageBox.Show(otdelka.Width.ToString());
-            
-            }
+            string[] kolonki = ps.kolonki.Split(';');
+
+            st1.Width = new DataGridLength(Convert.ToDouble(kolonki[1]));
+            st2.Width = new DataGridLength(Convert.ToDouble(kolonki[1]));
+            st3.Width = new DataGridLength(Convert.ToDouble(kolonki[2]));
+            st4.Width = new DataGridLength(Convert.ToDouble(kolonki[3]));
+          
+            //st11.Width =  (Convert.ToDouble(kolonki[10]));
+            //st12.Width =  (Convert.ToDouble(kolonki[11]));
+            //st13.Width =  (Convert.ToDouble(kolonki[12]));
+            //st14.Width =  (Convert.ToDouble(kolonki[13]));
+           
+     
+
+
+
+
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -602,6 +612,21 @@ namespace TreeCadN
                 ps.Width = this.Width;
                 ps.Height = this.Height;
             }
+
+            ps.kolonki =
+st1.Width.ToString() +";"+
+st2.Width.ToString() + ";" +
+st3.Width.ToString() + ";" +
+st4.Width.ToString() + ";" +
+otdelka.Width.ToString() + ";" +
+edizmer.Width.ToString() + ";" +
+st7.Width.ToString() + ";" +
+st8.Width.ToString() + ";" +
+st9.Width.ToString() + ";" +
+st11.Width.ToString() + ";" +
+st12.Width.ToString() + ";" +
+st13.Width.ToString() + ";" +
+st14.Width.ToString()+";";
 
 
 
@@ -754,14 +779,14 @@ namespace TreeCadN
         }
 
 
-        texnika index_for_poisl ;
+        texnika index_for_poisl;
         private bool FindComputer(texnika bk)
         {
 
             if (bk.Article == (g1.SelectedItem as texnika).Article && bk.OTD == "" && bk.Prim == "")
             {//если у сущ поз артикул совп с артик и (прим или отделка есть)
                 index_for_poisl = bk;
-           
+
                 return true;
             }
             else
@@ -769,9 +794,9 @@ namespace TreeCadN
 
                 return false;
             }
-          
+
         }
-      
+
         void Grid_select()
         {
 
@@ -816,7 +841,7 @@ namespace TreeCadN
 
                 dial_for_acctex_danet dial_for_acctex_danet = new dial_for_acctex_danet(this);
                 dial_for_acctex_danet.ShowDialog();
-               if (redakilidob ==1)
+                if (redakilidob == 1)
                 {
                     //добавить новую строку
                     nom_PP++;
@@ -833,9 +858,9 @@ namespace TreeCadN
 
 
 
-                 //   kotor_v_gr3.Last().kolvo++;//увеличиваем на 1
-                   g3.ItemsSource = null;
-                   g3.ItemsSource = gr3;
+                    //   kotor_v_gr3.Last().kolvo++;//увеличиваем на 1
+                    g3.ItemsSource = null;
+                    g3.ItemsSource = gr3;
                 }
 
 

@@ -85,7 +85,7 @@ namespace TreeCadN.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1*;1*;1*;1*;1*;1*;1*;1*;1*;")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100;100;100;100;100;100;100;100;100;100;100;100;100;100;")]
         public string kolonki {
             get {
                 return ((string)(this["kolonki"]));
