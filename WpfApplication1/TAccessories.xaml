@@ -114,7 +114,7 @@
                 <DataGridTextColumn x:Name="st7" Header="Кол-во"  Binding="{Binding kolvo}"   Width="60" />
                 <DataGridTextColumn x:Name="st8" Header="Базовая цена"  Binding="{Binding baseprice, StringFormat='0.00'}"  Width="60" />
                 <DataGridTextColumn x:Name="st9" Header="Цена ред."  Binding="{Binding priceredak, StringFormat='0.00'}"   Width="60" />
-                <DataGridCheckBoxColumn  Header="Выведено"  Binding="{Binding vived}"   Width="*"  />
+                <DataGridCheckBoxColumn  Header="Выведено"  Binding="{Binding vived}"   Width="auto"  />
 
             </DataGrid.Columns>
             <DataGrid.ContextMenu>

@@ -160,6 +160,12 @@ namespace TreeCadN
         }
         string otvetnoe_pismo_1 = "\r\n\r\nПользователь отменил заявку на", otvetnoe_pismo_2 = "\r\n\r\nИнформирование об отключении", otvetnoe_pismo_3 = "\r\n\r\nЗаявка на подключение модуля";
         bool pismo_prov_1 = false, pismo_prov_2 = false, pismo_prov_3 = false;
+
+        private void obnovitb_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         void otpravka_rez(int id)
         {
             if (items[id].sost != items[id].sost_iznach)

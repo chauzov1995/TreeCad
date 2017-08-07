@@ -23,7 +23,61 @@ namespace TreeCadN
         public string papka_s_foto = Environment.CurrentDirectory + @"\";
         public string index1idotd, index2idotd;
         public string Bazis;
+        private object Ambiente;
 
+        public string attiva(ref String s, String Valori, String DES, String PX, String PY, String param)
+        {
+            string returnValue = "";
+            try
+            {
+              //  percorsoordini
+
+
+                    switch (param)
+                {
+                    case "TAccess":
+
+                        INIManager client_man = new INIManager(Directory.GetCurrentDirectory() + @"\_ecadpro\ecadpro.ini");
+                        string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+
+                        MessageBox.Show(Assembly.GetExecutingAssembly().Location);
+                      //  TAccess(Directory.GetCurrentDirectory() +@"\"+ path_sysdba , 1, ref param);
+
+                        break;
+                }
+
+                // MessageBox.Show(s + "-" + Valori + "-" + DES + "-" + PX + "-" + PY + "-" + param);
+
+                //Form1 fm = new Form1(ref Ambiente);
+                //fm.StartPosition = FormStartPosition.CenterScreen;
+                //fm.TopMost = true;
+                //fm.Show();
+
+
+
+                /*
+                using (var form = new Form1(ref Ambiente))
+                {
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.Cancel)
+                    {
+                        returnValue = form.ReturnValue1;            //values preserved after close
+                    }
+                }
+
+    */
+                MessageBox.Show("Учпех");
+            }
+            catch (Exception e)
+            {
+               MessageBox.Show(e.Message);
+            }
+            return returnValue;
+        }
+        public void SetAmbiente(ref object x)
+        {
+            Ambiente = x;
+        }
 
         public string GNOTD(string path, string str)
         {
@@ -98,6 +152,8 @@ namespace TreeCadN
 
         public string TAccess(string path, int filtr, ref string text)
         {
+
+            MessageBox.Show(Assembly.GetExecutingAssembly().Location);
             TAccessories f_TAccess = new TAccessories(path + @"\system.mdb", text);
             f_TAccess.ShowDialog();
             return f_TAccess.text_otvet;

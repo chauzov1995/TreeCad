@@ -578,16 +578,30 @@ namespace TreeCadN
             }
             string[] kolonki = ps.kolonki.Split(';');
 
-            st1.Width = new DataGridLength(Convert.ToDouble(kolonki[1]));
-            st2.Width = new DataGridLength(Convert.ToDouble(kolonki[1]));
-            st3.Width = new DataGridLength(Convert.ToDouble(kolonki[2]));
-            st4.Width = new DataGridLength(Convert.ToDouble(kolonki[3]));
-          
-            //st11.Width =  (Convert.ToDouble(kolonki[10]));
-            //st12.Width =  (Convert.ToDouble(kolonki[11]));
-            //st13.Width =  (Convert.ToDouble(kolonki[12]));
-            //st14.Width =  (Convert.ToDouble(kolonki[13]));
-           
+
+            /*
+            //MessageBox.Show(kolonki[1]);
+            try
+            {
+                st1.Width = (DataGridLength)(Convert.ToInt32(kolonki[0]));
+                st2.Width = (DataGridLength)(Convert.ToInt32(kolonki[1]));
+              //  st3.Width = (DataGridLength)(Convert.ToInt32(kolonki[2]));
+                st4.Width = (DataGridLength)(Convert.ToInt32(kolonki[3]));
+                otdelka.Width = (DataGridLength)(Convert.ToInt32(kolonki[4]));
+                edizmer.Width = (DataGridLength)(Convert.ToInt32(kolonki[5]));
+                st7.Width = (DataGridLength)(Convert.ToInt32(kolonki[6]));
+                st8.Width = (DataGridLength)(Convert.ToInt32(kolonki[7]));
+                st9.Width = (DataGridLength)(Convert.ToInt32(kolonki[8]));
+          //      st11.Width = (DataGridLength)(Convert.ToDouble(kolonki[10]));
+            //    st12.Width = (DataGridLength)(Convert.ToDouble(kolonki[11]));
+              //  st13.Width = (DataGridLength)(Convert.ToDouble(kolonki[12]));
+                //st14.Width = (DataGridLength)(Convert.ToDouble(kolonki[13]));
+            }
+            catch(Exception e)
+            {
+              // MessageBox.Show( e.Message+" (Связано с шириной столбиков)");
+            }
+  */
      
 
 
