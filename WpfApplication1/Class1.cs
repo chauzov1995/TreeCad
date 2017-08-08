@@ -25,52 +25,30 @@ namespace TreeCadN
         public string Bazis;
         private object Ambiente;
 
-        public string attiva(ref String s, String Valori, String DES, String PX, String PY, String param)
+        public string attiva(String s, String Valori, String DES, String PX, String PY, String param)
         {
+
+
             string returnValue = "";
             try
             {
-              //  percorsoordini
 
-
-                    switch (param)
+                switch (param)
                 {
                     case "TAccess":
-
-                        INIManager client_man = new INIManager(Directory.GetCurrentDirectory() + @"\_ecadpro\ecadpro.ini");
+                        DirectoryInfo sdsd = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
+                        INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
                         string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-
-                        MessageBox.Show(Assembly.GetExecutingAssembly().Location);
-                      //  TAccess(Directory.GetCurrentDirectory() +@"\"+ path_sysdba , 1, ref param);
-
+                        if (s == null) s = "";
+                        returnValue = TAccess(Environment.CurrentDirectory + @"\" + path_sysdba, 1, s);
                         break;
                 }
 
-                // MessageBox.Show(s + "-" + Valori + "-" + DES + "-" + PX + "-" + PY + "-" + param);
 
-                //Form1 fm = new Form1(ref Ambiente);
-                //fm.StartPosition = FormStartPosition.CenterScreen;
-                //fm.TopMost = true;
-                //fm.Show();
-
-
-
-                /*
-                using (var form = new Form1(ref Ambiente))
-                {
-                    var result = form.ShowDialog();
-                    if (result == DialogResult.Cancel)
-                    {
-                        returnValue = form.ReturnValue1;            //values preserved after close
-                    }
-                }
-
-    */
-                MessageBox.Show("Учпех");
             }
             catch (Exception e)
             {
-               MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message);
             }
             return returnValue;
         }
@@ -150,10 +128,9 @@ namespace TreeCadN
             return f_prim.text_otvet;
         }
 
-        public string TAccess(string path, int filtr, ref string text)
+        public string TAccess(string path, int filtr, string text)
         {
 
-            MessageBox.Show(Assembly.GetExecutingAssembly().Location);
             TAccessories f_TAccess = new TAccessories(path + @"\system.mdb", text);
             f_TAccess.ShowDialog();
             return f_TAccess.text_otvet;

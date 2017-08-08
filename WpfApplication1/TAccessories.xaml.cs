@@ -41,7 +41,7 @@ namespace TreeCadN
 
 
         List<texnika> gr3 = new List<texnika>();
-        List<texnika> gr4 = new List<texnika>();
+
 
         public int redakilidob = 0;
         int nom_PP = 0;
@@ -308,47 +308,28 @@ namespace TreeCadN
                     if (Convert.ToInt32(znach[6]) > nom_PP) nom_PP = Convert.ToInt32(znach[6]);
 
 
-                    if (znach[0] == "a")
-                    {//t-техника a-аксесуар
+                    //t-техника a-аксесуар
 
-                        gr3.Add(new texnika()
-                        {
-                            type = znach[0],//типп аксес или техн
-                            Article = znach[1],//Артикул
-                            kolvo = Convert.ToSingle(znach[2]),//Колво
-                            OTD = znach[3],//отделка
-                            Prim = znach[4],//примечание
-                            Group = znach[5],//группы
-                            nom_pp = Convert.ToInt32(znach[6]),//ид позиция
-                            TName = znach[7],//название
-                            UnitsName = znach[8],//ед изм
-                            priceredak = Convert.ToSingle(znach[9]),//цена ред
-
-                            vived = Convert.ToBoolean((gr1.Find(x => x.Article.Equals(znach[1]))).vived),
-                            baseprice = Convert.ToSingle((gr1.Find(x => x.Article.Equals(znach[1]))).baseprice)
-
-
-
-                        });
-                    }
-                    if (znach[0] == "t")
+                    gr3.Add(new texnika()
                     {
-                        gr4.Add(new texnika()
-                        {
-                            type = znach[0],//типп аксес или техн
-                            Article = znach[1],//Артикул
-                            kolvo = Convert.ToSingle(znach[2]),//Колво
-                            Prim = znach[3],//примечание
-                            Group = znach[4],//группы
-                            nom_pp = Convert.ToInt32(znach[5]),//ид позиция
-                            TName = znach[6],//название
-                                             // TName = znach[7],//всегда 3
-                            priceredak = Convert.ToSingle(znach[8]),//цена ред
+                        type = znach[0].Replace('@', ','),//типп аксес или техн
+                        Article = znach[1].Replace('@', ','),//Артикул
+                        kolvo = Convert.ToSingle(znach[2].Replace('@', ',')),//Колво
+                        OTD = znach[3].Replace('@', ','),//отделка
+                        Prim = znach[4].Replace('@', ','),//примечание
+                        Group = znach[5].Replace('@', ','),//группы
+                        nom_pp = Convert.ToInt32(znach[6].Replace('@', ',')),//ид позиция
+                        TName = (gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',')))).TName,//название
+                        UnitsName = znach[8].Replace('@', ','),//ед изм
+                        priceredak = Convert.ToSingle(znach[9].Replace('@', ',')),//цена ред
+                        vived = Convert.ToBoolean((gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',')))).vived),
+                        baseprice = Convert.ToSingle((gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',')))).baseprice)
 
-                            baseprice = Convert.ToSingle((gr2.Find(x => x.Article.Equals(znach[1]))).baseprice)
-                        });
 
-                    }
+
+                    });
+
+
                 }
             }
 
@@ -418,79 +399,82 @@ namespace TreeCadN
             try
             {
                 e.Accepted = false;
-                if (((texnika)e.Item).Article.ToLower().IndexOf(tb1.Text.ToLower()) >= 0)
+                if (!((texnika)e.Item).vived)
                 {
-
-                    bool sledetap = true;
-
-                    string[] splitmass = tb2.Text.ToLower().Split(' ');
-                    for (int w = 0; w < splitmass.Count(); w++)
-                    {
-                        if (((texnika)e.Item).TName.ToLower().IndexOf(splitmass[w]) < 0) sledetap = false;
-
-                    }
-
-                    //(
-                    if (sledetap)
+                    if (((texnika)e.Item).Article.ToLower().IndexOf(tb1.Text.ToLower()) >= 0)
                     {
 
-                        //поиск по трееее
-                        if (tv1.SelectedItem == null || (tv1.SelectedItem as MenuItem).type == "at*")//если пока ничегоне выбрано
+                        bool sledetap = true;
+
+                        string[] splitmass = tb2.Text.ToLower().Split(' ');
+                        for (int w = 0; w < splitmass.Count(); w++)
                         {
-                            e.Accepted = true;
+                            if (((texnika)e.Item).TName.ToLower().IndexOf(splitmass[w]) < 0) sledetap = false;
+
                         }
-                        else
+
+                        //(
+                        if (sledetap)
                         {
 
-                            string name, id = "";//id в триивиф для фильтрации
-
-                            if ((tv1.SelectedItem as MenuItem).type == "t*" ||
-                                (tv1.SelectedItem as MenuItem).type == "a*")
-                            {//если выбрали в названии
-                             //   MessageBox.Show((e.Item ).ToString());
-
-
-                                if ((e.Item as texnika).type == "a" && (tv1.SelectedItem as MenuItem).type == "a*") e.Accepted = true;
-
-                                if ((e.Item as texnika).type == "t" && (tv1.SelectedItem as MenuItem).type == "t*") e.Accepted = true;
-
-
+                            //поиск по трееее
+                            if (tv1.SelectedItem == null || (tv1.SelectedItem as MenuItem).type == "at*")//если пока ничегоне выбрано
+                            {
+                                e.Accepted = true;
                             }
                             else
                             {
-                                //если выбрали в псол раскр списке
 
-                                id = (tv1.SelectedItem as MenuItem).ID;
+                                string name, id = "";//id в триивиф для фильтрации
 
-
-
-
-                                if (((texnika)e.Item).Article == "***" || ((texnika)e.Item).Article == "*" || ((texnika)e.Item).Article == "15R***" || ((texnika)e.Item).Article == "SAD***")
-                                {
+                                if ((tv1.SelectedItem as MenuItem).type == "t*" ||
+                                    (tv1.SelectedItem as MenuItem).type == "a*")
+                                {//если выбрали в названии
+                                 //   MessageBox.Show((e.Item ).ToString());
 
 
+                                    if ((e.Item as texnika).type == "a" && (tv1.SelectedItem as MenuItem).type == "a*") e.Accepted = true;
 
-                                    if (((e.Item as texnika).Article == "***" || ((texnika)e.Item).Article == "15R***" || ((texnika)e.Item).Article == "SAD***") && (tv1.SelectedItem as MenuItem).type == "a")
-                                    {
-                                        e.Accepted = true;
-                                    }
-
-                                    if ((e.Item as texnika).Article == "*" && (tv1.SelectedItem as MenuItem).type == "t")
-                                    {
-                                        e.Accepted = true;
-                                    }
+                                    if ((e.Item as texnika).type == "t" && (tv1.SelectedItem as MenuItem).type == "t*") e.Accepted = true;
 
 
                                 }
                                 else
                                 {
-                                    if (((texnika)e.Item).Group == id && ((texnika)e.Item).type == (tv1.SelectedItem as MenuItem).type)
+                                    //если выбрали в псол раскр списке
+
+                                    id = (tv1.SelectedItem as MenuItem).ID;
+
+
+
+
+                                    if (((texnika)e.Item).Article == "***" || ((texnika)e.Item).Article == "*" || ((texnika)e.Item).Article == "15R***" || ((texnika)e.Item).Article == "SAD***")
                                     {
 
-                                        e.Accepted = true;
-                                    }
-                                }
 
+
+                                        if (((e.Item as texnika).Article == "***" || ((texnika)e.Item).Article == "15R***" || ((texnika)e.Item).Article == "SAD***") && (tv1.SelectedItem as MenuItem).type == "a")
+                                        {
+                                            e.Accepted = true;
+                                        }
+
+                                        if ((e.Item as texnika).Article == "*" && (tv1.SelectedItem as MenuItem).type == "t")
+                                        {
+                                            e.Accepted = true;
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                        if (((texnika)e.Item).Group == id && ((texnika)e.Item).type == (tv1.SelectedItem as MenuItem).type)
+                                        {
+
+                                            e.Accepted = true;
+                                        }
+                                    }
+
+                                }
                             }
                         }
                     }
@@ -602,7 +586,7 @@ namespace TreeCadN
               // MessageBox.Show( e.Message+" (Связано с шириной столбиков)");
             }
   */
-     
+
 
 
 
@@ -627,8 +611,9 @@ namespace TreeCadN
                 ps.Height = this.Height;
             }
 
+            /*
             ps.kolonki =
-st1.Width.ToString() +";"+
+st1.Width.ToString() + ";" +
 st2.Width.ToString() + ";" +
 st3.Width.ToString() + ";" +
 st4.Width.ToString() + ";" +
@@ -640,8 +625,8 @@ st9.Width.ToString() + ";" +
 st11.Width.ToString() + ";" +
 st12.Width.ToString() + ";" +
 st13.Width.ToString() + ";" +
-st14.Width.ToString()+";";
-
+st14.Width.ToString() + ";";
+*/
 
 
             ps.Save();
@@ -654,15 +639,23 @@ st14.Width.ToString()+";";
             for (int i = 0; i < gr3.Count; i++)
             {
                 texnika otvet_massiv = ((texnika)gr3[i]);
-                t += "a~" + otvet_massiv.Article + "~" + otvet_massiv.kolvo + "~" + otvet_massiv.OTD + "~" + otvet_massiv.Prim + "~" + otvet_massiv.Group + "~" + otvet_massiv.nom_pp + "~" + otvet_massiv.TName + "~" + otvet_massiv.UnitsName + "~" + otvet_massiv.priceredak + ";";
+
+                string name = "";
+                if (otvet_massiv.TName == "***" || otvet_massiv.TName == "15R***" || otvet_massiv.TName == "SAD***") name = otvet_massiv.TName.Replace(',', '@');
+
+                t += otvet_massiv.type.Replace(',', '@') + "~" +
+                otvet_massiv.Article.Replace(',', '@') + "~" +
+                otvet_massiv.kolvo.ToString().Replace(',', '@') + "~" +
+                otvet_massiv.OTD.Replace(',', '@') + "~" +
+                otvet_massiv.Prim.Replace(',', '@') + "~" +
+                otvet_massiv.Group.Replace(',', '@') + "~" +
+                otvet_massiv.nom_pp.ToString().Replace(',', '@') + "~" +
+                name + "~" +
+                otvet_massiv.UnitsName.Replace(',', '@') + "~" +
+                otvet_massiv.priceredak.ToString().Replace(',', '@') + ";";
                 //      MessageBox.Show(text_otvet);
             }
-            for (int i = 0; i < gr4.Count; i++)
-            {
-                texnika otvet_massiv = ((texnika)gr4[i]);
-                t += "t~" + otvet_massiv.Article + "~" + otvet_massiv.kolvo + "~" + otvet_massiv.Prim + "~" + otvet_massiv.Group + "~" + otvet_massiv.nom_pp + "~" + otvet_massiv.TName + "~3~" + otvet_massiv.priceredak + ";";
-                //   MessageBox.Show(text_otvet);
-            }
+
 
             if (zakrit_ok)
             {
@@ -688,23 +681,7 @@ st14.Width.ToString()+";";
 
             }
         }
-        void save()
-        {
 
-            text_otvet = "";
-            for (int i = 0; i < gr3.Count; i++)
-            {
-                texnika otvet_massiv = ((texnika)gr3[i]);
-                text_otvet += "a~" + otvet_massiv.Article + "~" + otvet_massiv.kolvo + "~" + otvet_massiv.OTD + "~" + otvet_massiv.Prim + "~" + otvet_massiv.Group + "~" + otvet_massiv.nom_pp + "~" + otvet_massiv.TName + "~" + otvet_massiv.UnitsName + "~" + otvet_massiv.priceredak + ";";
-                //      MessageBox.Show(text_otvet);
-            }
-            for (int i = 0; i < gr4.Count; i++)
-            {
-                texnika otvet_massiv = ((texnika)gr4[i]);
-                text_otvet += "t~" + otvet_massiv.Article + "~" + otvet_massiv.kolvo + "~" + otvet_massiv.Prim + "~" + otvet_massiv.Group + "~" + otvet_massiv.nom_pp + "~" + otvet_massiv.TName + "~3~" + otvet_massiv.priceredak + ";";
-                //   MessageBox.Show(text_otvet);
-            }
-        }
 
         private void tb1_Loaded(object sender, RoutedEventArgs e)
         {

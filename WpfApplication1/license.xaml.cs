@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
@@ -163,6 +165,19 @@ namespace TreeCadN
 
         private void obnovitb_Click(object sender, RoutedEventArgs e)
         {
+
+            try
+            {
+             //   Process proc= Process.GetCurrentProcess();
+             //   ProcessStartInfo sadas=new ProcessStartInfo();
+             //   sadas.FileName = @"C:\!qwerty\TreeCadN\Obnov_dll_N\bin\Debug\Obnov_dll_N.exe";
+                //sadas
+              //  Process.Start(sadas);
+
+            }catch(Exception err){
+
+               MessageBox.Show( err.Message+err.TargetSite);
+            }
 
         }
 

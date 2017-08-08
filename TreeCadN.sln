@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3CF601
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Obnovl_N", "Obnovl_N\Obnovl_N.csproj", "{31B20DE2-4A79-4DDB-9398-95D0E4132B3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Obnov_dll_N", "Obnov_dll_N\Obnov_dll_N.csproj", "{C71A7822-CE99-47DC-BCC2-F0E9FC601EA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,10 +36,10 @@ Global
 		{9287BAAE-4F65-4824-9F51-D5A5D7C398CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9287BAAE-4F65-4824-9F51-D5A5D7C398CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9287BAAE-4F65-4824-9F51-D5A5D7C398CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31B20DE2-4A79-4DDB-9398-95D0E4132B3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31B20DE2-4A79-4DDB-9398-95D0E4132B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31B20DE2-4A79-4DDB-9398-95D0E4132B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31B20DE2-4A79-4DDB-9398-95D0E4132B3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C71A7822-CE99-47DC-BCC2-F0E9FC601EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C71A7822-CE99-47DC-BCC2-F0E9FC601EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C71A7822-CE99-47DC-BCC2-F0E9FC601EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C71A7822-CE99-47DC-BCC2-F0E9FC601EA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
