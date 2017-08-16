@@ -66,7 +66,7 @@
         <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Кол-во" Grid.Row="0" Grid.Column="6" VerticalAlignment="Bottom" Height="16"/>
         <TextBox x:Name="rsktb3" Margin="5" TextWrapping="Wrap" Grid.Row="1" Grid.Column="6" PreviewTextInput="rsktb3_PreviewTextInput" TabIndex="3" PreviewKeyDown="rsktb3_PreviewKeyDown" VerticalAlignment="Top"/>
         <TextBlock Margin="4,5" TextWrapping="Wrap" Text="Х" Grid.Row="1" Grid.Column="5" HorizontalAlignment="Center" Width="7"/>
-        <TextBlock x:Name="rsktblo1_Copy" Margin="5" TextWrapping="Wrap" Grid.Row="1" VerticalAlignment="Top" Height="23" FontWeight="Bold"><Run Text="Арктикул"/><Run Language="ru-ru" Text=" "/></TextBlock>
+        <TextBox x:Name="rsktblo1_Copy" IsReadOnly="True"  Margin="5" TextWrapping="Wrap" Grid.Row="1" VerticalAlignment="Top" Height="23" FontWeight="Bold"></TextBox>
         <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Базовая цена" Grid.Row="4" VerticalAlignment="Bottom" Height="16" Grid.Column="3"/>
         <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Цена ред." Grid.Row="4" VerticalAlignment="Bottom" Height="16" Grid.Column="4" Grid.ColumnSpan="3"/>
         <TextBox x:Name="rsktb3_Copy" Margin="5" TextWrapping="Wrap" Grid.Row="5" Grid.Column="3" PreviewTextInput="rsktb3_Copy_PreviewTextInput" TabIndex="7" PreviewKeyDown="rsktb3_Copy_PreviewKeyDown"/>

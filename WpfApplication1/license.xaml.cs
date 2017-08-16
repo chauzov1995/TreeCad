@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -163,24 +164,20 @@ namespace TreeCadN
         string otvetnoe_pismo_1 = "\r\n\r\nПользователь отменил заявку на", otvetnoe_pismo_2 = "\r\n\r\nИнформирование об отключении", otvetnoe_pismo_3 = "\r\n\r\nЗаявка на подключение модуля";
         bool pismo_prov_1 = false, pismo_prov_2 = false, pismo_prov_3 = false;
 
-        private void obnovitb_Click(object sender, RoutedEventArgs e)
+
+        string hash_value(string local_path)
         {
 
-            try
-            {
-             //   Process proc= Process.GetCurrentProcess();
-             //   ProcessStartInfo sadas=new ProcessStartInfo();
-             //   sadas.FileName = @"C:\!qwerty\TreeCadN\Obnov_dll_N\bin\Debug\Obnov_dll_N.exe";
-                //sadas
-              //  Process.Start(sadas);
+            RIPEMD160 myRIPEMD160 = RIPEMD160Managed.Create();
+            FileStream tmppathStream = File.OpenRead(local_path);
+            byte[] hashValue = myRIPEMD160.ComputeHash(tmppathStream);
+            tmppathStream.Close();
+            string hash = BitConverter.ToString(hashValue).Replace("-", String.Empty);
 
-            }catch(Exception err){
 
-               MessageBox.Show( err.Message+err.TargetSite);
-            }
-
+            return hash;
         }
-
+    
         void otpravka_rez(int id)
         {
             if (items[id].sost != items[id].sost_iznach)
@@ -235,7 +232,8 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                         otpr_na_server(id.id);
                     }
 
-                } this.Close();
+                }
+                this.Close();
             }
         }
         void otpr_na_server(string mod)
@@ -263,9 +261,9 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
             }
 
             string url = "http://ecad.giulianovars.ru/php/vkl_mod_for_dll.php?id_clienta=" + id_clienta_root + "&modul=" + mod + "&sost_type=" + sost_type + "&zel=" + zel;
-                        var response = client.DownloadData(url);
+            var response = client.DownloadData(url);
             string str = System.Text.Encoding.UTF8.GetString(response);
-       
+
         }
         void zhivoy()
         {
@@ -366,6 +364,54 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
 
 
+    public static class Obnov_dll_N
+    {
+        public static void Create()
+        {
+            try
+            {
+                string localpath = (new FileInfo(Assembly.GetExecutingAssembly().Location).Directory).ToString();
+                string TreeCadNpath = localpath + @"\TreeCadN.dll";
 
+                log.Add("обновление dll путь к длл "+ TreeCadNpath);
+
+
+                WebClient client = new WebClient();
+                var url = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1";
+                string response = client.DownloadString(url);
+
+                log.Add("обновление dll хэш с сервера "+ response);
+
+                if (hash_value(TreeCadNpath) != response)
+                {
+                    log.Add("обновление dll нуждается в обновлении" );
+
+
+                    Process proc = Process.GetCurrentProcess();
+                    Process.Start(localpath + @"\GIULIANOVARS\procedure\Obnov_dll_N.exe", proc.Id.ToString() +
+                        "=" + response+"="+ TreeCadNpath); 
+                }
+
+            }
+            catch(Exception err) {
+                log.Add("Обновление DLL catch"+ err.Message);
+                
+            }
+
+        }
+
+        static string hash_value(string local_path)
+        {
+
+            RIPEMD160 myRIPEMD160 = RIPEMD160Managed.Create();
+            FileStream tmppathStream = File.OpenRead(local_path);
+            byte[] hashValue = myRIPEMD160.ComputeHash(tmppathStream);
+            tmppathStream.Close();
+            string hash = BitConverter.ToString(hashValue).Replace("-", String.Empty);
+
+
+            return hash;
+        }
+    }
 
 }

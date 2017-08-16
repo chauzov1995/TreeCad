@@ -107,7 +107,7 @@ namespace TreeCadN
 
         public WebProxy init()
         {
-            log log = new log();
+            
 
             string path = Environment.CurrentDirectory + @"\proxy_N.ini";
             INIManager client_man = new INIManager(path);

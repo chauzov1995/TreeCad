@@ -712,6 +712,24 @@ st14.Width.ToString() + ";";
                 zakrit_ok = true;
                 Close();
             }
+
+            if (e.Key == Key.F1)
+            {
+                if (g3.SelectedIndex != -1)
+                {
+                    dial_for_acctex dial_for_acctex1 = new dial_for_acctex((g3.SelectedItem as texnika));
+                    dial_for_acctex1.ShowDialog();
+
+                    g3.SelectedItem = dial_for_acctex1.otvet;
+                    g3.ItemsSource = null;
+                    g3.ItemsSource = gr3;
+                }
+                else
+                {
+                    MessageBox.Show("Сначала выбирите элемент, который необходимо редактировать, затем нажмите эту кнопку снова");
+
+                }
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)

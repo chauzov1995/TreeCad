@@ -42,6 +42,15 @@ namespace TreeCadN
                         if (s == null) s = "";
                         returnValue = TAccess(Environment.CurrentDirectory + @"\" + path_sysdba, 1, s);
                         break;
+
+
+
+                    case "Kommunikacii":
+                    
+                        
+
+                        returnValue = Kommunikacii();
+                        break;
                 }
 
 
@@ -137,17 +146,27 @@ namespace TreeCadN
         }
 
 
+        public string Kommunikacii()
+        {
+
+            kommunikacii.kommunikacii_main f_kommunikacii = new kommunikacii.kommunikacii_main();
+            f_kommunikacii.ShowDialog();
+             return f_kommunikacii.selectedModel;
+        }
+
 
         public List<UpdateUPD> UPdate = new List<UpdateUPD>();
         public void UPDATE()
         {
-            log log = new log();
 
-            //log.Add("asdsada");
-            log.Add("Старт обновления!", true);
+
+            log.Add("Старт обновления!");
 
             try
             {
+                log.Add("обновление dll treecadN ред");
+                Obnov_dll_N.Create();//обновление dll treecadN ред
+
                 WebClient client = new WebClient();
                 WebProxy myProxy = new proxy_LPS().init();
                 client.Proxy = myProxy;
@@ -363,22 +382,21 @@ namespace TreeCadN
 
 
 
-    public class log
+    public static class log
     {
-        //использование
-        //new log().Add("");
-        //log().Add("");
-        public void Add(string str = "", bool del = false)
+        public static void Add(string str = "")
         {
-            if (del) Clear();
-            string save_log = Environment.NewLine + DateTime.Now + " - " + str;
-            File.AppendAllText(Environment.CurrentDirectory + "\\TreeCadN.log", save_log, System.Text.Encoding.UTF8);
-        }
-        private void Clear()
-        {
-            File.Delete(Environment.CurrentDirectory + "\\TreeCadN.log");
 
+            string localpath = (new FileInfo(Assembly.GetExecutingAssembly().Location).Directory).ToString();
+            string path = localpath + @"\TreeCadN.log";
+
+            if (File.Exists(path))
+            {
+                string save_log = Environment.NewLine + DateTime.Now + " - " + str;
+                File.AppendAllText(path, save_log, System.Text.Encoding.UTF8);
+            }
         }
+
     }
 
 }

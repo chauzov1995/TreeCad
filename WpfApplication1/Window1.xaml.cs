@@ -778,7 +778,7 @@ namespace TreeCadN
             Properties.Settings1 ps2 = Properties.Settings1.Default;
             bool prov = false;
 
-            new log().Add("Сохранили строку в истории: " + otvetka);
+            log.Add("Сохранили строку в истории: " + otvetka);
 
             if (otvetka == ps2.history1)
             {
@@ -912,7 +912,7 @@ namespace TreeCadN
             Properties.Settings1 ps2 = Properties.Settings1.Default;
 
             bool prov = false;
-            new log().Add("Сохранили строку в закладках: " + otvetka);
+            log.Add("Сохранили строку в закладках: " + otvetka);
 
 
             if (otvetka == ps2.zakladka1)

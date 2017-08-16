@@ -119,8 +119,8 @@
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
                 <ContextMenu >
-                    <MenuItem x:Name="g4_radak"  Header="Редактировать"  Click="Button_Click_4" />
-                    <MenuItem x:Name="g4_delete"  Header="Удалить"  Click="g3_delete_Click" />
+                    <MenuItem x:Name="g4_radak"  Header="Редактировать [F1]"  Click="Button_Click_4" />
+                    <MenuItem x:Name="g4_delete"  Header="Удалить [Del]"  Click="g3_delete_Click" />
 
                 </ContextMenu>
             </DataGrid.ContextMenu>

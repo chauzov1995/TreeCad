@@ -19,7 +19,7 @@
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" Grid.Row="0" x:Name="tb2" Margin="5" ToolTip="Поиск" TextChanged="tb2_TextChanged" VerticalAlignment="Top" TabIndex="1" KeyUp="tb2_KeyUp" />
-            <Button Grid.Row="0"  x:Name="b4" Content="Очистить фильтр"   Click="b4_Click" HorizontalAlignment="Left" VerticalAlignment="Center" Height="22" Margin="5" Width="110" Grid.Column="1" TabIndex="6"/>
+            <Button Grid.Row="0"  x:Name="b4" Content="Очистить фильтр"   Click="b4_Click" HorizontalAlignment="Left" VerticalAlignment="Center" Height="22" Margin="5" Width="110" Grid.Column="1" TabIndex="6" IsTabStop="False"/>
         </Grid>
 
 
@@ -62,9 +62,9 @@
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
-            <Button   Content="Отмена" Margin="5" Click="Button_Click_1" IsCancel="True"  Grid.Column="2" Height="30" Width="90" TabIndex="5" />
+            <Button   Content="Отмена" Margin="5" Click="Button_Click_1" IsCancel="True"  Grid.Column="2" Height="30" Width="90" TabIndex="5" IsTabStop="False" />
             <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" FontSize="14" Text="Запрещено использовать символы #$@№^|" Margin="5"/>
-            <Button  x:Name="b1" Content="Ок" Margin="5" Click="b1_Click" Height="30" Grid.Column="1" TabIndex="4" />
+            <Button  x:Name="b1" Content="Ок" Margin="5" Click="b1_Click" Height="30" Grid.Column="1" TabIndex="4" IsTabStop="False" />
         </Grid>
     </Grid>
 

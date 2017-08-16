@@ -76,6 +76,12 @@
     <Compile Include="dial_for_acctex_danet.xaml.cs">
       <DependentUpon>dial_for_acctex_danet.xaml</DependentUpon>
     </Compile>
+    <Compile Include="kommunikacii\kommunikacii_main.xaml.cs">
+      <DependentUpon>kommunikacii_main.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="kommunikacii\kommunikacii_dial_imp.xaml.cs">
+      <DependentUpon>kommunikacii_dial_imp.xaml</DependentUpon>
+    </Compile>
     <Compile Include="license.xaml.cs">
       <DependentUpon>license.xaml</DependentUpon>
     </Compile>
@@ -110,9 +116,6 @@
     <Compile Include="TAccessories.xaml.cs">
       <DependentUpon>TAccessories.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TAccess\Window1.xaml.cs">
-      <DependentUpon>Window1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Update.xaml.cs">
       <DependentUpon>Update.xaml</DependentUpon>
     </Compile>
@@ -134,6 +137,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="kommunikacii\kommunikacii_main.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="kommunikacii\kommunikacii_dial_imp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="license.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -147,10 +158,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TAccessories.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TAccess\Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
