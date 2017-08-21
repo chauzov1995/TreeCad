@@ -1,0 +1,25 @@
+﻿<Window x:Name="win" x:Class="TreeCadN.dialog_univi"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TreeCadN"
+        mc:Ignorable="d" Height="232.188" Width="415" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" Closing="win_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <StackPanel  Background="#FFF0F0F0" Grid.Row="1">
+            <StackPanel Orientation="Horizontal" Margin="0,13,0,0"  Grid.Row="1" HorizontalAlignment="Right">
+                <Button x:Name="btn3" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" Height="24" IsDefault="True" Padding="10,1" Click="btn3_Click"/>
+            <Button x:Name="btn2" Content="Редактировать" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0"  Height="24" Padding="10,1" Click="btn2_Click"/>
+            <Button x:Name="btn1" Content="Отмена" Margin="0,0,10,0" IsCancel="True" Height="24" HorizontalAlignment="Right" Padding="10,1" Click="btn1_Click"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Margin="0,25,0,0" >
+            <TextBlock x:Name="tblock1" Margin="10,0,10,10" TextWrapping="Wrap" Text="В списке уже есть такое изделие, Добавить новую строку или редактировать существующюю?" VerticalAlignment="Top" />
+            <TextBox x:Name="tb1" Height="23" TextWrapping="Wrap" Margin="10,0,10,10"/>
+        </StackPanel>
+    </Grid>
+</Window>

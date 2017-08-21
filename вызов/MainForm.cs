@@ -229,6 +229,7 @@ namespace вызов
             Object instane = Activator.CreateInstance(ourClass);
             MethodInfo meth = ourClass.GetMethod("Kommunikacii"); //нужен тот Show, который не принимает параметров
             object result = meth.Invoke(instane, new object[] {
+                textBox4.Text
                 });
         }
     }

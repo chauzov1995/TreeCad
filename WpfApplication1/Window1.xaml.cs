@@ -54,30 +54,44 @@ namespace TreeCadN
         {
             InitializeComponent();
 
+            try
+            {
+                newneqqw = nneqwq;
 
-            newneqqw = nneqwq;
-
-            vh_func_path = newneqqw.path1;
-            vh_func_str = newneqqw.str1;
-            BD.path = vh_func_path; //укажем файл бд
-
-
-
-            TekOtdelka.Add(new TekOtd() { });
-
-            strrazobr(vh_func_str, true);
+                vh_func_path = newneqqw.path1;
+                vh_func_str = newneqqw.str1;
+                BD.path = vh_func_path; //укажем файл бд
 
 
-            load_group();//загрузка списка групп
-            load_tekst();//загрузка тестуры
-            loadpage();//загрузка полож окна
-            first_def_zagr();//загрузка списка эффект отделки
-            proverka_uhoda_za_granicu(); //проверка ухода за границу
-            history_func();//загрузка истории
-            zakl_func();//загрузка закладок
 
-            listView1_Loaded();
-            selectbtn1();//выбор кнопки 1
+                TekOtdelka.Add(new TekOtd() { });
+
+                strrazobr(vh_func_str, true);
+
+
+                load_group();//загрузка списка групп
+                log.Add("отделка загрузка списка групп");
+                load_tekst();//загрузка тестуры
+                log.Add("отделка загрузка тестуры");
+                loadpage();//загрузка полож окна
+                log.Add("отделка загрузка полож окна");
+                first_def_zagr();//загрузка списка эффект отделки
+                log.Add("отделка /загрузка списка эффект отделки");
+                proverka_uhoda_za_granicu(); //проверка ухода за границу
+                log.Add("отделка проверка ухода за границу");
+                history_func();//загрузка истории
+                log.Add("отделка загрузка истории");
+                zakl_func();//загрузка закладок
+                log.Add("отделка загрузка закладок");
+
+                listView1_Loaded();
+                selectbtn1();//выбор кнопки 1
+
+            }
+            catch (Exception err)
+            {
+                log.Add("отделка" + err.Message);
+            }
 
         }
         void first_def_zagr() //загрузка дополнительных параметров
@@ -136,11 +150,11 @@ namespace TreeCadN
             OleDbDataReader reader = BD.conn("SELECT NAME, ID FROM TOTDELKAGROUP " + s + " order by NAME ASC");
             int iteratro = 0;
             GROUPE.Add(new Person()
-              {
-                  NAME = "Все",
-                  ID = "*",
-                  index_group = iteratro
-              });
+            {
+                NAME = "Все",
+                ID = "*",
+                index_group = iteratro
+            });
 
 
             while (reader.Read())
@@ -320,22 +334,22 @@ namespace TreeCadN
 
                 TekOtdelka_Zakl.Add(new TekOtd()
 
- {
+                {
 
-     Name1 = history1word[0],
-     Name2 = history1word[1],
-     textura1 = history1word[2],
-     textura2 = history1word[3],
-     textura1_otris = textura1_otris1,
-     textura2_otris = textura2_otris1,
-     naprav1 = history1word[4],
-     naprav2 = history1word[5],
-     IDGroup1 = history1word[6],
-     IDGroup2 = history1word[7],
-     cheked = cheked,
-     str = history1word[8]
+                    Name1 = history1word[0],
+                    Name2 = history1word[1],
+                    textura1 = history1word[2],
+                    textura2 = history1word[3],
+                    textura1_otris = textura1_otris1,
+                    textura2_otris = textura2_otris1,
+                    naprav1 = history1word[4],
+                    naprav2 = history1word[5],
+                    IDGroup1 = history1word[6],
+                    IDGroup2 = history1word[7],
+                    cheked = cheked,
+                    str = history1word[8]
 
- });
+                });
 
 
             }
@@ -441,7 +455,7 @@ namespace TreeCadN
 
             if (perv) pervload();
 
-           
+
             TekOtdelka[0].index5 = razr_odinak;//Флаг, 1-одинаковая отделака обеих пластей, при этом назначать разную отделку нельзя
             TekOtdelka[0].index10 = razr_group;// спис разреш групп для отделки
 
@@ -467,19 +481,19 @@ namespace TreeCadN
                 if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka[0].textura1))
                 {
 
-                if (TekOtdelka[0].index3 == "0")
-                {
+                    if (TekOtdelka[0].index3 == "0")
+                    {
 
-                    image3.Source = rotate270_loc();
-                    image1.Source = rotate270(TekOtdelka[0].textura1);
-                    //MessageBox.Show(TekOtdelka[0].textura1);
-                }
-                if (TekOtdelka[0].index3 != "0")
-                {
-                    image3.Source = norotate_loc("naprav.png");
-                    image1.Source = norotate(TekOtdelka[0].textura1);
-                    TekOtdelka[0].index3 = "1";
-                }
+                        image3.Source = rotate270_loc();
+                        image1.Source = rotate270(TekOtdelka[0].textura1);
+                        //MessageBox.Show(TekOtdelka[0].textura1);
+                    }
+                    if (TekOtdelka[0].index3 != "0")
+                    {
+                        image3.Source = norotate_loc("naprav.png");
+                        image1.Source = norotate(TekOtdelka[0].textura1);
+                        TekOtdelka[0].index3 = "1";
+                    }
                 }
 
                 else
@@ -496,7 +510,7 @@ namespace TreeCadN
                 if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka[0].textura1))
                 {
 
-                image1.Source = norotate(TekOtdelka[0].textura1);
+                    image1.Source = norotate(TekOtdelka[0].textura1);
                 }
                 else
                 {
@@ -515,19 +529,19 @@ namespace TreeCadN
                 if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka[0].textura2))
                 {
 
-                if (TekOtdelka[0].index4 == "0")
-                {
+                    if (TekOtdelka[0].index4 == "0")
+                    {
 
-                    image4.Source = rotate270_loc();
-                    image2.Source = rotate270(TekOtdelka[0].textura2);
+                        image4.Source = rotate270_loc();
+                        image2.Source = rotate270(TekOtdelka[0].textura2);
 
-                }
-                if (TekOtdelka[0].index4 != "0")
-                {
-                    image4.Source = norotate_loc("naprav.png");
-                    image2.Source = norotate(TekOtdelka[0].textura2);
-                    TekOtdelka[0].index4 = "1";
-                }
+                    }
+                    if (TekOtdelka[0].index4 != "0")
+                    {
+                        image4.Source = norotate_loc("naprav.png");
+                        image2.Source = norotate(TekOtdelka[0].textura2);
+                        TekOtdelka[0].index4 = "1";
+                    }
                 }
 
                 else
@@ -1453,32 +1467,38 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
         private void comboBox1_FocusableChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-         
+
         }
 
         private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
- }
+        }
+
+        private void checkBox3_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void comboBox1_TextInput(object sender, TextCompositionEventArgs e)
         {
-     //comboBox1.IsDropDownOpen = true;
+            //comboBox1.IsDropDownOpen = true;
         }
 
         private void comboBox1_MouseUp(object sender, MouseButtonEventArgs e)
         {
-           // comboBox1.IsDropDownOpen = true;
+            // comboBox1.IsDropDownOpen = true;
         }
 
         private void comboBox1_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-         //   comboBox1.IsDropDownOpen = true;
+            //   comboBox1.IsDropDownOpen = true;
         }
 
         private void comboBox1_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             comboBox1.IsDropDownOpen = true;
         }
-        
+
 
 
 

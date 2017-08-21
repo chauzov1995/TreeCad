@@ -70,11 +70,19 @@
       <DependentUpon>Basis.xaml</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs" />
+    <Compile Include="dialog_univi.xaml.cs">
+      <DependentUpon>dialog_univi.xaml</DependentUpon>
+    </Compile>
     <Compile Include="dial_for_acctex.xaml.cs">
       <DependentUpon>dial_for_acctex.xaml</DependentUpon>
     </Compile>
     <Compile Include="dial_for_acctex_danet.xaml.cs">
       <DependentUpon>dial_for_acctex_danet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="kommunikacii\kommunikacii_Set.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>kommunikacii_Set.settings</DependentUpon>
     </Compile>
     <Compile Include="kommunikacii\kommunikacii_main.xaml.cs">
       <DependentUpon>kommunikacii_main.xaml</DependentUpon>
@@ -126,6 +134,10 @@
       <DependentUpon>Prim2.xaml</DependentUpon>
     </Compile>
     <Page Include="Basis.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="dialog_univi.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -193,6 +205,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="kommunikacii\kommunikacii_Set.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>kommunikacii_Set.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

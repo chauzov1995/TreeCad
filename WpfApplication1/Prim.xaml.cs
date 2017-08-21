@@ -202,14 +202,21 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 if (this.text_otvet != t)
                 {
-                    if (MessageBox.Show(
+                    var ms = MessageBox.Show(
         "Вы изменили примечания, хотели бы Вы их сохранить?",
         "Предупреждение",
-        MessageBoxButton.YesNo,
-        MessageBoxImage.Warning) == MessageBoxResult.Yes)
+        MessageBoxButton.YesNoCancel,
+        MessageBoxImage.Warning);
+
+                    if (ms == MessageBoxResult.Yes)
                     {
                         //    MessageBox.Show(t);
                         this.text_otvet = t;
+                    }
+                    if (ms == MessageBoxResult.Cancel)
+                    {
+                        //    MessageBox.Show(t);
+                        e.Cancel = true;
                     }
                 }
 

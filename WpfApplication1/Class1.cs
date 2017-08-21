@@ -32,13 +32,15 @@ namespace TreeCadN
             string returnValue = "";
             try
             {
+                INIManager client_man;
+                string path_sysdba;
 
                 switch (param)
                 {
                     case "TAccess":
                         DirectoryInfo sdsd = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
-                        INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                        string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
                         if (s == null) s = "";
                         returnValue = TAccess(Environment.CurrentDirectory + @"\" + path_sysdba, 1, s);
                         break;
@@ -46,10 +48,11 @@ namespace TreeCadN
 
 
                     case "Kommunikacii":
-                    
-                        
 
-                        returnValue = Kommunikacii();
+                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+                        returnValue = Kommunikacii(Environment.CurrentDirectory + @"\" + path_sysdba);
+
                         break;
                 }
 
@@ -146,12 +149,12 @@ namespace TreeCadN
         }
 
 
-        public string Kommunikacii()
+        public string Kommunikacii(string path)
         {
 
-            kommunikacii.kommunikacii_main f_kommunikacii = new kommunikacii.kommunikacii_main();
+            kommunikacii.kommunikacii_main f_kommunikacii = new kommunikacii.kommunikacii_main(path + @"\system.mdb");
             f_kommunikacii.ShowDialog();
-             return f_kommunikacii.selectedModel;
+            return f_kommunikacii.selectedModel;
         }
 
 
