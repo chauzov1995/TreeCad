@@ -34,7 +34,7 @@ namespace TreeCadN
         public List<Person> seldopotd = new List<Person>();
         public List<Person> history = new List<Person>();
         private List<Person> GROUPE = new List<Person>();
-        public List<TekOtd> TekOtdelka = new List<TekOtd>();
+        public TekOtd TekOtdelka = new TekOtd();
         public List<TekOtd> TekOtdelka_Histor = new List<TekOtd>();
         public List<TekOtd> TekOtdelka_Zakl = new List<TekOtd>();
 
@@ -64,11 +64,10 @@ namespace TreeCadN
 
 
 
-                TekOtdelka.Add(new TekOtd() { });
-
+                //    TekOtdelka.Add(new TekOtd() { });
+              
                 strrazobr(vh_func_str, true);
-
-
+            
                 load_group();//загрузка списка групп
                 log.Add("отделка загрузка списка групп");
                 load_tekst();//загрузка тестуры
@@ -86,6 +85,8 @@ namespace TreeCadN
 
                 listView1_Loaded();
                 selectbtn1();//выбор кнопки 1
+
+                
 
             }
             catch (Exception err)
@@ -114,7 +115,7 @@ namespace TreeCadN
                     NAME = reader["Name"].ToString(),
                 });
 
-                if (TekOtdelka[0].index6 == reader["id"].ToString())
+                if (TekOtdelka.index6 == reader["id"].ToString())
                 {
                     comboBox1.SelectedIndex = aasssaq;
                 }
@@ -130,9 +131,9 @@ namespace TreeCadN
         {
 
             string s = "";
-            if (TekOtdelka[0].index10 != "0")
+            if (TekOtdelka.index10 != "0")
             {
-                string[] words = TekOtdelka[0].index10.Split('^');
+                string[] words = TekOtdelka.index10.Split('^');
                 for (int x = 0; x <= words.Length - 1; x++)
                 {
                     if (x == 0)
@@ -179,9 +180,9 @@ namespace TreeCadN
         void load_tekst()
         {
             string s = "";
-            if (TekOtdelka[0].index10 != "0")
+            if (TekOtdelka.index10 != "0")
             {
-                string[] words = TekOtdelka[0].index10.Split('^');
+                string[] words = TekOtdelka.index10.Split('^');
                 for (int x = 0; x <= words.Length - 1; x++)
                 {
                     if (x == 0)
@@ -380,53 +381,53 @@ namespace TreeCadN
         public string strsobr()
         {
 
-            string otvet = TekOtdelka[0].index1 + ";" + TekOtdelka[0].index2 + ";" + TekOtdelka[0].index3 + ";" + TekOtdelka[0].index4 + ";" + TekOtdelka[0].index5 + ";" + TekOtdelka[0].index6 + ";" + TekOtdelka[0].index7 + ";" + TekOtdelka[0].index8 + ";" + TekOtdelka[0].index9 + ";" + TekOtdelka[0].index10;
+            string otvet = TekOtdelka.index1 + ";" + TekOtdelka.index2 + ";" + TekOtdelka.index3 + ";" + TekOtdelka.index4 + ";" + TekOtdelka.index5 + ";" + TekOtdelka.index6 + ";" + TekOtdelka.index7 + ";" + TekOtdelka.index8 + ";" + TekOtdelka.index9 + ";" + TekOtdelka.index10;
             return otvet;
         }
         public void pervload()
         {
-            razr_odinak = TekOtdelka[0].index5;
-            razr_group = TekOtdelka[0].index10;
+            razr_odinak = TekOtdelka.index5;
+            razr_group = TekOtdelka.index10;
 
 
-            OleDbDataReader reader = BD.conn("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup  FROM TOtdelka WHERE id=" + TekOtdelka[0].index1 + "");
+            OleDbDataReader reader = BD.conn("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup  FROM TOtdelka WHERE id=" + TekOtdelka.index1 + "");
 
             while (reader.Read())
             {
-                if (TekOtdelka[0].index1 == "0")
+                if (TekOtdelka.index1 == "0")
                 {
-                    TekOtdelka[0].Name1 = "Нет отделки";
-                    TekOtdelka[0].IDGroup1 = "*";
+                    TekOtdelka.Name1 = "Нет отделки";
+                    TekOtdelka.IDGroup1 = "*";
 
                 }
                 else
                 {
-                    TekOtdelka[0].Name1 = reader["Name"].ToString();
-                    TekOtdelka[0].IDGroup1 = reader["IDGroup"].ToString();
+                    TekOtdelka.Name1 = reader["Name"].ToString();
+                    TekOtdelka.IDGroup1 = reader["IDGroup"].ToString();
                 }
-                TekOtdelka[0].textura1 = reader["TEKSTURA"].ToString();
-                TekOtdelka[0].naprav1 = reader["NAPRAVLENIE"].ToString();
+                TekOtdelka.textura1 = reader["TEKSTURA"].ToString();
+                TekOtdelka.naprav1 = reader["NAPRAVLENIE"].ToString();
 
             }
             reader.Close();
             reader = null;//Загружаем фон для текстуры 1
 
-            reader = BD.conn("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup   FROM TOtdelka WHERE id=" + TekOtdelka[0].index2 + "");
+            reader = BD.conn("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup   FROM TOtdelka WHERE id=" + TekOtdelka.index2 + "");
             while (reader.Read())
             {
 
-                if (TekOtdelka[0].index2 == "0")
+                if (TekOtdelka.index2 == "0")
                 {
-                    TekOtdelka[0].Name2 = "Нет отделки";
-                    TekOtdelka[0].IDGroup2 = "*";
+                    TekOtdelka.Name2 = "Нет отделки";
+                    TekOtdelka.IDGroup2 = "*";
                 }
                 else
                 {
-                    TekOtdelka[0].Name2 = reader["Name"].ToString();
-                    TekOtdelka[0].IDGroup2 = reader["IDGroup"].ToString();
+                    TekOtdelka.Name2 = reader["Name"].ToString();
+                    TekOtdelka.IDGroup2 = reader["IDGroup"].ToString();
                 }
-                TekOtdelka[0].textura2 = reader["TEKSTURA"].ToString();
-                TekOtdelka[0].naprav2 = reader["NAPRAVLENIE"].ToString();
+                TekOtdelka.textura2 = reader["TEKSTURA"].ToString();
+                TekOtdelka.naprav2 = reader["NAPRAVLENIE"].ToString();
 
             }
 
@@ -435,20 +436,20 @@ namespace TreeCadN
         public void strrazobr(string str, bool perv = false)
         {
 
-            //   TekOtdelka[0].str = strsobr();//для переопределения инд1 инд2  для выбора текстуры
+            //   TekOtdelka.str = strsobr();//для переопределения инд1 инд2  для выбора текстуры
             string[] words = str.Split(';');
 
-
-            TekOtdelka[0].index1 = words[0];//Индекс Внешней пласти
-            TekOtdelka[0].index2 = words[1];//индекс внутренней пласти
-            TekOtdelka[0].index3 = words[2];//Направление текстуры 1- вертик, 2-горизонтально
-            TekOtdelka[0].index4 = words[3];//Направление текстуры Внутренней пласти
-            TekOtdelka[0].index5 = words[4];//Флаг, 1-одинаковая отделака обеих пластей, при этом назначать разную отделку нельзя
-            TekOtdelka[0].index6 = words[5];//Индекс Эффекта
-            TekOtdelka[0].index7 = words[6];//Галочка одинак отделка
-            TekOtdelka[0].index8 = words[7];//нестанд цвет
-            TekOtdelka[0].index9 = words[8];//не исп
-            TekOtdelka[0].index10 = words[9];// спис разреш групп для отделки
+    
+            TekOtdelka.index1 = words[0];//Индекс Внешней пласти
+            TekOtdelka.index2 = words[1];//индекс внутренней пласти
+            TekOtdelka.index3 = words[2];//Направление текстуры 1- вертик, 2-горизонтально
+            TekOtdelka.index4 = words[3];//Направление текстуры Внутренней пласти
+            TekOtdelka.index5 = words[4];//Флаг, 1-одинаковая отделака обеих пластей, при этом назначать разную отделку нельзя
+            TekOtdelka.index6 = words[5];//Индекс Эффекта
+            TekOtdelka.index7 = words[6];//Галочка одинак отделка
+            TekOtdelka.index8 = words[7];//нестанд цвет
+            TekOtdelka.index9 = words[8];//не исп
+            TekOtdelka.index10 = words[9];// спис разреш групп для отделки
 
 
 
@@ -456,43 +457,47 @@ namespace TreeCadN
             if (perv) pervload();
 
 
-            TekOtdelka[0].index5 = razr_odinak;//Флаг, 1-одинаковая отделака обеих пластей, при этом назначать разную отделку нельзя
-            TekOtdelka[0].index10 = razr_group;// спис разреш групп для отделки
+         
+
+            TekOtdelka.index5 = razr_odinak;//Флаг, 1-одинаковая отделака обеих пластей, при этом назначать разную отделку нельзя
+            TekOtdelka.index10 = razr_group;// спис разреш групп для отделки
+
+          
 
 
-
-
-            if (TekOtdelka[0].index5 == "1")
+            if (TekOtdelka.index5 == "1")
             {
-                TekOtdelka[0].index2 = TekOtdelka[0].index1;
-                TekOtdelka[0].index4 = TekOtdelka[0].index3;
-                TekOtdelka[0].index7 = "1";
+                TekOtdelka.index2 = TekOtdelka.index1;
+                TekOtdelka.index4 = TekOtdelka.index3;
+                TekOtdelka.index7 = "1";
             }
 
             //загруж название
 
-            label7.Text = TekOtdelka[0].Name1;
-            label8.Text = TekOtdelka[0].Name2;
+            label7.Text = TekOtdelka.Name1;
+            label8.Text = TekOtdelka.Name2;
 
+
+            //ошибка ниже
             //загруж направл текстуры для 1 //загруж карт для 1 кнопки
-            if (TekOtdelka[0].naprav1 == "1")
+            if (TekOtdelka.naprav1 == "1")
             {
                 button3.IsEnabled = true;
-                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka[0].textura1))
+                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka.textura1))
                 {
 
-                    if (TekOtdelka[0].index3 == "0")
+                    if (TekOtdelka.index3 == "0")
                     {
 
                         image3.Source = rotate270_loc();
-                        image1.Source = rotate270(TekOtdelka[0].textura1);
-                        //MessageBox.Show(TekOtdelka[0].textura1);
+                        image1.Source = rotate270(TekOtdelka.textura1);
+                        //MessageBox.Show(TekOtdelka.textura1);
                     }
-                    if (TekOtdelka[0].index3 != "0")
+                    if (TekOtdelka.index3 != "0")
                     {
                         image3.Source = norotate_loc("naprav.png");
-                        image1.Source = norotate(TekOtdelka[0].textura1);
-                        TekOtdelka[0].index3 = "1";
+                        image1.Source = norotate(TekOtdelka.textura1);
+                        TekOtdelka.index3 = "1";
                     }
                 }
 
@@ -500,17 +505,17 @@ namespace TreeCadN
                 {
                     image3.Source = norotate_loc("naprav.png");
                     image1.Source = norotate_loc("Net_Tekst.jpg");
-                    TekOtdelka[0].index3 = "1";
+                    TekOtdelka.index3 = "1";
                 }
 
             }
             else
             {
 
-                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka[0].textura1))
+                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka.textura1))
                 {
 
-                    image1.Source = norotate(TekOtdelka[0].textura1);
+                    image1.Source = norotate(TekOtdelka.textura1);
                 }
                 else
                 {
@@ -518,29 +523,30 @@ namespace TreeCadN
                 }
                 image3.Source = norotate_loc("no_naprav.png");
                 button3.IsEnabled = false;
-                TekOtdelka[0].index3 = "0";
+                TekOtdelka.index3 = "0";
 
             }
+            //ошибка выше 
 
             //загруж направл текстуры для 2 //загруж карт для 2 кнопки
-            if (TekOtdelka[0].naprav2 == "1")
+            if (TekOtdelka.naprav2 == "1")
             {
                 button4.IsEnabled = true;
-                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka[0].textura2))
+                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka.textura2))
                 {
 
-                    if (TekOtdelka[0].index4 == "0")
+                    if (TekOtdelka.index4 == "0")
                     {
 
                         image4.Source = rotate270_loc();
-                        image2.Source = rotate270(TekOtdelka[0].textura2);
+                        image2.Source = rotate270(TekOtdelka.textura2);
 
                     }
-                    if (TekOtdelka[0].index4 != "0")
+                    if (TekOtdelka.index4 != "0")
                     {
                         image4.Source = norotate_loc("naprav.png");
-                        image2.Source = norotate(TekOtdelka[0].textura2);
-                        TekOtdelka[0].index4 = "1";
+                        image2.Source = norotate(TekOtdelka.textura2);
+                        TekOtdelka.index4 = "1";
                     }
                 }
 
@@ -548,14 +554,14 @@ namespace TreeCadN
                 {
                     image4.Source = norotate_loc("naprav.png");
                     image2.Source = norotate_loc("Net_Tekst.jpg");
-                    TekOtdelka[0].index4 = "1";
+                    TekOtdelka.index4 = "1";
                 }
             }
             else
             {
-                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka[0].textura2))
+                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka.textura2))
                 {
-                    image2.Source = norotate(TekOtdelka[0].textura2);
+                    image2.Source = norotate(TekOtdelka.textura2);
                 }
                 else
                 {
@@ -563,11 +569,11 @@ namespace TreeCadN
                 }
                 image4.Source = norotate_loc("no_naprav.png");
                 button4.IsEnabled = false;
-                TekOtdelka[0].index4 = "0";
+                TekOtdelka.index4 = "0";
 
             }
             //загруж одинак отделку
-            if (TekOtdelka[0].index5 == "1")
+            if (TekOtdelka.index5 == "1")
             {
 
                 //заблокир кнопка
@@ -578,7 +584,7 @@ namespace TreeCadN
             else
             {
                 button11.IsEnabled = true;
-                if (TekOtdelka[0].index7 == "1")
+                if (TekOtdelka.index7 == "1")
                 {
                     //отделка одинаковая
                     // button11.Content = "=";
@@ -589,13 +595,13 @@ namespace TreeCadN
                     // отделка разная
                     //  button11.Content = "<>";
                     image6.Source = norotate_loc("tek3.png");
-                    TekOtdelka[0].index7 = "0";
+                    TekOtdelka.index7 = "0";
                 }
 
 
             }
             //загружаем необычный цвет
-            if (TekOtdelka[0].index8 == "")
+            if (TekOtdelka.index8 == "")
             {
 
                 checkBox3.IsChecked = false;
@@ -608,9 +614,10 @@ namespace TreeCadN
 
                 checkBox3.IsChecked = true;
                 textBox2.IsEnabled = true;
-                textBox2.Text = TekOtdelka[0].index8;
+                textBox2.Text = TekOtdelka.index8;
             }
-            TekOtdelka[0].str = strsobr();
+
+            TekOtdelka.str = strsobr();
 
         }
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -619,8 +626,8 @@ namespace TreeCadN
         }
         void selectbtn1()
         {
-
-            if (TekOtdelka[0].index7 == "1")
+            
+            if (TekOtdelka.index7 == "1")
             {
                 obe_plasti = 1;//значит на обе пласти
             }
@@ -632,7 +639,7 @@ namespace TreeCadN
             stor_otd = 1;// на внешнюю пласть
 
 
-            comboBox2.SelectedIndex = (GROUPE.Find(x => x.ID.Equals(TekOtdelka[0].IDGroup1))).index_group;
+            comboBox2.SelectedIndex = (GROUPE.Find(x => x.ID.Equals(TekOtdelka.IDGroup1))).index_group;
             if (!reload_text)
             {
                 viewSource.View.Refresh();
@@ -649,7 +656,7 @@ namespace TreeCadN
         {
 
 
-            if (TekOtdelka[0].index7 == "1")
+            if (TekOtdelka.index7 == "1")
             {
                 obe_plasti = 1;//значит на обе пласти
             }
@@ -660,7 +667,7 @@ namespace TreeCadN
 
             stor_otd = 2;// на внутр пласть
 
-            comboBox2.SelectedIndex = (GROUPE.Find(x => x.ID.Equals(TekOtdelka[0].IDGroup2))).index_group;
+            comboBox2.SelectedIndex = (GROUPE.Find(x => x.ID.Equals(TekOtdelka.IDGroup2))).index_group;
             if (!reload_text)
             {
                 viewSource.View.Refresh();
@@ -683,28 +690,28 @@ namespace TreeCadN
 
 
 
-            string corrper = TekOtdelka[0].index3;
-            if (TekOtdelka[0].index3 == "1")
+            string corrper = TekOtdelka.index3;
+            if (TekOtdelka.index3 == "1")
             {//вертик
 
                 image3.Source = rotate270_loc();
-                image1.Source = rotate270(TekOtdelka[0].textura1);
+                image1.Source = rotate270(TekOtdelka.textura1);
                 corrper = "0";
             }
-            if (TekOtdelka[0].index3 == "0")
+            if (TekOtdelka.index3 == "0")
             {//гориз
                 image3.Source = norotate_loc("naprav.png");
-                image1.Source = norotate(TekOtdelka[0].textura1);
+                image1.Source = norotate(TekOtdelka.textura1);
                 corrper = "1";
             }
-            TekOtdelka[0].index3 = corrper;
+            TekOtdelka.index3 = corrper;
 
 
-            if (TekOtdelka[0].index7 == "1")
+            if (TekOtdelka.index7 == "1")
             {
                 image4.Source = image3.Source;
                 image2.Source = image1.Source;
-                TekOtdelka[0].index4 = TekOtdelka[0].index3;
+                TekOtdelka.index4 = TekOtdelka.index3;
             }
 
 
@@ -714,29 +721,29 @@ namespace TreeCadN
 
 
 
-            string corrper = TekOtdelka[0].index4;
-            if (TekOtdelka[0].index4 == "1")
+            string corrper = TekOtdelka.index4;
+            if (TekOtdelka.index4 == "1")
             {//вертик
                 image4.Source = rotate270_loc();
-                image2.Source = rotate270(TekOtdelka[0].textura2);
+                image2.Source = rotate270(TekOtdelka.textura2);
 
                 corrper = "0";
             }
-            if (TekOtdelka[0].index4 == "0")
+            if (TekOtdelka.index4 == "0")
             {//гориз
                 image4.Source = norotate_loc("naprav.png");
-                image2.Source = norotate(TekOtdelka[0].textura2);
+                image2.Source = norotate(TekOtdelka.textura2);
                 corrper = "1";
             }
-            TekOtdelka[0].index4 = corrper;
+            TekOtdelka.index4 = corrper;
 
 
 
-            if (TekOtdelka[0].index7 == "1")
+            if (TekOtdelka.index7 == "1")
             {
                 image3.Source = image4.Source;
                 image1.Source = image2.Source;
-                TekOtdelka[0].index3 = TekOtdelka[0].index4;
+                TekOtdelka.index3 = TekOtdelka.index4;
             }
         }
         private void checkBox3_Click(object sender, RoutedEventArgs e)
@@ -764,23 +771,23 @@ namespace TreeCadN
 
             if (comboBox1.SelectedIndex == 0)
             {
-                TekOtdelka[0].index6 = "0";
+                TekOtdelka.index6 = "0";
 
             }
             else
             {
                 try
                 {
-                    TekOtdelka[0].index6 = seldopotd[(comboBox1.SelectedIndex)].ID;
+                    TekOtdelka.index6 = seldopotd[(comboBox1.SelectedIndex)].ID;
                 }
                 catch
                 {
-                    TekOtdelka[0].index6 = "0";
+                    TekOtdelka.index6 = "0";
 
                 }
             }
 
-            TekOtdelka[0].index8 = textBox2.Text;
+            TekOtdelka.index8 = textBox2.Text;
 
 
             vh_func_str = strsobr();
@@ -788,7 +795,7 @@ namespace TreeCadN
 
 
 
-            string otvetka = TekOtdelka[0].Name1 + "|" + TekOtdelka[0].Name2 + "|" + TekOtdelka[0].textura1 + "|" + TekOtdelka[0].textura2 + "|" + TekOtdelka[0].naprav1 + "|" + TekOtdelka[0].naprav2 + "|" + TekOtdelka[0].IDGroup1 + "|" + TekOtdelka[0].IDGroup2 + "|" + vh_func_str;
+            string otvetka = TekOtdelka.Name1 + "|" + TekOtdelka.Name2 + "|" + TekOtdelka.textura1 + "|" + TekOtdelka.textura2 + "|" + TekOtdelka.naprav1 + "|" + TekOtdelka.naprav2 + "|" + TekOtdelka.IDGroup1 + "|" + TekOtdelka.IDGroup2 + "|" + vh_func_str;
             Properties.Settings1 ps2 = Properties.Settings1.Default;
             bool prov = false;
 
@@ -865,10 +872,10 @@ namespace TreeCadN
                 if (TekOtdelka_Histor[listBox1.SelectedIndex].cheked == "x:Null")
                 {
                     listBox2.SelectedIndex = -1;
-                    TekOtdelka.Clear();
-                    TekOtdelka.Add(new TekOtd() { });
-                    TekOtdelka[0] = TekOtdelka_Histor[listBox1.SelectedIndex];
-                    strrazobr(TekOtdelka[0].str);
+                  //  TekOtdelka.Clear();
+                   // TekOtdelka.Add(new TekOtd() { });
+                    TekOtdelka = TekOtdelka_Histor[listBox1.SelectedIndex];
+                    strrazobr(TekOtdelka.str);
                 }
                 else
                 {
@@ -885,10 +892,10 @@ namespace TreeCadN
                 if (TekOtdelka_Zakl[listBox2.SelectedIndex].cheked == "x:Null")
                 {
                     listBox1.SelectedIndex = -1;
-                    TekOtdelka.Clear();
-                    TekOtdelka.Add(new TekOtd() { });
-                    TekOtdelka[0] = TekOtdelka_Zakl[listBox2.SelectedIndex];
-                    strrazobr(TekOtdelka[0].str);
+                 //   TekOtdelka.Clear();
+                  //  TekOtdelka.Add(new TekOtd() { });
+                    TekOtdelka = TekOtdelka_Zakl[listBox2.SelectedIndex];
+                    strrazobr(TekOtdelka.str);
                 }
                 else
                 {
@@ -904,16 +911,16 @@ namespace TreeCadN
 
             if (comboBox1.SelectedIndex == 0)
             {
-                TekOtdelka[0].index6 = "0";
+                TekOtdelka.index6 = "0";
 
             }
             else
             {
 
-                TekOtdelka[0].index6 = seldopotd[(comboBox1.SelectedIndex)].ID;
+                TekOtdelka.index6 = seldopotd[(comboBox1.SelectedIndex)].ID;
             }
 
-            TekOtdelka[0].index8 = textBox2.Text;
+            TekOtdelka.index8 = textBox2.Text;
 
 
             vh_func_str = strsobr();
@@ -921,7 +928,7 @@ namespace TreeCadN
 
 
 
-            string otvetka = TekOtdelka[0].Name1 + "|" + TekOtdelka[0].Name2 + "|" + TekOtdelka[0].textura1 + "|" + TekOtdelka[0].textura2 + "|" + TekOtdelka[0].naprav1 + "|" + TekOtdelka[0].naprav2 + "|" + TekOtdelka[0].IDGroup1 + "|" + TekOtdelka[0].IDGroup2 + "|" + vh_func_str;
+            string otvetka = TekOtdelka.Name1 + "|" + TekOtdelka.Name2 + "|" + TekOtdelka.textura1 + "|" + TekOtdelka.textura2 + "|" + TekOtdelka.naprav1 + "|" + TekOtdelka.naprav2 + "|" + TekOtdelka.IDGroup1 + "|" + TekOtdelka.IDGroup2 + "|" + vh_func_str;
 
             Properties.Settings1 ps2 = Properties.Settings1.Default;
 
@@ -1028,7 +1035,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         private void button11_Click(object sender, RoutedEventArgs e)
         {
 
-            if (TekOtdelka[0].index7 == "0")
+            if (TekOtdelka.index7 == "0")
             {
 
 
@@ -1046,13 +1053,13 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 }
 
                 image6.Source = norotate_loc("tek2.png");
-                TekOtdelka[0].index7 = "1";
+                TekOtdelka.index7 = "1";
                 obe_plasti = 1;
             }
             else
             {
                 image6.Source = norotate_loc("tek3.png");
-                TekOtdelka[0].index7 = "0";
+                TekOtdelka.index7 = "0";
                 obe_plasti = 0;
             }
 
@@ -1063,22 +1070,22 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         {
 
 
-            var perem4 = TekOtdelka[0].index1;
-            var perem5 = TekOtdelka[0].index3;
-            var perem6 = TekOtdelka[0].textura1;
-            var perem7 = TekOtdelka[0].naprav1;
+            var perem4 = TekOtdelka.index1;
+            var perem5 = TekOtdelka.index3;
+            var perem6 = TekOtdelka.textura1;
+            var perem7 = TekOtdelka.naprav1;
 
-            var perem9 = TekOtdelka[0].Name1;
-            var perem10 = TekOtdelka[0].IDGroup1;
+            var perem9 = TekOtdelka.Name1;
+            var perem10 = TekOtdelka.IDGroup1;
 
             smena_1to2();
 
-            TekOtdelka[0].index2 = perem4;
-            TekOtdelka[0].index4 = perem5;
-            TekOtdelka[0].textura2 = perem6;
-            TekOtdelka[0].naprav2 = perem7;
-            TekOtdelka[0].Name2 = perem9;
-            TekOtdelka[0].IDGroup2 = perem10;
+            TekOtdelka.index2 = perem4;
+            TekOtdelka.index4 = perem5;
+            TekOtdelka.textura2 = perem6;
+            TekOtdelka.naprav2 = perem7;
+            TekOtdelka.Name2 = perem9;
+            TekOtdelka.IDGroup2 = perem10;
 
 
 
@@ -1277,10 +1284,10 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
             if (TekOtdelka_Histor[0].cheked == "x:Null")
             {
                 listBox2.SelectedIndex = -1;
-                TekOtdelka.Clear();
-                TekOtdelka.Add(new TekOtd() { });
-                TekOtdelka[0] = TekOtdelka_Histor[0];
-                strrazobr(TekOtdelka[0].str);
+               // TekOtdelka.Clear();
+               // TekOtdelka.Add(new TekOtd() { });
+                TekOtdelka = TekOtdelka_Histor[0];
+                strrazobr(TekOtdelka.str);
 
 
                 zakrit_OK();
@@ -1295,17 +1302,17 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         {
             if (stor_otd == 2)
             {
-                TekOtdelka[0].Name2 = "Нет отделки";
-                TekOtdelka[0].index2 = "0";
-                TekOtdelka[0].textura2 = "Net_Tekst.jpg";
-                TekOtdelka[0].naprav2 = "0";
+                TekOtdelka.Name2 = "Нет отделки";
+                TekOtdelka.index2 = "0";
+                TekOtdelka.textura2 = "Net_Tekst.jpg";
+                TekOtdelka.naprav2 = "0";
             }
             if (stor_otd == 1)
             {
-                TekOtdelka[0].Name1 = "Нет отделки";
-                TekOtdelka[0].index1 = "0";
-                TekOtdelka[0].textura1 = "Net_Tekst.jpg";
-                TekOtdelka[0].naprav1 = "0";
+                TekOtdelka.Name1 = "Нет отделки";
+                TekOtdelka.index1 = "0";
+                TekOtdelka.textura1 = "Net_Tekst.jpg";
+                TekOtdelka.naprav1 = "0";
 
             }
 
@@ -1350,12 +1357,12 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     }
 
 
-                    if (TekOtdelka[0].index2 == ((Person)e.Item).ID && stor_otd == 2)
+                    if (TekOtdelka.index2 == ((Person)e.Item).ID && stor_otd == 2)
                     {
 
                         item_forind2 = e.Item;
                     }
-                    if (TekOtdelka[0].index1 == ((Person)e.Item).ID && stor_otd == 1)
+                    if (TekOtdelka.index1 == ((Person)e.Item).ID && stor_otd == 1)
                     {
                         item_forind1 = e.Item;
                     }
@@ -1395,49 +1402,46 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         }
         void smena_1to2()
         {
-            TekOtdelka[0].Name1 = TekOtdelka[0].Name2;
-            TekOtdelka[0].index1 = TekOtdelka[0].index2;
-            TekOtdelka[0].index3 = TekOtdelka[0].index4;
-            TekOtdelka[0].textura1 = TekOtdelka[0].textura2;
-            TekOtdelka[0].naprav1 = TekOtdelka[0].naprav2;
-            TekOtdelka[0].IDGroup1 = TekOtdelka[0].IDGroup2;
+            TekOtdelka.Name1 = TekOtdelka.Name2;
+            TekOtdelka.index1 = TekOtdelka.index2;
+            TekOtdelka.index3 = TekOtdelka.index4;
+            TekOtdelka.textura1 = TekOtdelka.textura2;
+            TekOtdelka.naprav1 = TekOtdelka.naprav2;
+            TekOtdelka.IDGroup1 = TekOtdelka.IDGroup2;
 
         }//когда 1 текстуре придаем значение 2ой
         void smena_2to1()
         {
-            TekOtdelka[0].IDGroup2 = TekOtdelka[0].IDGroup1;
-            TekOtdelka[0].index2 = TekOtdelka[0].index1;
-            TekOtdelka[0].index4 = TekOtdelka[0].index3;
-            TekOtdelka[0].textura2 = TekOtdelka[0].textura1;
-            TekOtdelka[0].naprav2 = TekOtdelka[0].naprav1;
-            TekOtdelka[0].Name2 = TekOtdelka[0].Name1;
+            TekOtdelka.IDGroup2 = TekOtdelka.IDGroup1;
+            TekOtdelka.index2 = TekOtdelka.index1;
+            TekOtdelka.index4 = TekOtdelka.index3;
+            TekOtdelka.textura2 = TekOtdelka.textura1;
+            TekOtdelka.naprav2 = TekOtdelka.naprav1;
+            TekOtdelka.Name2 = TekOtdelka.Name1;
         }//когда 2 текстуре придаем значение 1ой
         private void textBox1_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = "0123456789 ,.-йфяцычувскамепинртгоьшлбщдюзжэхъqazxswedcvfrtgbnhyujmkiolЙФЯЦЫЧУВСКАМЕПИНРТГОЬШЛБЩДЮЗЖХЭЪQAZWSXEDCRFVTGBYHNUJMIKOLP".IndexOf(e.Text) < 0;
         }
 
-        private void listView1_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-
-
-        }
+     
 
         private void listView1_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
+            
             if (listView1.SelectedItem != null)
             {
                 if (stor_otd == 1)
                 {
 
-                    TekOtdelka[0].IDGroup1 = ((Person)listView1.SelectedItem).Idgroupe;
-                    TekOtdelka[0].Name1 = ((Person)listView1.SelectedItem).NAME;
-                    TekOtdelka[0].index1 = ((Person)listView1.SelectedItem).ID;
-                    TekOtdelka[0].textura1 = ((Person)listView1.SelectedItem).textura;
-                    TekOtdelka[0].naprav1 = ((Person)listView1.SelectedItem).napravl;
-                    if (TekOtdelka[0].naprav1 != "1")
+                    TekOtdelka.IDGroup1 = ((Person)listView1.SelectedItem).Idgroupe;
+                    TekOtdelka.Name1 = ((Person)listView1.SelectedItem).NAME;
+                    TekOtdelka.index1 = ((Person)listView1.SelectedItem).ID;
+                    TekOtdelka.textura1 = ((Person)listView1.SelectedItem).textura;
+                    TekOtdelka.naprav1 = ((Person)listView1.SelectedItem).napravl;
+                    if (TekOtdelka.naprav1 != "1")
                     {
-                        TekOtdelka[0].index3 = "0";
+                       TekOtdelka.index3 = "0";
                     }
                     if (obe_plasti == 1)
                     {
@@ -1446,21 +1450,21 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 }
                 if (stor_otd == 2)
                 {
-                    TekOtdelka[0].IDGroup2 = ((Person)listView1.SelectedItem).Idgroupe;
-                    TekOtdelka[0].Name2 = ((Person)listView1.SelectedItem).NAME;
-                    TekOtdelka[0].index2 = ((Person)listView1.SelectedItem).ID;
-                    TekOtdelka[0].textura2 = ((Person)listView1.SelectedItem).textura;
-                    TekOtdelka[0].naprav2 = ((Person)listView1.SelectedItem).napravl;
-                    if (TekOtdelka[0].naprav2 != "1")
+                    TekOtdelka.IDGroup2 = ((Person)listView1.SelectedItem).Idgroupe;
+                    TekOtdelka.Name2 = ((Person)listView1.SelectedItem).NAME;
+                    TekOtdelka.index2 = ((Person)listView1.SelectedItem).ID;
+                    TekOtdelka.textura2 = ((Person)listView1.SelectedItem).textura;
+                    TekOtdelka.naprav2 = ((Person)listView1.SelectedItem).napravl;
+                    if (TekOtdelka.naprav2 != "1")
                     {
-                        TekOtdelka[0].index4 = "0";
+                        TekOtdelka.index4 = "0";
                     }
                     if (obe_plasti == 1)
                     {
                         smena_1to2();
                     }
                 }
-
+                
                 strrazobr(strsobr());
             }
         }

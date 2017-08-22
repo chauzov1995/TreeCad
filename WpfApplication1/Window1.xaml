@@ -43,7 +43,7 @@
                 <TextBox TabIndex="0" x:Name="textBox1"  Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="195.1" TextChanged="textBox1_TextChanged_1" PreviewTextInput="textBox1_PreviewTextInput" ToolTip="Фильтр"  />
                 <Button TabIndex="2" x:Name="button18" Content="Очистить" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="80" Height="23" Click="button18_Click" />
             </StackPanel>
-            <ListView TabIndex="1"  Style="{StaticResource myListboxStyle}"   x:Name="listView1" ItemsSource="{Binding idselect}"     ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,5,5,0"  Grid.Column="0" ToolTip="Выберите текстуру" Background="#E5FFFFFF" Height="359" Width="280" HorizontalAlignment="Right" BorderThickness="0" MouseUp="listView1_MouseUp" SelectionChanged="listView1_SelectionChanged_1"     >
+            <ListView TabIndex="1"  Style="{StaticResource myListboxStyle}"   x:Name="listView1" ItemsSource="{Binding idselect}"     ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,5,5,0"  Grid.Column="0" ToolTip="Выберите текстуру" Background="#E5FFFFFF" Height="359" Width="280" HorizontalAlignment="Right" BorderThickness="0" SelectionChanged="listView1_SelectionChanged_1"     >
 
                 <ListView.ItemTemplate>
                     <DataTemplate>

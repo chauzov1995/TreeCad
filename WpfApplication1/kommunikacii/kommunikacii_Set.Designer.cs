@@ -85,7 +85,7 @@ namespace TreeCadN.kommunikacii {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int tab1sel {
             get {
                 return ((int)(this["tab1sel"]));
@@ -116,6 +116,18 @@ namespace TreeCadN.kommunikacii {
             }
             set {
                 this["lb3sel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int lb1sel {
+            get {
+                return ((int)(this["lb1sel"]));
+            }
+            set {
+                this["lb1sel"] = value;
             }
         }
     }

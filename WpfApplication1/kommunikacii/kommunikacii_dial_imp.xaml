@@ -5,25 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeCadN.kommunikacii"
         mc:Ignorable="d"
-        Title="Добавление пользовательского 3d объекта" Height="287.37" Width="412.524" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="Добавление пользовательского 3d объекта" Height="287.37" Width="461.184" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
-        <Button Content="Обзор" HorizontalAlignment="Left" Margin="319,50,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <TextBox x:Name="tb1" HorizontalAlignment="Left" Height="23" Margin="11,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="303"/>
-        <TextBox x:Name="tb2" HorizontalAlignment="Left" Height="23" Margin="11,101,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="303"/>
-        <Button Content="Обзор" HorizontalAlignment="Left" Margin="319,101,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-        <Button Content="Отправить" HorizontalAlignment="Left" Margin="319,193,0,0" VerticalAlignment="Top" Width="75" Height="31" Click="Button_Click_2"/>
-        <TextBlock HorizontalAlignment="Left" Margin="11,34,0,0" TextWrapping="Wrap" Text="Выбирите 3ds объект" VerticalAlignment="Top"/>
+        <Button Content="Обзор" HorizontalAlignment="Left" Margin="364,50,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <TextBox x:Name="tb1" HorizontalAlignment="Left" Height="23" Margin="11,49,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="348"/>
+        <TextBox x:Name="tb2" HorizontalAlignment="Left" Height="23" Margin="11,101,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="348"/>
+        <Button Content="Обзор" HorizontalAlignment="Left" Margin="364,101,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <Button Content="Отправить" HorizontalAlignment="Left" Margin="364,193,0,0" VerticalAlignment="Top" Width="75" Height="31" Click="Button_Click_2"/>
+        <TextBlock HorizontalAlignment="Left" Margin="11,34,0,0" TextWrapping="Wrap" Text="Выберите 3ds объект" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="11,85,0,0" TextWrapping="Wrap" Text="Добавьте картинку" VerticalAlignment="Top"/>
-        <TextBox x:Name="tx" HorizontalAlignment="Left" Height="23" Margin="22,201,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewTextInput="tx_PreviewTextInput" PreviewKeyDown="tx_PreviewKeyDown"/>
-        <TextBox x:Name="ty" HorizontalAlignment="Left" Height="23" Margin="97,201,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewKeyDown="ty_PreviewKeyDown" PreviewTextInput="ty_PreviewTextInput"/>
-        <TextBox x:Name="tz" HorizontalAlignment="Left" Height="23" Margin="172,201,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewKeyDown="tz_PreviewKeyDown" PreviewTextInput="tz_PreviewTextInput"/>
-        <TextBox x:Name="tb3" HorizontalAlignment="Left" Height="23" Margin="11,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="303" IsEnabled="False"/>
-        <Button x:Name="btn1" Content="Обзор" HorizontalAlignment="Left" Margin="319,150,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_3" IsEnabled="False"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,201,0,0" TextWrapping="Wrap" Text="x" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="86,201,0,0" TextWrapping="Wrap" Text="y" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="161,201,0,0" TextWrapping="Wrap" Text="z" VerticalAlignment="Top"/>
+        <TextBox x:Name="tx" HorizontalAlignment="Left" Height="23" Margin="60,201,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewTextInput="tx_PreviewTextInput" PreviewKeyDown="tx_PreviewKeyDown"/>
+        <TextBox x:Name="ty" HorizontalAlignment="Left" Height="23" Margin="173,201,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewKeyDown="ty_PreviewKeyDown" PreviewTextInput="ty_PreviewTextInput"/>
+        <TextBox x:Name="tz" HorizontalAlignment="Left" Height="23" Margin="300,201,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewKeyDown="tz_PreviewKeyDown" PreviewTextInput="tz_PreviewTextInput"/>
+        <TextBox x:Name="tb3" HorizontalAlignment="Left" Height="23" Margin="11,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="348" IsEnabled="False"/>
+        <Button x:Name="btn1" Content="Обзор" HorizontalAlignment="Left" Margin="364,150,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_3" IsEnabled="False"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,201,0,0" TextWrapping="Wrap" Text="Ширина" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="129,201,0,0" TextWrapping="Wrap" Text="Высота" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="250,201,0,0" TextWrapping="Wrap" Text="Глубина" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,178,0,0" TextWrapping="Wrap" Text="Габариты" VerticalAlignment="Top" Width="100"/>
-        <Button Content="Очистить" HorizontalAlignment="Left" Margin="319,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_4"/>
+        <Button Content="Очистить" HorizontalAlignment="Left" Margin="364,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_4"/>
         <CheckBox x:Name="chb1" Content="Добавьте картинку УГО (если нужно)" HorizontalAlignment="Left" Margin="11,134,0,0" VerticalAlignment="Top" Click="chb1_Click"/>
 
     </Grid>

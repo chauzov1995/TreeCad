@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,6 +21,7 @@ namespace TreeCadN
     public partial class dialog_univi : Window
     {
         dialuni otvet;
+        int param;
         public dialog_univi(dialuni otv, string sbtn1, string sbtn2, string sbtn3, string stitle, string stext, int param, double heightwin)
         {
             InitializeComponent();
@@ -29,7 +31,7 @@ namespace TreeCadN
             3-текс и текстбокс
             
     */
-
+            this.param = param;
             otvet = otv;
             if (sbtn1 != null) { btn1.Content = sbtn1; btn1.Visibility = Visibility.Visible; }
             else
@@ -44,7 +46,7 @@ namespace TreeCadN
             {
                 btn2.Visibility = Visibility.Collapsed;
             }
-            if (sbtn3 != null ){ btn3.Content = sbtn3; btn3.Visibility = Visibility.Visible; }
+            if (sbtn3 != null) { btn3.Content = sbtn3; btn3.Visibility = Visibility.Visible; }
             else
             {
                 btn3.Visibility = Visibility.Collapsed;
@@ -78,14 +80,14 @@ namespace TreeCadN
 
         private void btn1_Click(object sender, RoutedEventArgs e)
         {
-          
+
             Close();
         }
 
         private void btn2_Click(object sender, RoutedEventArgs e)
         {
             otvet.otvet = "NO";
-            close=true;
+            close = true;
             Close();
         }
 
@@ -93,21 +95,42 @@ namespace TreeCadN
         {
             if (tb1.Text == "")
             {
-                otvet.otvet = "YES";
+                if (param == 2 || param == 3)
+                {
+                    MessageBox.Show("Текстовое поле не может быть пустым");
+                }
+                else
+                {
+                    tb1.Text = "YES";
+                }
             }
             else
             {
                 otvet.otvet = tb1.Text;
+                close = true;
+                Close();
             }
-            close = true;
-            Close();
+
         }
-        bool close=false;
+        bool close = false;
         private void win_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (close == false)
             {
                 otvet.otvet = "CANCEL";
+            }
+        }
+
+        private void tb1_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            string pattern = @"[^']";
+            Regex regex = new Regex(pattern);
+
+            // Получаем совпадения в экземпляре класса Match
+            if (!regex.IsMatch(e.Text))
+            {
+                e.Handled = true;
+
             }
         }
     }

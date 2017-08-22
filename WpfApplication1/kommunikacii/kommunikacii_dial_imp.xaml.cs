@@ -115,6 +115,7 @@ namespace TreeCadN.kommunikacii
                     {
                         BD.conn("UPDATE `import3ds` SET  `path3ds`='" + tb1.Text + "', `pathjpg`='"+ tb2.Text + "', `pathjpgugo`='" + tb3.Text + "', `x`='" + tx.Text + "', `y`='" + ty.Text + "', `z`='" + tz.Text + "'  WHERE id="+model.id);
                         MessageBox.Show("Модель успешно изменена");
+                        Close();
 
                     }
                 }

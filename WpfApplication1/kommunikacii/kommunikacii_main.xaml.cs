@@ -25,6 +25,8 @@ namespace TreeCadN.kommunikacii
         public string pathBD = "";
         public string selectedModel = "";
         BD_Connect BD = new BD_Connect();
+        int lb1_selitem;
+
 
         public kommunikacii_main(string pathBD)
         {
@@ -33,10 +35,10 @@ namespace TreeCadN.kommunikacii
 
             this.pathBD = pathBD;
             BD.path = pathBD; //укажем файл бд
-
+            loadpage();
 
             lb2lb3napolnene();
-            loadpage();
+
 
 
         }
@@ -69,7 +71,7 @@ namespace TreeCadN.kommunikacii
 
 
             lb2.ItemsSource = (polzovat);
-
+            peremestitb.ItemsSource = (polzovat);
 
 
 
@@ -80,6 +82,9 @@ namespace TreeCadN.kommunikacii
         void lb1_napolnenie(treespis Treespis, string type)//наполнение листбокса
         {
             string path = Treespis.path;
+
+
+
 
 
             List<Models3d> modeli = new List<Models3d>();
@@ -109,6 +114,7 @@ namespace TreeCadN.kommunikacii
                         });
 
                     }
+
                     break;
                 case "S":
                     break;
@@ -141,16 +147,37 @@ namespace TreeCadN.kommunikacii
             }
             lb1.ItemsSource = modeli;
 
+
+            try
+            {
+                object selitem = lb1.Items[lb1_selitem];
+
+
+                lb1.ScrollIntoView(selitem);
+                lb1.SelectedItem = (selitem);
+            }
+            catch
+            {
+                lb1.ScrollIntoView(null);
+                lb1.SelectedItem = (null);
+            }
+
         }
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var model = (lb2.SelectedItem as treespis).id;
-            kommunikacii_dial_imp dial = new kommunikacii_dial_imp(pathBD, null, model);
-            dial.ShowDialog();
-            lb1_napolnenie((lb2.SelectedItem as treespis), "P");
-
+            if (lb2.SelectedIndex > -1)
+            {
+                var model = (lb2.SelectedItem as treespis).id;
+                kommunikacii_dial_imp dial = new kommunikacii_dial_imp(pathBD, null, model);
+                dial.ShowDialog();
+                lb1_napolnenie((lb2.SelectedItem as treespis), "P");
+            }
+            else
+            {
+                MessageBox.Show("Сначала выберите категорию");
+            }
             //  lb1_napolnenie();
 
         }
@@ -163,6 +190,7 @@ namespace TreeCadN.kommunikacii
                 var file = lb1.SelectedValue as Models3d;
                 selectedModel = (file.path + @";" + file.name + ";" + file.jpg_ugo + ";" + file.x + ";" + file.y + ";" + file.z);
                 // MessageBox.Show(file.path);
+                lb1_selitem = lb1.SelectedIndex;
             }
         }
 
@@ -180,32 +208,66 @@ namespace TreeCadN.kommunikacii
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            if (lb1.SelectedIndex > -1)
-            {
-                var file = lb1.SelectedValue as Models3d;
+            lb1_redak();
+        }
 
-                kommunikacii_dial_imp dial = new kommunikacii_dial_imp(pathBD, file, null);
-                dial.ShowDialog();
-                lb1_napolnenie((lb2.SelectedItem as treespis), "P");
+        void lb1_redak()
+        {
+            if (lb2.SelectedIndex > -1)
+            {
+                if (lb1.SelectedIndex > -1)
+                {
+                    var file = lb1.SelectedValue as Models3d;
+
+                    kommunikacii_dial_imp dial = new kommunikacii_dial_imp(pathBD, file, null);
+                    dial.ShowDialog();
+                    lb1_napolnenie((lb2.SelectedItem as treespis), "P");
+                }
+                else
+                {
+                    MessageBox.Show("Сначала выберите объект для редактирования");
+                }
             }
             else
             {
-                MessageBox.Show("Сначала выбирите модель для редактирования");
+                MessageBox.Show("Сначала выберите категорию");
             }
+
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            var file = lb1.SelectedValue as Models3d;
-            if (MessageBox.Show(
-         "Вы действительно хотите удалить \"" + file.name + "\"?", "",
-         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                BD.conn("DELETE FROM `import3ds` WHERE id=" + file.id);
-                MessageBox.Show("Модель успешно удалена");
-                lb1_napolnenie((lb2.SelectedItem as treespis), "P");
+            lb1_del();
+        }
 
+        void lb1_del()
+        {
+
+            if (lb2.SelectedIndex > -1)
+            {
+                if (lb1.SelectedIndex > -1)
+                {
+                    var file = lb1.SelectedValue as Models3d;
+                    if (MessageBox.Show(
+                 "Вы действительно хотите удалить \"" + file.name + "\"?", "",
+                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        BD.conn("DELETE FROM `import3ds` WHERE id=" + file.id);
+                        MessageBox.Show("Объект успешно удалён");
+                        lb1_napolnenie((lb2.SelectedItem as treespis), "P");
+
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Сначала выберите объект для редактирования");
+                }
             }
+            else
+            {
+                MessageBox.Show("Сначала выберите категорию");
+            }
+
         }
 
         private void lb3_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -230,7 +292,7 @@ namespace TreeCadN.kommunikacii
             if (otv != "CANCEL")
             {
                 BD.conn("INSERT INTO  `import3ds_category` (nazv)  VALUES ('" + otv + "')");
-                MessageBox.Show("Модель успешно добавлена");
+                MessageBox.Show("Категория успешно создана");
                 lb2lb3napolnene();
             }
 
@@ -280,7 +342,7 @@ namespace TreeCadN.kommunikacii
                 ps.Width = this.Width;
                 ps.Height = this.Height;
             }
-
+            ps.lb1sel = lb1.SelectedIndex;
             ps.lb2sel = lb2.SelectedIndex;
             ps.lb3sel = lb3.SelectedIndex;
             ps.tab1sel = tab1.SelectedIndex;
@@ -293,6 +355,7 @@ namespace TreeCadN.kommunikacii
             try
             {
                 kommunikacii_Set ps = kommunikacii_Set.Default;
+
                 if (ps.Top == -100)
                 {
                     this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
@@ -316,6 +379,7 @@ namespace TreeCadN.kommunikacii
                 lb2.SelectedIndex = ps.lb2sel;
                 lb3.SelectedIndex = ps.lb3sel;
                 tab1.SelectedIndex = ps.tab1sel;
+                lb1_selitem = ps.lb1sel;
             }
             catch
             {
@@ -324,6 +388,40 @@ namespace TreeCadN.kommunikacii
 
 
 
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            lb1_redak();
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            lb1_del();
+        }
+
+        private void lb1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Close();
+        }
+
+
+
+
+        private void PolygonShapesMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                string idcategor = ((sender as System.Windows.Controls.MenuItem).Header as treespis).id;
+                string idmodel_peremech = (lb1.SelectedItem as Models3d).id;
+                BD.conn("UPDATE `import3ds` SET  `category`='" + idcategor + "' WHERE id=" + idmodel_peremech);
+                MessageBox.Show("Объект успешно перемещён");
+                lb1_napolnenie((lb2.SelectedItem as treespis), "P");
+            }catch(Exception err)
+            {
+              //  MessageBox.Show(err.Message.ToString());
+            }
         }
     }
 

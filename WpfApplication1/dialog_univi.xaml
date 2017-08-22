@@ -19,7 +19,7 @@
         </StackPanel>
         <StackPanel Margin="0,25,0,0" >
             <TextBlock x:Name="tblock1" Margin="10,0,10,10" TextWrapping="Wrap" Text="В списке уже есть такое изделие, Добавить новую строку или редактировать существующюю?" VerticalAlignment="Top" />
-            <TextBox x:Name="tb1" Height="23" TextWrapping="Wrap" Margin="10,0,10,10"/>
+            <TextBox x:Name="tb1" Height="23" TextWrapping="Wrap" Margin="10,0,10,10" PreviewTextInput="tb1_PreviewTextInput"/>
         </StackPanel>
     </Grid>
 </Window>
