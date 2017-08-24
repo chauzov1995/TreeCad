@@ -479,6 +479,7 @@ namespace TreeCadN
 
 
             //ошибка ниже
+      
             //загруж направл текстуры для 1 //загруж карт для 1 кнопки
             if (TekOtdelka.naprav1 == "1")
             {
@@ -492,12 +493,14 @@ namespace TreeCadN
                         image3.Source = rotate270_loc();
                         image1.Source = rotate270(TekOtdelka.textura1);
                         //MessageBox.Show(TekOtdelka.textura1);
+                       
                     }
                     if (TekOtdelka.index3 != "0")
                     {
                         image3.Source = norotate_loc("naprav.png");
                         image1.Source = norotate(TekOtdelka.textura1);
-                        TekOtdelka.index3 = "1";
+                     //   TekOtdelka.index3 = "1";
+                       
                     }
                 }
 
@@ -505,7 +508,8 @@ namespace TreeCadN
                 {
                     image3.Source = norotate_loc("naprav.png");
                     image1.Source = norotate_loc("Net_Tekst.jpg");
-                    TekOtdelka.index3 = "1";
+                   // TekOtdelka.index3 = "1";
+                   
                 }
 
             }
@@ -523,7 +527,7 @@ namespace TreeCadN
                 }
                 image3.Source = norotate_loc("no_naprav.png");
                 button3.IsEnabled = false;
-                TekOtdelka.index3 = "0";
+              //  TekOtdelka.index3 = "0";
 
             }
             //ошибка выше 
@@ -546,7 +550,7 @@ namespace TreeCadN
                     {
                         image4.Source = norotate_loc("naprav.png");
                         image2.Source = norotate(TekOtdelka.textura2);
-                        TekOtdelka.index4 = "1";
+                     //   TekOtdelka.index4 = "1";
                     }
                 }
 
@@ -554,7 +558,7 @@ namespace TreeCadN
                 {
                     image4.Source = norotate_loc("naprav.png");
                     image2.Source = norotate_loc("Net_Tekst.jpg");
-                    TekOtdelka.index4 = "1";
+                  //  TekOtdelka.index4 = "1";
                 }
             }
             else
@@ -569,9 +573,13 @@ namespace TreeCadN
                 }
                 image4.Source = norotate_loc("no_naprav.png");
                 button4.IsEnabled = false;
-                TekOtdelka.index4 = "0";
+             //   TekOtdelka.index4 = "0";
 
             }
+
+
+
+
             //загруж одинак отделку
             if (TekOtdelka.index5 == "1")
             {
@@ -1441,7 +1449,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     TekOtdelka.naprav1 = ((Person)listView1.SelectedItem).napravl;
                     if (TekOtdelka.naprav1 != "1")
                     {
-                       TekOtdelka.index3 = "0";
+                      // TekOtdelka.index3 = "0";
                     }
                     if (obe_plasti == 1)
                     {
@@ -1457,7 +1465,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     TekOtdelka.naprav2 = ((Person)listView1.SelectedItem).napravl;
                     if (TekOtdelka.naprav2 != "1")
                     {
-                        TekOtdelka.index4 = "0";
+                    //    TekOtdelka.index4 = "0";
                     }
                     if (obe_plasti == 1)
                     {

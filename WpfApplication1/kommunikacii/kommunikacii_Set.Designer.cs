@@ -130,5 +130,17 @@ namespace TreeCadN.kommunikacii {
                 this["lb1sel"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int lb4sel {
+            get {
+                return ((int)(this["lb4sel"]));
+            }
+            set {
+                this["lb4sel"] = value;
+            }
+        }
     }
 }

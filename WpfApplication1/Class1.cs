@@ -27,8 +27,8 @@ namespace TreeCadN
 
         public string attiva(String s, String Valori, String DES, String PX, String PY, String param)
         {
-
-
+            
+          
             string returnValue = "";
             try
             {

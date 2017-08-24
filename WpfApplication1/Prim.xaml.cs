@@ -32,7 +32,7 @@ namespace TreeCadN
         {
             InitializeComponent();
 
-
+          
 
 
             BD.path = path; //укажем файл бд
@@ -371,14 +371,16 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
         }
 
+       
 
-
-
-
-
-
-
-
+        private void tb2_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (!String.IsNullOrEmpty(tb2.Text))
+            {
+                tb2.SelectionStart = 0;
+                tb2.SelectionLength = tb2.Text.Length;
+            }
+        }
     }
 
     class MyTable

@@ -33,7 +33,7 @@ namespace TreeCadN.kommunikacii
             this.pathBD = pathBD;
             this.model = model;
             this.category = category;
-            
+
 
             if (model != null)
             {
@@ -41,17 +41,7 @@ namespace TreeCadN.kommunikacii
 
                 tb1.Text = model.path;
                 tb2.Text = model.jpg_path;
-                if (model.jpg_ugo == "")
-                {
-                    chb1.IsChecked = false;
-                }
-                else
-                {
-                    chb1.IsChecked = true;
-                    tb3.IsEnabled = true;
-                    btn1.IsEnabled = true;
-                    tb3.Text = model.jpg_ugo;
-                }
+                tb3.Text = model.jpg_ugo;
 
                 tx.Text = model.x;
                 ty.Text = model.y;
@@ -88,42 +78,60 @@ namespace TreeCadN.kommunikacii
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(tb1.Text) && File.Exists(tb2.Text) &&
-               ((File.Exists(tb3.Text) && chb1.IsChecked == true) || (chb1.IsChecked == false))
-                )
+            if (File.Exists(tb1.Text) && tb1.Text != "")
             {
+                if (File.Exists(tb2.Text) || tb2.Text == "")
+                {
+                    if (File.Exists(tb3.Text) || tb3.Text == "")
+                    {
 
-                if (tx.Text == "" || ty.Text == "" || tz.Text == "")
-                {
-                    MessageBox.Show("Габариты не могут быть пустыми");
-                }
-                else
-                {
-                    if (chb1.IsChecked == false)
-                    {
-                        tb3.Text = "";
-                    }
-                    string strini = tb1.Text + ";" + tb2.Text + ";" + tb3.Text + ";" + tx.Text + ";" + ty.Text + ";" + tz.Text;
-                    BD_Connect BD = new BD_Connect();
-                    BD.path = pathBD; //укажем файл бд
-                    if (model == null)
-                    {
-                        BD.conn("INSERT INTO `import3ds` (`path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category) VALUES ('" + tb1.Text + "','" + tb2.Text + "','" + tb3.Text + "','" + tx.Text + "','" + ty.Text + "','" + tz.Text + "', '"+ category + "')");
-                        MessageBox.Show("Модель успешно добавлена");
+                        if (tx.Text != "" || ty.Text != "" || tz.Text != "")
+                        {
+
+                            //  string strini = tb1.Text + ";" + tb2.Text + ";" + tb3.Text + ";" + tx.Text + ";" + ty.Text + ";" + tz.Text;
+                            string nazv = tb4.Text;
+                            if (tb4.Text == "")
+                            {
+                                nazv = tb1.Text.Remove(tb1.Text.Length-4);
+                            }
+                            
+                           
+                            BD_Connect BD = new BD_Connect();
+                            BD.path = pathBD; //укажем файл бд
+                            if (model == null)
+                            {
+                                BD.conn("INSERT INTO `import3ds` (`nazv`, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category) VALUES ('" + nazv + "','" + tb1.Text + "','" + tb2.Text + "','" + tb3.Text + "','" + tx.Text + "','" + ty.Text + "','" + tz.Text + "', '" + category + "')");
+                                MessageBox.Show("Модель успешно добавлена");
+                            }
+                            else
+                            {
+                                BD.conn("UPDATE `import3ds` SET `nazv`='" + nazv + "',  `path3ds`='" + tb1.Text + "', `pathjpg`='" + tb2.Text + "', `pathjpgugo`='" + tb3.Text + "', `x`='" + tx.Text + "', `y`='" + ty.Text + "', `z`='" + tz.Text + "'  WHERE id=" + model.id);
+                                MessageBox.Show("Модель успешно изменена");
+
+
+                            }
+                            Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Габариты не могут быть пустыми");
+                        }
                     }
                     else
                     {
-                        BD.conn("UPDATE `import3ds` SET  `path3ds`='" + tb1.Text + "', `pathjpg`='"+ tb2.Text + "', `pathjpgugo`='" + tb3.Text + "', `x`='" + tx.Text + "', `y`='" + ty.Text + "', `z`='" + tz.Text + "'  WHERE id="+model.id);
-                        MessageBox.Show("Модель успешно изменена");
-                        Close();
-
+                        MessageBox.Show("Ошибка Картинка УГО не существует");
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка Картинка не существует");
                 }
             }
             else
             {
-                MessageBox.Show("Указанного файла не существует");
+                MessageBox.Show("Ошибка 3ds файл не существует либо не указан");
             }
+
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -203,30 +211,9 @@ namespace TreeCadN.kommunikacii
             }
         }
 
-        private void Button_Click_4(object sender, RoutedEventArgs e)
-        {
-            tb1.Text = "";
-            tb2.Text = "";
-            tb3.Text = "";
-            tx.Text = "";
-            ty.Text = "";
-            tz.Text = "";
-        }
 
 
-        private void chb1_Click(object sender, RoutedEventArgs e)
-        {
-            if (chb1.IsChecked == true)
-            {
-                tb3.IsEnabled = true;
-                btn1.IsEnabled = true;
-            }
-            else
-            {
-                tb3.IsEnabled = false;
-                btn1.IsEnabled = false;
 
-            }
-        }
+
     }
 }
