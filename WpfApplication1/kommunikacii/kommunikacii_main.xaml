@@ -33,9 +33,9 @@
         <ListBox  Style="{StaticResource myListboxStyle}" x:Name="lb1" Margin="5" SelectionChanged="lb1_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="1" RenderTransformOrigin="0.066,0.51" VerticalContentAlignment="Stretch" MouseDoubleClick="lb1_MouseDoubleClick">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical" Width="150">
-                        <Image Width="150" Height="150" Source="{Binding Path=jpg_path}"  />
-                        <TextBlock Text="{Binding Path=name}"/>
+                    <StackPanel Orientation="Vertical" Width="160">
+                        <Image Width="150" Height="150" Source="{Binding Path=jpg_path}"  Margin="5"/>
+                        <TextBlock Text="{Binding Path=name}" Margin="2"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -47,6 +47,8 @@
             <ListBox.ContextMenu>
                 <ContextMenu >
                     <MenuItem   Header="Добавить 3ds объект" Click="MenuItem_Click_6"  />
+                    <MenuItem   Header="Отправить на фабрику" Click="MenuItem_Click_7" />
+                    <Separator/>
                     <MenuItem   Header="Редактировать" Click="MenuItem_Click_1" />
                     <MenuItem x:Name="peremestitb"   Header="Переместить" >
                         <MenuItem.ItemTemplate>
@@ -60,19 +62,28 @@
                             </Style>
                         </MenuItem.Resources>
                     </MenuItem>
-                    <MenuItem   Header="Удалить" Click="MenuItem_Click_2" />
-
-                    <MenuItem   Header="Отправить на фабрику" Click="MenuItem_Click_7" />
                     
+
+                  
+                    <Separator/>
+                    <MenuItem   Header="Удалить" Click="MenuItem_Click_2" />
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
-        <ListBox  Style="{StaticResource myListboxStyle}" x:Name="lb4" Margin="5" SelectionChanged="lb4_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="1" RenderTransformOrigin="0.066,0.51" VerticalContentAlignment="Stretch" Background="#FFFFF7F7" MouseDoubleClick="lb1_MouseDoubleClick">
+        <ListBox  Style="{StaticResource myListboxStyle}" x:Name="lb4" Margin="5" SelectionChanged="lb4_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="1" RenderTransformOrigin="0.066,0.51" VerticalContentAlignment="Stretch" Background="{x:Null}" MouseDoubleClick="lb1_MouseDoubleClick">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical" Width="150">
-                        <Image Width="150" Height="150" Source="{Binding Path=jpg_path}"  />
-                        <TextBlock Text="{Binding Path=name}"/>
+                    <StackPanel Orientation="Vertical" Width="160" Background="{Binding Path=zvetbg}">
+                        <Grid   Width="150" Margin="5">
+
+                            <Image Width="150" Height="150" Source="{Binding Path=loc_jpg}"  />
+                            <Image Width="26" Height="26" Source="/TreeCadN;component/Foto/download.png" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,2,0" ToolTip="Файл скачан"
+                                   Visibility="{Binding Path=download}"  />
+
+                        </Grid>
+
+
+                        <TextBlock Text="{Binding Path=name}" Margin="2"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -81,21 +92,47 @@
                     <WrapPanel/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
+            <ListBox.ContextMenu>
+                <ContextMenu >
+                    <MenuItem   Header="Очистить базу данных" Click="MenuItem_Click_8"  />
+                    <MenuItem   Header="Новая категория" Click="MenuItem_Click_3"  />
+                    <MenuItem   Header="Удалить категорию" Click="MenuItem_Click_4"  />
+                    <MenuItem   Header="Удалить объект" Click="MenuItem_Click_5" />
+                    <MenuItem x:Name="peremestitb_serv"   Header="Переместить" >
+                        <MenuItem.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=name}" />
+                            </DataTemplate>
+                        </MenuItem.ItemTemplate>
+                        <MenuItem.Resources>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <EventSetter Event="Click" Handler="peremestitb_serv_event" />
+                            </Style>
+                        </MenuItem.Resources>
+                    </MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
         </ListBox>
         <Button Content="Отмена" Height="22" Margin="0,10,10,0" VerticalAlignment="Top" Click="Button_Click_2" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Padding="10,1" Width="80"/>
         <Button Content="Ок" Click="Button_Click_1" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="1" Width="80" Margin="0,10,100,10"/>
         <StackPanel x:Name="stpan" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
-            <Button Content="Добавить 3ds обьект" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="130" Click="Button_Click" />
+            <Button Content="Добавить 3ds обьект" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Padding="10,1" Click="Button_Click" />
+            <Button Content="Редактировать" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Padding="10,1" Click="Button_Click_8"  />
+
         </StackPanel>
         <TabControl x:Name="tab1" Margin="5" Grid.RowSpan="2" VerticalContentAlignment="Stretch" SelectionChanged="tab1_SelectionChanged">
             <TabItem Header="С сервера">
                 <Grid Background="#FFE5E5E5">
-
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="43"/>
+                        <RowDefinition Height="367*"/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Обновить" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_7" />
 
                     <ListBox  x:Name="lb3" SelectionChanged="lb3_SelectionChanged" Margin="0" Grid.Row="1" VerticalContentAlignment="Stretch" >
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Path=name}"/>
+                                <TextBlock Text="{Binding Path=name}" Background="{Binding Path=zvetbg}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -124,27 +161,10 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button x:Name="btnserv" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="53" Background="#FF8FF100" Content="Сервер" Click="Button_Click_6">
-            <Button.ContextMenu>
-                <ContextMenu >
-                    <MenuItem   Header="Новая категория" Click="MenuItem_Click_3"  />
-                    <MenuItem   Header="Удалить категорию" Click="MenuItem_Click_4"  />
-                    <MenuItem   Header="Удалить объект" Click="MenuItem_Click_5" />
-                    <MenuItem x:Name="peremestitb_serv"   Header="Переместить" >
-                        <MenuItem.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Path=name}" />
-                            </DataTemplate>
-                        </MenuItem.ItemTemplate>
-                        <MenuItem.Resources>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <EventSetter Event="Click" Handler="peremestitb_serv_event" />
-                            </Style>
-                        </MenuItem.Resources>
-                    </MenuItem>
-                </ContextMenu>
-            </Button.ContextMenu>
-        </Button>
+        <StackPanel x:Name="stpan1" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
 
+            <Button x:Name="btnserv" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Content="Обновить" Click="Button_Click_6" Padding="10,1"/>
+            <Label x:Name="label1" Content="" HorizontalAlignment="Right" Width="210" Padding="20,5,5,5"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -211,7 +211,7 @@
                 <Button TabIndex="10" x:Name="button2" Margin="0,5,0,0" Click="button2_Click" ToolTip="Выбирите текстуру для внешней отделки" Padding="0" Width="150" Height="150" >
                     <Image x:Name="image2"  Stretch="UniformToFill"/>
                 </Button>
-                <Button TabIndex="11" x:Name="button4" Margin="0,2,0,0" Width="50" Height="50" Click="button4_Click" ToolTip="Поворот текстуры" Padding="0"  BorderThickness="0">
+                <Button  TabIndex="11" x:Name="button4" Margin="0,2,0,0" Width="50" Height="50" Click="button4_Click" ToolTip="Поворот текстуры" Padding="0"  BorderThickness="0">
                     <Image x:Name="image4"  Stretch="UniformToFill"/>
                 </Button>
 

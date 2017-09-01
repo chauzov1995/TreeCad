@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -23,13 +24,14 @@ namespace TreeCadN.kommunikacii
     public partial class kommunikacii_dial_imp : Window
     {
         public string pathBD = "";
-        public Models3d model;
-        public string category;
+        public Models3d model = new Models3d();
+        public treespis category = new treespis();
 
-        public kommunikacii_dial_imp(string pathBD, Models3d model, string category)
+        public kommunikacii_dial_imp(string pathBD, Models3d model, treespis category)
         {
 
             InitializeComponent();
+
             this.pathBD = pathBD;
             this.model = model;
             this.category = category;
@@ -38,10 +40,17 @@ namespace TreeCadN.kommunikacii
             if (model != null)
             {
 
-
                 tb1.Text = model.path;
-                tb2.Text = model.jpg_path;
+                if ("/TreeCadN;component/Foto/nofoto.jpg" == model.jpg_path)
+                {
+                    tb2.Text = "";
+                }
+                else
+                {
+                    tb2.Text = model.jpg_path;
+                }
                 tb3.Text = model.jpg_ugo;
+                tb4.Text = model.name;
 
                 tx.Text = model.x;
                 ty.Text = model.y;
@@ -92,21 +101,61 @@ namespace TreeCadN.kommunikacii
                             string nazv = tb4.Text;
                             if (tb4.Text == "")
                             {
-                                nazv = tb1.Text.Remove(tb1.Text.Length-4);
+                                string split = tb1.Text.Split('\\').Last();
+                                nazv = split.Remove(split.Length - 4);
+
                             }
-                            
-                           
+
+
                             BD_Connect BD = new BD_Connect();
                             BD.path = pathBD; //укажем файл бд
                             if (model == null)
                             {
-                                BD.conn("INSERT INTO `import3ds` (`nazv`, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category) VALUES ('" + nazv + "','" + tb1.Text + "','" + tb2.Text + "','" + tb3.Text + "','" + tx.Text + "','" + ty.Text + "','" + tz.Text + "', '" + category + "')");
-                                MessageBox.Show("Модель успешно добавлена");
+                                DirectoryInfo directory = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
+
+                                string path_copy = directory + @"\3dsObject\User\" + category.name + @"\";
+                                Directory.CreateDirectory(path_copy);
+
+
+                                string time = DateTime.Now.ToFileTimeUtc().ToString();
+
+                                string path3ds = path_copy + nazv + "_" + time + ".3ds";
+                                string pathjpg = path_copy + nazv + "_" + time + ".jpg";
+                                string pathjpgugo = path_copy + nazv + "_" + time + "_ugo.jpg";
+
+
+                                File.Copy(tb1.Text, path3ds, true);
+                                if (File.Exists(tb2.Text))
+                                {
+                                    File.Copy(tb2.Text, pathjpg, true);
+                                }
+                                else
+                                {
+                                    pathjpg = "";
+                                }
+                                if (File.Exists(tb3.Text))
+                                {
+                                    File.Copy(tb3.Text, pathjpgugo, true);
+                                }
+                                else
+                                {
+                                    pathjpgugo = "";
+                                }
+                                BD.conn("INSERT INTO `import3ds` (`nazv`, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category) VALUES ('" +
+                                    nazv + "','" +
+                                    path3ds + "','" +
+                                    pathjpg + "','" +
+                                    pathjpgugo + "','" +
+                                    tx.Text + "','" +
+                                    ty.Text + "','" +
+                                    tz.Text + "', '" +
+                                    category.id + "')");
+                                MessageBox.Show("Объект успешно добавлен");
                             }
                             else
                             {
                                 BD.conn("UPDATE `import3ds` SET `nazv`='" + nazv + "',  `path3ds`='" + tb1.Text + "', `pathjpg`='" + tb2.Text + "', `pathjpgugo`='" + tb3.Text + "', `x`='" + tx.Text + "', `y`='" + ty.Text + "', `z`='" + tz.Text + "'  WHERE id=" + model.id);
-                                MessageBox.Show("Модель успешно изменена");
+                                MessageBox.Show("Объект успешно изменён");
 
 
                             }

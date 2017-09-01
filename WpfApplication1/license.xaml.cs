@@ -177,7 +177,7 @@ namespace TreeCadN
 
             return hash;
         }
-    
+
         void otpravka_rez(int id)
         {
             if (items[id].sost != items[id].sost_iznach)
@@ -371,31 +371,60 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
             try
             {
                 string localpath = (new FileInfo(Assembly.GetExecutingAssembly().Location).Directory).ToString();
-                string TreeCadNpath = localpath + @"\TreeCadN.dll";
+                string TreeCadNpath = localpath + @"\Giulianovars\PROCEDURE\TreeCadN.dll";
 
-                log.Add("обновление dll путь к длл "+ TreeCadNpath);
+                log.Add("обновление dll путь к длл " + TreeCadNpath);
 
 
-                WebClient client = new WebClient();
-                var url = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1";
-                string response = client.DownloadString(url);
+                WebClient client1 = new WebClient();
+                var url1 = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1";
+                string response1 = client1.DownloadString(url1);
 
-                log.Add("обновление dll хэш с сервера "+ response);
+                log.Add("обновление dll хэш с сервера " + response1);
 
-                if (hash_value(TreeCadNpath) != response)
+                if (hash_value(TreeCadNpath) != response1)
                 {
-                    log.Add("обновление dll нуждается в обновлении" );
+                    log.Add("обновление dll нуждается в обновлении");
 
 
-                    Process proc = Process.GetCurrentProcess();
-                    Process.Start(localpath + @"\GIULIANOVARS\procedure\Obnov_dll_N.exe", proc.Id.ToString() +
-                        "=" + response+"="+ TreeCadNpath); 
+
+
+                    WebClient client = new WebClient();
+                    var url = "http://ecad.giulianovars.ru/TreeCadN/TreeCadN.dll";
+
+
+                    string tmppath = Path.GetTempPath() + @"\TreeCadN.dll";
+
+
+                    client.DownloadFile(url, tmppath);//скачаем новую
+
+
+                    RIPEMD160 myRIPEMD160 = RIPEMD160Managed.Create();
+                    FileStream tmppathStream = File.OpenRead(tmppath);
+                    byte[] hashValue = myRIPEMD160.ComputeHash(tmppathStream);
+                    tmppathStream.Close();
+                    string hash = BitConverter.ToString(hashValue).Replace("-", String.Empty);
+
+
+                    if (hash == response1)
+                    {
+                        log.Add("заменим на новую - успех");
+                        File.Copy(tmppath, TreeCadNpath, true);//заменим на новую
+                                                               //   MessageBox.Show("Процесс завершён обновимся сумма=" + hash);
+
+                    }
+                    File.Delete(tmppath);
+
+
+
+
                 }
 
             }
-            catch(Exception err) {
-                log.Add("Обновление DLL catch"+ err.Message);
-                
+            catch (Exception err)
+            {
+                log.Add("Обновление DLL catch" + err.Message);
+
             }
 
         }

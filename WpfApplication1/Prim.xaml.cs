@@ -288,6 +288,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
                 Thread myThread = new Thread(new ParameterizedThreadStart(Count));
                 myThread.Start(path.ID);
+                tb2.Focus();
 
             }
             catch

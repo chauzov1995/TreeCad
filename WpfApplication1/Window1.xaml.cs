@@ -25,7 +25,7 @@ namespace TreeCadN
 
 
         static BD_Connect BD = new BD_Connect();
-        public string vh_func_path = "";
+        //   public string vh_func_path = "";
         public string vh_func_str = "";
 
         public string papka_s_foto = Environment.CurrentDirectory + @"\GIULIANOVARS\";
@@ -58,16 +58,16 @@ namespace TreeCadN
             {
                 newneqqw = nneqwq;
 
-                vh_func_path = newneqqw.path1;
+                //   vh_func_path = newneqqw.path1;
                 vh_func_str = newneqqw.str1;
-                BD.path = vh_func_path; //укажем файл бд
+                BD.path = newneqqw.path1; //укажем файл бд
 
 
 
                 //    TekOtdelka.Add(new TekOtd() { });
-              
-                strrazobr(vh_func_str, true);
-            
+
+                strrazobr(vh_func_str, true);//разбираем строку
+                log.Add("разбираем строку");
                 load_group();//загрузка списка групп
                 log.Add("отделка загрузка списка групп");
                 load_tekst();//загрузка тестуры
@@ -86,7 +86,7 @@ namespace TreeCadN
                 listView1_Loaded();
                 selectbtn1();//выбор кнопки 1
 
-                
+
 
             }
             catch (Exception err)
@@ -131,57 +131,48 @@ namespace TreeCadN
         {
 
             string s = "";
-            if (TekOtdelka.index10 != "0")
-            {
-                string[] words = TekOtdelka.index10.Split('^');
-                for (int x = 0; x <= words.Length - 1; x++)
-                {
-                    if (x == 0)
-                    {
-                        s += "WHERE ID=" + words[x];//Индекс Внешней пласти	
-                    }
-                    else
-                    {
-                        s += " or ID=" + words[x];//Индекс Внешней пласти
-                    }
 
+            string[] words = TekOtdelka.index10.Split('^');
+            for (int x = 0; x < words.Length ; x++)
+            {
+              
+                if (x == 0)
+                {
+                    s += "WHERE ID=" + words[x];//Индекс Внешней пласти	
                 }
+                else
+                {
+                    s += " or ID=" + words[x];//Индекс Внешней пласти
+                }
+
             }
 
+
             OleDbDataReader reader = BD.conn("SELECT NAME, ID FROM TOTDELKAGROUP " + s + " order by NAME ASC");
-            int iteratro = 0;
+
             GROUPE.Add(new Person()
             {
                 NAME = "Все",
                 ID = "*",
-                index_group = iteratro
             });
 
 
             while (reader.Read())
             {
-                iteratro++;
                 GROUPE.Add(new Person()
                 {
                     NAME = reader["NAME"].ToString().Trim(),
                     ID = reader["ID"].ToString(),
-                    index_group = iteratro
                 });
-
-
-                //   MessageBox.Show(reader["ID"].ToString());
             }
 
             comboBox2.ItemsSource = GROUPE;
-            // MessageBox.Show(vibrannaya_group.ToString());
-            //listBox1.SelectedIndex = 1;
-            //
+
         }
         void load_tekst()
         {
             string s = "";
-            if (TekOtdelka.index10 != "0")
-            {
+           
                 string[] words = TekOtdelka.index10.Split('^');
                 for (int x = 0; x <= words.Length - 1; x++)
                 {
@@ -195,7 +186,7 @@ namespace TreeCadN
                     }
 
                 }
-            }
+            
             OleDbDataReader reader = BD.conn("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup FROM TOtdelka " + s + "  ORDER BY Name ASC");
             idselect = new List<Person>();
             idselect.Add(new Person()//нулевая отделка
@@ -439,7 +430,7 @@ namespace TreeCadN
             //   TekOtdelka.str = strsobr();//для переопределения инд1 инд2  для выбора текстуры
             string[] words = str.Split(';');
 
-    
+
             TekOtdelka.index1 = words[0];//Индекс Внешней пласти
             TekOtdelka.index2 = words[1];//индекс внутренней пласти
             TekOtdelka.index3 = words[2];//Направление текстуры 1- вертик, 2-горизонтально
@@ -457,12 +448,12 @@ namespace TreeCadN
             if (perv) pervload();
 
 
-         
+
 
             TekOtdelka.index5 = razr_odinak;//Флаг, 1-одинаковая отделака обеих пластей, при этом назначать разную отделку нельзя
             TekOtdelka.index10 = razr_group;// спис разреш групп для отделки
 
-          
+
 
 
             if (TekOtdelka.index5 == "1")
@@ -478,103 +469,58 @@ namespace TreeCadN
             label8.Text = TekOtdelka.Name2;
 
 
-            //ошибка ниже
-      
+
             //загруж направл текстуры для 1 //загруж карт для 1 кнопки
-            if (TekOtdelka.naprav1 == "1")
+            if (TekOtdelka.naprav1 == "1")//если обладает направлением
             {
                 button3.IsEnabled = true;
-                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka.textura1))
-                {
-
-                    if (TekOtdelka.index3 == "0")
-                    {
-
-                        image3.Source = rotate270_loc();
-                        image1.Source = rotate270(TekOtdelka.textura1);
-                        //MessageBox.Show(TekOtdelka.textura1);
-                       
-                    }
-                    if (TekOtdelka.index3 != "0")
-                    {
-                        image3.Source = norotate_loc("naprav.png");
-                        image1.Source = norotate(TekOtdelka.textura1);
-                     //   TekOtdelka.index3 = "1";
-                       
-                    }
-                }
-
-                else
+                if (TekOtdelka.index3 == "1")//если вертикально
                 {
                     image3.Source = norotate_loc("naprav.png");
-                    image1.Source = norotate_loc("Net_Tekst.jpg");
-                   // TekOtdelka.index3 = "1";
-                   
+                    image1.Source = norotate(TekOtdelka.textura1);
+                    button3.ToolTip = "Вертикальное направление волокон шпона";
                 }
-
+                else//если горизонатльно
+                {
+                    image3.Source = rotate270_loc();
+                    image1.Source = rotate270(TekOtdelka.textura1);
+                    button3.ToolTip = "Горизонтальное направление волокон шпона";
+                }
             }
             else
-            {
+            {//нет направлений
 
-                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka.textura1))
-                {
-
-                    image1.Source = norotate(TekOtdelka.textura1);
-                }
-                else
-                {
-                    image1.Source = norotate_loc("Net_Tekst.jpg");
-                }
+                image1.Source = norotate(TekOtdelka.textura1);
                 image3.Source = norotate_loc("no_naprav.png");
                 button3.IsEnabled = false;
-              //  TekOtdelka.index3 = "0";
-
+                button3.ToolTip = "Не имеет направления волокон шпона";
             }
-            //ошибка выше 
+
 
             //загруж направл текстуры для 2 //загруж карт для 2 кнопки
-            if (TekOtdelka.naprav2 == "1")
+            if (TekOtdelka.naprav2 == "1")//если обладает направлением
             {
                 button4.IsEnabled = true;
-                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka.textura2))
-                {
-
-                    if (TekOtdelka.index4 == "0")
-                    {
-
-                        image4.Source = rotate270_loc();
-                        image2.Source = rotate270(TekOtdelka.textura2);
-
-                    }
-                    if (TekOtdelka.index4 != "0")
-                    {
-                        image4.Source = norotate_loc("naprav.png");
-                        image2.Source = norotate(TekOtdelka.textura2);
-                     //   TekOtdelka.index4 = "1";
-                    }
-                }
-
-                else
+                if (TekOtdelka.index4 == "1")//если вертикально
                 {
                     image4.Source = norotate_loc("naprav.png");
-                    image2.Source = norotate_loc("Net_Tekst.jpg");
-                  //  TekOtdelka.index4 = "1";
+                    image2.Source = norotate(TekOtdelka.textura2);
+                    button4.ToolTip = "Вертикальное направление волокон шпона";
+                }
+                else//если горизонатльно
+                {
+                    image4.Source = rotate270_loc();
+                    image2.Source = rotate270(TekOtdelka.textura2);
+                    button4.ToolTip = "Горизонтальное направление волокон шпона";
+
                 }
             }
             else
             {
-                if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + TekOtdelka.textura2))
-                {
-                    image2.Source = norotate(TekOtdelka.textura2);
-                }
-                else
-                {
-                    image2.Source = norotate_loc("Net_Tekst.jpg");
-                }
+                image2.Source = norotate(TekOtdelka.textura2);
                 image4.Source = norotate_loc("no_naprav.png");
                 button4.IsEnabled = false;
-             //   TekOtdelka.index4 = "0";
-
+                button4.ToolTip = "Не имеет направления волокон шпона";
             }
 
 
@@ -595,15 +541,12 @@ namespace TreeCadN
                 if (TekOtdelka.index7 == "1")
                 {
                     //отделка одинаковая
-                    // button11.Content = "=";
                     image6.Source = norotate_loc("tek2.png");
                 }
                 else
                 {
                     // отделка разная
-                    //  button11.Content = "<>";
                     image6.Source = norotate_loc("tek3.png");
-                    TekOtdelka.index7 = "0";
                 }
 
 
@@ -634,7 +577,7 @@ namespace TreeCadN
         }
         void selectbtn1()
         {
-            
+
             if (TekOtdelka.index7 == "1")
             {
                 obe_plasti = 1;//значит на обе пласти
@@ -647,7 +590,7 @@ namespace TreeCadN
             stor_otd = 1;// на внешнюю пласть
 
 
-            comboBox2.SelectedIndex = (GROUPE.Find(x => x.ID.Equals(TekOtdelka.IDGroup1))).index_group;
+            comboBox2.SelectedItem = GROUPE.Find(x => x.ID.Equals(TekOtdelka.IDGroup1));
             if (!reload_text)
             {
                 viewSource.View.Refresh();
@@ -675,7 +618,7 @@ namespace TreeCadN
 
             stor_otd = 2;// на внутр пласть
 
-            comboBox2.SelectedIndex = (GROUPE.Find(x => x.ID.Equals(TekOtdelka.IDGroup2))).index_group;
+            comboBox2.SelectedItem = GROUPE.Find(x => x.ID.Equals(TekOtdelka.IDGroup2));
             if (!reload_text)
             {
                 viewSource.View.Refresh();
@@ -694,33 +637,20 @@ namespace TreeCadN
         private void button3_Click(object sender, RoutedEventArgs e)
         {
 
-
-
-
-
-            string corrper = TekOtdelka.index3;
             if (TekOtdelka.index3 == "1")
             {//вертик
-
-                image3.Source = rotate270_loc();
-                image1.Source = rotate270(TekOtdelka.textura1);
-                corrper = "0";
+                TekOtdelka.index3 = "0";
             }
-            if (TekOtdelka.index3 == "0")
+            else
             {//гориз
-                image3.Source = norotate_loc("naprav.png");
-                image1.Source = norotate(TekOtdelka.textura1);
-                corrper = "1";
+                TekOtdelka.index3 = "1";
             }
-            TekOtdelka.index3 = corrper;
-
 
             if (TekOtdelka.index7 == "1")
             {
-                image4.Source = image3.Source;
-                image2.Source = image1.Source;
                 TekOtdelka.index4 = TekOtdelka.index3;
             }
+            strrazobr(strsobr());
 
 
         }
@@ -729,30 +659,23 @@ namespace TreeCadN
 
 
 
-            string corrper = TekOtdelka.index4;
             if (TekOtdelka.index4 == "1")
             {//вертик
-                image4.Source = rotate270_loc();
-                image2.Source = rotate270(TekOtdelka.textura2);
-
-                corrper = "0";
+                TekOtdelka.index4 = "0";
             }
-            if (TekOtdelka.index4 == "0")
+            else
             {//гориз
-                image4.Source = norotate_loc("naprav.png");
-                image2.Source = norotate(TekOtdelka.textura2);
-                corrper = "1";
+                TekOtdelka.index4 = "1";
             }
-            TekOtdelka.index4 = corrper;
-
 
 
             if (TekOtdelka.index7 == "1")
             {
-                image3.Source = image4.Source;
-                image1.Source = image2.Source;
                 TekOtdelka.index3 = TekOtdelka.index4;
             }
+
+
+            strrazobr(strsobr());
         }
         private void checkBox3_Click(object sender, RoutedEventArgs e)
         {
@@ -880,8 +803,8 @@ namespace TreeCadN
                 if (TekOtdelka_Histor[listBox1.SelectedIndex].cheked == "x:Null")
                 {
                     listBox2.SelectedIndex = -1;
-                  //  TekOtdelka.Clear();
-                   // TekOtdelka.Add(new TekOtd() { });
+                    //  TekOtdelka.Clear();
+                    // TekOtdelka.Add(new TekOtd() { });
                     TekOtdelka = TekOtdelka_Histor[listBox1.SelectedIndex];
                     strrazobr(TekOtdelka.str);
                 }
@@ -900,8 +823,8 @@ namespace TreeCadN
                 if (TekOtdelka_Zakl[listBox2.SelectedIndex].cheked == "x:Null")
                 {
                     listBox1.SelectedIndex = -1;
-                 //   TekOtdelka.Clear();
-                  //  TekOtdelka.Add(new TekOtd() { });
+                    //   TekOtdelka.Clear();
+                    //  TekOtdelka.Add(new TekOtd() { });
                     TekOtdelka = TekOtdelka_Zakl[listBox2.SelectedIndex];
                     strrazobr(TekOtdelka.str);
                 }
@@ -1292,8 +1215,8 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
             if (TekOtdelka_Histor[0].cheked == "x:Null")
             {
                 listBox2.SelectedIndex = -1;
-               // TekOtdelka.Clear();
-               // TekOtdelka.Add(new TekOtd() { });
+                // TekOtdelka.Clear();
+                // TekOtdelka.Add(new TekOtd() { });
                 TekOtdelka = TekOtdelka_Histor[0];
                 strrazobr(TekOtdelka.str);
 
@@ -1432,11 +1355,11 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
             e.Handled = "0123456789 ,.-йфяцычувскамепинртгоьшлбщдюзжэхъqazxswedcvfrtgbnhyujmkiolЙФЯЦЫЧУВСКАМЕПИНРТГОЬШЛБЩДЮЗЖХЭЪQAZWSXEDCRFVTGBYHNUJMIKOLP".IndexOf(e.Text) < 0;
         }
 
-     
+
 
         private void listView1_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-            
+
             if (listView1.SelectedItem != null)
             {
                 if (stor_otd == 1)
@@ -1449,7 +1372,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     TekOtdelka.naprav1 = ((Person)listView1.SelectedItem).napravl;
                     if (TekOtdelka.naprav1 != "1")
                     {
-                      // TekOtdelka.index3 = "0";
+                        // TekOtdelka.index3 = "0";
                     }
                     if (obe_plasti == 1)
                     {
@@ -1465,14 +1388,14 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     TekOtdelka.naprav2 = ((Person)listView1.SelectedItem).napravl;
                     if (TekOtdelka.naprav2 != "1")
                     {
-                    //    TekOtdelka.index4 = "0";
+                        //    TekOtdelka.index4 = "0";
                     }
                     if (obe_plasti == 1)
                     {
                         smena_1to2();
                     }
                 }
-                
+
                 strrazobr(strsobr());
             }
         }
@@ -1547,6 +1470,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         public string cheked { get; set; }
         public string textura2_otris { get; set; }
         public string textura1_otris { get; set; }
+
     }
 
     public class Person
@@ -1557,7 +1481,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         public string NAME { get; set; }
         public string ID { get; set; }
         public string textura_otris { get; set; }
-        public int index_group { get; set; }
+
     }
 
 }
