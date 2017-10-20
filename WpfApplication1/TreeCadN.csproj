@@ -55,6 +55,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Printing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,6 +68,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Basis.xaml.cs">
@@ -81,6 +83,20 @@
     </Compile>
     <Compile Include="dial_for_acctex_danet.xaml.cs">
       <DependentUpon>dial_for_acctex_danet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="evesync\auth.xaml.cs">
+      <DependentUpon>auth.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="evesync\evesync.xaml.cs">
+      <DependentUpon>evesync.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="evesync\saveeve.xaml.cs">
+      <DependentUpon>saveeve.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="evesync\YA.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>YA.settings</DependentUpon>
     </Compile>
     <Compile Include="kommunikacii\kommunikacii_Set.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -152,6 +168,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="evesync\auth.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="evesync\evesync.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="evesync\saveeve.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="kommunikacii\kommunikacii_main.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -208,6 +236,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="evesync\YA.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>YA.Designer.cs</LastGenOutput>
+    </None>
     <None Include="kommunikacii\kommunikacii_Set.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>kommunikacii_Set.Designer.cs</LastGenOutput>
@@ -276,6 +308,7 @@
   <ItemGroup>
     <Resource Include="Foto\download.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

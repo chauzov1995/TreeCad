@@ -188,6 +188,7 @@ namespace TreeCadN
                         Group = reader["TexID"].ToString(),
                         Prim = "",
                         kolvo = 1,
+                        OTD = "",
                         sort = sort
                     });
                 }
@@ -304,22 +305,34 @@ namespace TreeCadN
                 if (elems[i] != "")
                 {
                     string[] znach = elems[i].Split('~');
+                    string name;
 
                     if (Convert.ToInt32(znach[6]) > nom_PP) nom_PP = Convert.ToInt32(znach[6]);
 
 
+                    string article = znach[1].Replace('@', ',');
+                    if (article == "***" || article == "*" || article == "15R***" || article == "SAD***")
+                    {
+                        name = znach[7].Replace('@', ',');
+
+                    }
+                    else
+                    {
+                        name = (gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',')))).TName;
+
+                    }
                     //t-техника a-аксесуар
 
                     gr3.Add(new texnika()
                     {
                         type = znach[0].Replace('@', ','),//типп аксес или техн
-                        Article = znach[1].Replace('@', ','),//Артикул
+                        Article = article,//Артикул
                         kolvo = Convert.ToSingle(znach[2].Replace('@', ',')),//Колво
                         OTD = znach[3].Replace('@', ','),//отделка
                         Prim = znach[4].Replace('@', ','),//примечание
                         Group = znach[5].Replace('@', ','),//группы
                         nom_pp = Convert.ToInt32(znach[6].Replace('@', ',')),//ид позиция
-                        TName = (gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',')))).TName,//название
+                        TName = name,//название
                         UnitsName = znach[8].Replace('@', ','),//ед изм
                         priceredak = Convert.ToSingle(znach[9].Replace('@', ',')),//цена ред
                         vived = Convert.ToBoolean((gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',')))).vived),
@@ -641,7 +654,10 @@ st14.Width.ToString() + ";";
                 texnika otvet_massiv = ((texnika)gr3[i]);
 
                 string name = "";
-                if (otvet_massiv.TName == "***" || otvet_massiv.TName == "15R***" || otvet_massiv.TName == "SAD***") name = otvet_massiv.TName.Replace(',', '@');
+
+                if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@');
+
+
 
                 t += otvet_massiv.type.Replace(',', '@') + "~" +
                 otvet_massiv.Article.Replace(',', '@') + "~" +
@@ -668,7 +684,7 @@ st14.Width.ToString() + ";";
                 if (this.text_otvet != t)
                 {
                     if (MessageBox.Show(
-        "Вы изменили примечания, хотели бы Вы их сохранить?",
+        "Есть изменения, хотели бы Вы их сохранить?",
         "Предупреждение",
         MessageBoxButton.YesNo,
         MessageBoxImage.Warning) == MessageBoxResult.Yes)
@@ -812,6 +828,7 @@ st14.Width.ToString() + ";";
             texnika poluch = g1.SelectedItem as texnika;
             List<texnika> kotor_v_gr3 = gr3.FindAll(FindComputer);
 
+
             texnika chto_vstavlyaem = new texnika()
             {
                 type = poluch.type,
@@ -832,11 +849,12 @@ st14.Width.ToString() + ";";
 
 
             };
+            //  MessageBox.Show(chto_vstavlyaem.OTD);
 
             g3.SelectedItem = index_for_poisl;
             if (kotor_v_gr3.Count <= 0)
-            {//если такая уже есть
-
+            {//если такой нет
+                //добавить новую строку
                 nom_PP++;
                 chto_vstavlyaem.nom_pp = nom_PP;
                 gr3.Add(chto_vstavlyaem);
@@ -846,7 +864,7 @@ st14.Width.ToString() + ";";
 
             }
             else
-            {
+            {//если такая уже есть
 
                 dial_for_acctex_danet dial_for_acctex_danet = new dial_for_acctex_danet(this);
                 dial_for_acctex_danet.ShowDialog();
@@ -898,9 +916,18 @@ st14.Width.ToString() + ";";
 
             if ((e.Row.Item as texnika).Article == "***" || (e.Row.Item as texnika).Article == "*" || (e.Row.Item as texnika).Article == "15R***" || (e.Row.Item as texnika).Article == "SAD***")
             {//если 
+                if ((e.Row.Item as texnika).Article == "*")
+                {
+                    string[] slovarb = { "Название", "Примечание", "Ед. изм.", "Кол-во", "Базовая цена", "Цена ред." };
 
-                string[] slovarb = { "Название", "Примечание", "Отделка", "Ед. изм.", "Кол-во", "Базовая цена", "Цена ред." };
-                e.Cancel = isreadonly_forGRID(e, slovarb);
+                    e.Cancel = isreadonly_forGRID(e, slovarb);
+
+                }
+                else
+                {
+                    string[] slovarb = { "Название", "Примечание", "Отделка", "Ед. изм.", "Кол-во", "Базовая цена", "Цена ред." };
+                    e.Cancel = isreadonly_forGRID(e, slovarb);
+                }
             }
             else
             {
@@ -913,6 +940,7 @@ st14.Width.ToString() + ";";
                 {
                     string[] slovarb = { "Примечание", "Кол-во", "Цена ред." };
                     e.Cancel = isreadonly_forGRID(e, slovarb);
+
                 }
             }
 

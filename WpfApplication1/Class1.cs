@@ -157,6 +157,14 @@ namespace TreeCadN
             return f_kommunikacii.selectedModel;
         }
 
+        public void evesync()
+        {
+            evesync.evesync f_evesync = new evesync.evesync();
+            f_evesync.ShowDialog();
+           
+
+        }
+
 
         public List<UpdateUPD> UPdate = new List<UpdateUPD>();
         public void UPDATE()
