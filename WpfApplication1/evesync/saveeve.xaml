@@ -6,7 +6,9 @@
         xmlns:my="clr-namespace:System.ComponentModel;assembly=System"
         xmlns:local="clr-namespace:TreeCadN.evesync"
         mc:Ignorable="d"
-        Title="saveeve" Height="160.312" Width="381.562">
+        AllowsTransparency="true"
+    WindowStyle="None"
+        Title="saveeve" Height="35" Width="320" Loaded="Window_Loaded" Topmost="True">
     <Window.Resources>
         <my:BackgroundWorker
       x:Key="backgroundWoker"
@@ -18,16 +20,11 @@
       >
         </my:BackgroundWorker>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="44*"/>
-            <RowDefinition Height="21*"/>
-        </Grid.RowDefinitions>
-        <ProgressBar x:Name="pb1" HorizontalAlignment="Left" Height="16" Margin="10,13,0,0" VerticalAlignment="Top" Width="139" Grid.Row="1"/>
-        <TextBlock x:Name="tb3" HorizontalAlignment="Left" Margin="154,13,0,0" TextWrapping="Wrap" Text="Синхронизированно 8 из 3231" VerticalAlignment="Top" Grid.Row="1"/>
-        <TextBlock x:Name="tb1" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="23" Width="139"/>
-        <TextBlock x:Name="tb2" HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="225,33,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+    <Border BorderBrush="#FFFEDD61" BorderThickness="3" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="320">
 
-    </Grid>
+        <Grid>
+            <TextBlock x:Name="tb3" HorizontalAlignment="Left" Margin="41,6,0,0" TextWrapping="Wrap" Text="Подготовка к загрузке.." VerticalAlignment="Top"/>
+            <Image HorizontalAlignment="Left" Height="29" VerticalAlignment="Top" Width="36" Source="/TreeCadN;component/Foto/yandex_disk.png"/>
+        </Grid>
+    </Border>
 </Window>

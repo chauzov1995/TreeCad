@@ -11,6 +11,9 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Xml.Linq;
 using System.Runtime.InteropServices;
+using TreeCadN.evesync;
+using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace TreeCadN
 {
@@ -24,11 +27,13 @@ namespace TreeCadN
         public string index1idotd, index2idotd;
         public string Bazis;
         private object Ambiente;
+        private object xamb, aamain, engine;
 
         public string attiva(String s, String Valori, String DES, String PX, String PY, String param)
         {
-            
-          
+
+
+
             string returnValue = "";
             try
             {
@@ -38,7 +43,7 @@ namespace TreeCadN
                 switch (param)
                 {
                     case "TAccess":
-                        DirectoryInfo sdsd = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
+                        //   DirectoryInfo sdsd = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
                         client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
                         path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
                         if (s == null) s = "";
@@ -52,6 +57,23 @@ namespace TreeCadN
                         client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
                         path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
                         returnValue = Kommunikacii(Environment.CurrentDirectory + @"\" + path_sysdba);
+
+                        break;
+
+                    case "evesync":
+
+                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+
+                        evesync(Environment.CurrentDirectory + @"\" + path_sysdba);
+
+                        break;
+                    case "GNviewer":
+
+                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoprocedure");//версия клиента
+
+                        GNviewer(Environment.CurrentDirectory + @"\GIULIANOVARS\procedure");
 
                         break;
                 }
@@ -68,6 +90,165 @@ namespace TreeCadN
         {
             Ambiente = x;
         }
+        public void Termina()
+        {
+
+        }
+        #region GetParam
+
+        public void Param(object obj, string param, string value)
+        {
+            obj.GetType().InvokeMember(param, BindingFlags.InvokeMethod, null, obj, new object[] { value });
+        }
+
+        public void Param(object obj, string param)
+        {
+            obj.GetType().InvokeMember(param, BindingFlags.InvokeMethod, null, obj, new object[0]);
+        }
+
+        public object getParamI(object obj, string param)
+        {
+            var obj1 = obj.GetType().InvokeMember(param, BindingFlags.InvokeMethod, null, obj, new object[0]);
+
+            if (obj1 != null)
+            {
+                return obj1;
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
+        public object getParam(object obj, string param)
+        {
+            var obj1 = obj.GetType().InvokeMember(param, BindingFlags.GetProperty, null, obj, new object[0]);
+
+            if (obj1 != null)
+            {
+                return obj1;
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
+        public object getParam(object obj, string param, string value)
+        {
+            var obj1 = obj.GetType().InvokeMember(param, BindingFlags.InvokeMethod, null, obj, new object[] { value.ToString() });
+
+            if (obj1 != null)
+            {
+                return obj1;
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
+        public object getParam(object obj, string param, string value, string value1)
+        {
+            var obj1 = obj.GetType().InvokeMember(param, BindingFlags.InvokeMethod, null, obj, new object[] { value.ToString(), value1.ToString() });
+
+            if (obj1 != null)
+            {
+                return obj1;
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
+        public object getParam(object obj, string param, string value, string value1, string value2)
+        {
+            var obj1 = obj.GetType().InvokeMember(param, BindingFlags.InvokeMethod, null, obj, new object[] { value.ToString(), value1.ToString(), value2.ToString() });
+
+            if (obj1 != null)
+            {
+                return obj1;
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
+        public object getParam(object obj, string param, string value, string value1, string value2, string value3)
+        {
+            var obj1 = obj.GetType().InvokeMember(param, BindingFlags.InvokeMethod, null, obj, new object[] { value.ToString(), value1.ToString(), value2.ToString(), value3.ToString() });
+
+            if (obj1 != null)
+            {
+                return obj1;
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
+        public object getParamG(object obj, string param)
+        {
+            var obj1 = obj.GetType().InvokeMember(param, BindingFlags.GetProperty, null, obj, new object[0]);
+
+            if (obj1 != null)
+            {
+                return obj1;
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
+        public object getParamG(object obj, string param, string value)
+        {
+            var obj1 = obj.GetType().InvokeMember(param, BindingFlags.GetProperty, null, obj, new object[] { value.ToString() });
+
+            if (obj1 != null)
+            {
+                return obj1;
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
+        public void setParam(object obj, string param, string param1, string value)
+        {
+            //setParam(xamb, "curbox", node.GetDisplayText(column).ToString());
+            obj.GetType().InvokeMember(param, BindingFlags.InvokeMethod, null, obj, new object[] { param1, value.ToString() });
+
+        }
+
+        public void setParam(object obj, string param, string value)
+        {
+            //setParam(xamb, "curbox", node.GetDisplayText(column).ToString());
+            obj.GetType().InvokeMember(param, BindingFlags.SetField, null, obj, new object[] { value.ToString() });
+
+        }
+
+        public void setParamP(object obj, string param, string value)
+        {
+            //setParam(xamb, "curbox", node.GetDisplayText(column).ToString());
+            obj.GetType().InvokeMember(param, BindingFlags.SetProperty, null, obj, new object[] { value.ToString() });
+
+        }
+
+
+        #endregion
 
         public string GNOTD(string path, string str)
         {
@@ -157,12 +338,95 @@ namespace TreeCadN
             return f_kommunikacii.selectedModel;
         }
 
-        public void evesync()
+        public void evesync(string path)
         {
-            evesync.evesync f_evesync = new evesync.evesync();
+            evesync.evesync f_evesync = new evesync.evesync(path + @"\system.mdb", path);
             f_evesync.ShowDialog();
-           
 
+
+        }
+        public void GNviewer(string path)
+        {
+
+
+            string otvet = "";
+            string patholdtv = "";
+
+
+
+           // string path = @"C:\evolution\giulianovars\GIULIANOVARS\procedure";
+            string[] dirs = Directory.GetFiles(path, "*.exe");
+
+
+            foreach (string dir in dirs)
+            {
+                if (dir.Split('\\').Last().Substring(0, 12) == "TeamViewerQS")
+                {
+                    patholdtv = dir;
+                    otvet = path;
+                    break;
+
+                }
+
+            }
+
+            WebClient webClient = new WebClient();
+            string url;
+            url = "https://webapi.teamviewer.com/api/v1/sessions";
+            webClient.Headers.Add("Authorization", "Bearer 2875381-8jCmpdsLcQm5FelCc9rv");
+            webClient.Headers.Add("Content-Type", "application/json");
+
+
+            string JSON = webClient.UploadString(url, "POST", @"{""groupid"" : ""g18888010""}");
+            session_TV login = JsonConvert.DeserializeObject<session_TV>(JSON);
+
+            string code = login.code.Replace("-", "");
+            string newpathtv = otvet + @"\TeamViewerQS-id" + code + ".exe";
+
+            File.Move(patholdtv, newpathtv);
+
+            Process.Start(newpathtv);
+
+
+            //GNviewer.teamv timview = new GNviewer.teamv("");
+            //  timview.ShowDialog();
+
+
+        }
+        public void evesync_save(ref object xAmbiente)
+        {
+            YA ps = YA.Default;
+            if (ps.isSave)
+            {
+                INIManager client_man;
+                string path_sysdba;
+                client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+
+                this.Ambiente = xAmbiente;
+                this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+
+
+                object info = getParamG(xamb, "info");
+
+                string nomzakaza = getParam(info, "Numero").ToString();
+                int skolko0 = 6 - nomzakaza.Length;
+                string evepath = Environment.CurrentDirectory + @"\" + path_sysdba + @"\";
+                for (int i = 0; i < skolko0; i++)
+                {
+                    evepath += "0";
+                }
+                evepath += nomzakaza + ".eve";
+
+
+
+
+
+
+
+                evesync.saveeve saveeve = new evesync.saveeve(path_sysdba + @"\system.mdb", evepath);
+                saveeve.Show();
+            }
         }
 
 
@@ -408,6 +672,13 @@ namespace TreeCadN
             }
         }
 
+    }
+    class session_TV
+    {
+
+        public string code { get; set; }
+        public string end_customer_link { get; set; }
+        public string supporter_link { get; set; }
     }
 
 }

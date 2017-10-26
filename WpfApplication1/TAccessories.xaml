@@ -137,7 +137,7 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="b3" Content="Отмена" Margin="5" Grid.Column="3" Click="b3_Click" IsCancel="True"/>
             <Button x:Name="b2" Content="Ок" Margin="5" Grid.Column="2" Click="Button_Click"/>
-            <Button x:Name="btn4" Content="Редактировать" Margin="5" Click="Button_Click_4"/>
+            <Button x:Name="btn4" Content="Редактировать [F1]" Margin="5" Click="Button_Click_4"/>
         </Grid>
         <TreeView x:Name="tv1" Margin="5,5,0,5" Grid.Row="1"  SelectedItemChanged="tv1_SelectedItemChanged" BorderThickness="1,1,0,1">
         <TreeView.ItemTemplate>

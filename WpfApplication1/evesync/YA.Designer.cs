@@ -34,5 +34,17 @@ namespace TreeCadN.evesync {
                 this["OAuth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isSave {
+            get {
+                return ((bool)(this["isSave"]));
+            }
+            set {
+                this["isSave"] = value;
+            }
+        }
     }
 }

@@ -243,5 +243,16 @@ namespace вызов
                 textBox4.Text
                 });
         }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            Assembly s = Assembly.LoadFile(Environment.CurrentDirectory + @"\TreeCadN.dll");
+            Type ourClass = s.GetType("TreeCadN.neqweqe", true, true);
+            Object instane = Activator.CreateInstance(ourClass);
+            MethodInfo meth = ourClass.GetMethod("GNviewer"); //нужен тот Show, который не принимает параметров
+            object result = meth.Invoke(instane, new object[] {
+            @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\GIULIANOVARS\procedure"
+                });
+        }
     }
 }

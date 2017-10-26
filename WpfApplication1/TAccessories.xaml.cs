@@ -103,7 +103,7 @@ namespace TreeCadN
 
 
             //аксессуары
-            OleDbDataReader reader_GRACC = BD.conn("SELECT TPrice1.Articul, TUnits.UnitsID,  TUnits.UnitsName, TPrice1.MName, TPrice1.MatID,  TPrice1.PriceID,  TPrice1.Price, TMAT.MATNAME,  TPrice1.Visibl FROM (TPrice1  LEFT OUTER JOIN  TMAT ON TPrice1.MatID = TMAT.MATID) LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID  ");
+            OleDbDataReader reader_GRACC = BD.conn("SELECT TPrice1.Articul, TUnits.UnitsID, TPrice1.TKOEFGROUP_ID, TUnits.UnitsName, TPrice1.MName, TPrice1.MatID,  TPrice1.PriceID,  TPrice1.Price, TMAT.MATNAME,  TPrice1.Visibl FROM (TPrice1  LEFT OUTER JOIN  TMAT ON TPrice1.MatID = TMAT.MATID) LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID  ");
             //LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID
             while (reader_GRACC.Read())
             {
@@ -144,7 +144,8 @@ namespace TreeCadN
                     kolvo = 1,
                     vived = vived,
                     OTD = "",
-                    sort = sort
+                    sort = sort,
+                    GROUP_dlyaspicif = reader_GRACC["TKOEFGROUP_ID"].ToString(),
 
 
                 });
@@ -153,7 +154,7 @@ namespace TreeCadN
             }
 
             //техника
-            OleDbDataReader reader = BD.conn("SELECT TTxPrice1.Article, TTxPrice1.TName, TTxPrice1.TPriceID, TTxPrice1.TexID, TTxPrice1.Price, TTexnics.TexType  FROM TTxPrice1  LEFT OUTER JOIN  TTexnics ON  TTxPrice1.TexID = TTexnics.TexID  ");
+            OleDbDataReader reader = BD.conn("SELECT TTxPrice1.Article, TTxPrice1.TName, TTxPrice1.TKOEFGROUP_ID, TTxPrice1.TPriceID, TTxPrice1.TexID, TTxPrice1.Price, TTexnics.TexType  FROM TTxPrice1  LEFT OUTER JOIN  TTexnics ON  TTxPrice1.TexID = TTexnics.TexID  ");
             while (reader.Read())
             {
                 try
@@ -189,7 +190,8 @@ namespace TreeCadN
                         Prim = "",
                         kolvo = 1,
                         OTD = "",
-                        sort = sort
+                        sort = sort,
+                        GROUP_dlyaspicif = reader["TKOEFGROUP_ID"].ToString(),
                     });
                 }
                 catch
@@ -302,9 +304,11 @@ namespace TreeCadN
             string[] elems = vh_str.Split(';');
             for (int i = 0; i < elems.Count(); i++)
             {
-                if (elems[i] != "")
+               if (elems[i] != "")
                 {
+
                     string[] znach = elems[i].Split('~');
+
                     string name;
 
                     if (Convert.ToInt32(znach[6]) > nom_PP) nom_PP = Convert.ToInt32(znach[6]);
@@ -323,35 +327,25 @@ namespace TreeCadN
                     }
                     //t-техника a-аксесуар
 
-                    gr3.Add(new texnika()
-                    {
-                        type = znach[0].Replace('@', ','),//типп аксес или техн
-                        Article = article,//Артикул
-                        kolvo = Convert.ToSingle(znach[2].Replace('@', ',')),//Колво
-                        OTD = znach[3].Replace('@', ','),//отделка
-                        Prim = znach[4].Replace('@', ','),//примечание
-                        Group = znach[5].Replace('@', ','),//группы
-                        nom_pp = Convert.ToInt32(znach[6].Replace('@', ',')),//ид позиция
-                        TName = name,//название
-                        UnitsName = znach[8].Replace('@', ','),//ед изм
-                        priceredak = Convert.ToSingle(znach[9].Replace('@', ',')),//цена ред
-                        vived = Convert.ToBoolean((gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',')))).vived),
-                        baseprice = Convert.ToSingle((gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',')))).baseprice)
+                    texnika poluch = (gr1.Find(x => x.Article.Equals(article.Replace('@', ','))));
 
+                    poluch.TName = name;
+                    poluch.OTD = znach[3].Replace('@', ',');//отделка
+                    poluch.Prim = znach[4].Replace('@', ',');//примечание
+                    poluch.type = znach[0].Replace('@', ',');//типп аксес или техн
+                    poluch.kolvo = Convert.ToSingle(znach[2].Replace('@', ','));//Колво
+                    poluch.nom_pp = Convert.ToInt32(znach[6].Replace('@', ','));//ид позиция
+                    poluch.priceredak = Convert.ToSingle(znach[9].Replace('@', ','));//цена ред
+                   // poluch.GROUP_dlyaspicif = znach[5].Replace('@', ',');//группа специфик
+                 
 
-
-                    });
-
-
+                    gr3.Add(poluch);
+               
                 }
             }
-
-
-
-
-
+         
             g3.ItemsSource = gr3;
-
+           
 
         }
 
@@ -394,7 +388,6 @@ namespace TreeCadN
         private void g1_Loaded(object sender, RoutedEventArgs e)
         {
 
-            //  g1.CanUserSortColumns = true;
             g1.ItemsSource = gr1;
 
             viewSource1 = new CollectionViewSource();
@@ -443,8 +436,7 @@ namespace TreeCadN
                                 if ((tv1.SelectedItem as MenuItem).type == "t*" ||
                                     (tv1.SelectedItem as MenuItem).type == "a*")
                                 {//если выбрали в названии
-                                 //   MessageBox.Show((e.Item ).ToString());
-
+                           
 
                                     if ((e.Item as texnika).type == "a" && (tv1.SelectedItem as MenuItem).type == "a*") e.Accepted = true;
 
@@ -541,8 +533,8 @@ namespace TreeCadN
 
         private void g1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-
-            Grid_select();
+            texnika poluch = g1.SelectedItem as texnika;
+            Grid_select(poluch);
 
         }
 
@@ -664,7 +656,7 @@ st14.Width.ToString() + ";";
                 otvet_massiv.kolvo.ToString().Replace(',', '@') + "~" +
                 otvet_massiv.OTD.Replace(',', '@') + "~" +
                 otvet_massiv.Prim.Replace(',', '@') + "~" +
-                otvet_massiv.Group.Replace(',', '@') + "~" +
+                otvet_massiv.GROUP_dlyaspicif.Replace(',', '@') + "~" +
                 otvet_massiv.nom_pp.ToString().Replace(',', '@') + "~" +
                 name + "~" +
                 otvet_massiv.UnitsName.Replace(',', '@') + "~" +
@@ -790,7 +782,7 @@ st14.Width.ToString() + ";";
                 if (e.Key == Key.Enter)
                 {
 
-                    Grid_select();
+                    //              Grid_select();
 
 
                 }
@@ -822,42 +814,21 @@ st14.Width.ToString() + ";";
 
         }
 
-        void Grid_select()
+        void Grid_select(texnika poluch)
         {
 
-            texnika poluch = g1.SelectedItem as texnika;
+
             List<texnika> kotor_v_gr3 = gr3.FindAll(FindComputer);
 
 
-            texnika chto_vstavlyaem = new texnika()
-            {
-                type = poluch.type,
-                Article = poluch.Article,
-                baseprice = poluch.baseprice,
-                Group = poluch.Group,
-                GroupName = poluch.GroupName,
-                ID = poluch.ID,
-                kolvo = poluch.kolvo,
-                nom_pp = poluch.nom_pp,
-                OTD = poluch.OTD,
-
-                priceredak = poluch.priceredak,
-                Prim = poluch.Prim,
-                TName = poluch.TName,
-                UnitsName = poluch.UnitsName,
-                vived = poluch.vived,
-
-
-            };
-            //  MessageBox.Show(chto_vstavlyaem.OTD);
-
+         
             g3.SelectedItem = index_for_poisl;
             if (kotor_v_gr3.Count <= 0)
             {//если такой нет
                 //добавить новую строку
                 nom_PP++;
-                chto_vstavlyaem.nom_pp = nom_PP;
-                gr3.Add(chto_vstavlyaem);
+                poluch.nom_pp = nom_PP;
+                gr3.Add(poluch);
                 g3.ItemsSource = null;
                 g3.ItemsSource = gr3;
                 //   g3.Style = DataGridViewTriState.True;
@@ -872,8 +843,8 @@ st14.Width.ToString() + ";";
                 {
                     //добавить новую строку
                     nom_PP++;
-                    chto_vstavlyaem.nom_pp = nom_PP;
-                    gr3.Add(chto_vstavlyaem);
+                    poluch.nom_pp = nom_PP;
+                    gr3.Add(poluch);
                     g3.ItemsSource = null;
                     g3.ItemsSource = gr3;
                 }
@@ -1093,7 +1064,7 @@ st14.Width.ToString() + ";";
         public float kolvo { get; set; }
         public bool vived { get; set; }
         public int sort { get; set; }
-
+        public string GROUP_dlyaspicif { get; set; }
     }
     public class todelka
     {

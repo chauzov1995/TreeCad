@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TreeCadN.evesync"
         xmlns:my="clr-namespace:System.ComponentModel;assembly=System"
         mc:Ignorable="d"
-        Title="evesync" Height="300" Width="603.75">
+        Title="Синхронизация заказов с ЯндексДиском" Height="219.374" Width="403.124" ResizeMode="CanMinimize" Icon="/TreeCadN;component/Foto/favicons.png" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <my:BackgroundWorker
       x:Key="backgroundWoker"
@@ -19,20 +19,12 @@
         </my:BackgroundWorker>
     </Window.Resources>
     <Grid>
-        <Button Content="Авторизация ЯД" HorizontalAlignment="Left" Margin="333,10,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <Button Content="Создаём папку для архива" HorizontalAlignment="Left" Margin="18,50,0,0" VerticalAlignment="Top" Width="160" Height="29" Click="Button_Click_1"/>
-        <Label x:Name="token" Content="Label" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="318"/>
-        <Button Content="Загрузить файл" HorizontalAlignment="Left" Margin="18,84,0,0" VerticalAlignment="Top" Width="112" Click="Button_Click_2"/>
-        <Button Content="Скачать файл" HorizontalAlignment="Left" Margin="18,111,0,0" VerticalAlignment="Top" Width="93" Click="Button_Click_3"/>
-        <Button Content="Удалить файл" HorizontalAlignment="Left" Margin="18,138,0,0" VerticalAlignment="Top" Width="93" Click="Button_Click_4"/>
-        <Label Content="Путь в ЯД" HorizontalAlignment="Left" Margin="208,42,0,0" VerticalAlignment="Top" Width="93"/>
-        <Label Content="Путь локальный" HorizontalAlignment="Left" Margin="208,114,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="tb2" HorizontalAlignment="Left" Height="23" Margin="208,140,0,0" TextWrapping="Wrap" Text="C:/1.txt" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="tb1" HorizontalAlignment="Left" Height="23" Margin="208,68,0,0" TextWrapping="Wrap" Text="GN_arhiv/" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="111,221,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_5"/>
-        <ProgressBar x:Name="pb1" HorizontalAlignment="Left" Height="39" Margin="207,221,0,0" VerticalAlignment="Top" Width="210"/>
-        <Label x:Name="txtProgress" Content="Label" HorizontalAlignment="Left" Margin="0,168,0,0" VerticalAlignment="Top" Width="429" Height="48"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="111,254,0,-6" VerticalAlignment="Top" Width="75" Click="Button_Click_6"/>
-        <Button Content="Сохранить настройки" HorizontalAlignment="Left" Margin="343,138,0,0" VerticalAlignment="Top" Width="160" Click="Button_Click_7"/>
+        <Button Content="Авторизация ЯД" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="Button_Click" Width="116"/>
+        <Button x:Name="btn1" HorizontalAlignment="Left" Margin="10,40,0,0"  Content="Начать синхронизацию всех заказов" VerticalAlignment="Top" Width="220" Click="Button_Click_7"/>
+        <CheckBox x:Name="cb1" Content="Синхронизировать текущий заказ при сохранении?" HorizontalAlignment="Left" Margin="10,136,0,0" VerticalAlignment="Top" Loaded="cb1_Loaded"/>
+        <Label x:Name="tb3" Content="" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="374"/>
+        <ProgressBar x:Name="pb1" HorizontalAlignment="Left" Height="24" Margin="10,98,0,0" VerticalAlignment="Top" Width="374"/>
+        <Button Content="Сохранить и выйти" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Width="116" Click="Button_Click_1"/>
+        <Label x:Name="tb1" Content="" HorizontalAlignment="Left" Margin="131,8,0,0" VerticalAlignment="Top" Foreground="#FF17C30F" FontWeight="Bold"/>
     </Grid>
 </Window>
