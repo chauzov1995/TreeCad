@@ -3,37 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using System.Security.Cryptography;
 
 namespace TreeCadN.evesync
 {
@@ -154,93 +124,7 @@ namespace TreeCadN.evesync
             Close();
 
         }
-        void syncstart2()
-        {
-            log.Add("Старт синхронизации");
-
-            List<evevsyncfile> syncfile = new List<evevsyncfile>();
-            var reader1 = BD.conn("SELECT * FROM `evesync` WHERE 1");
-
-            while (reader1.Read())
-            {
-                syncfile.Add(new evevsyncfile()
-                {
-                    filename = reader1["filename"].ToString(),
-                    md5 = reader1["md5"].ToString(),
-                });
-
-            }
-            log.Add("Запрос из бд выполнен");
-
-            log.Add("Где смотрим папки - " + path_ordini);
-            string[] dirs = Directory.GetFiles(path_ordini, "*.eve");
-            vsegofiles = dirs.Length;
-            log.Add("Получили число файлов eve - " + vsegofiles);
-            foreach (string dir in dirs)
-            {
-                MD5 myRIPEMD160 = MD5.Create();
-                FileStream tmppathStream = File.OpenRead(dir);
-                byte[] hashValue = myRIPEMD160.ComputeHash(tmppathStream);
-                tmppathStream.Close();
-                string hash = BitConverter.ToString(hashValue).Replace("-", String.Empty);
-
-                string filename = dir.Split('\\').Last();
-                // MessageBox.Show(filename);
-
-                string md5bd = "";
-
-                try
-                {
-                    md5bd = (syncfile.Find(x => x.filename.Equals(filename))).md5;
-                }
-                catch { }
-                if (md5bd == hash)
-                {
-
-                }
-                else
-                {
-                    if (md5bd == "")
-                    {
-
-                        BD.conn("INSERT INTO evesync (filename, md5) VALUES ('" + filename + "','" + hash + "') ");
-
-                    }
-                    else
-                    {
-                        //   MessageBox.Show(md5bd + " " + hash);
-                        BD.conn("UPDATE evesync SET md5='" + hash + "' WHERE filename='" + filename + "' ");
-
-                    }
-                    nadosave.Add(new evevsyncfile
-                    {
-                        filename = filename,
-                        md5 = hash
-
-                    });
-                }
-
-                //   BD.conn("INSERT INTO evesync (filename, md5) VALUES ('" + filename + "','" + hash + "') ");
-            }
-            log.Add("Цикл выполнен");
-            kolvozagr = nadosave.Count;
-
-            //pb1.Minimum = 0;
-            //pb1.Maximum = nadosave.Count;
-            //pb1.Value = 0;
-            //pb1.Visibility = Visibility.Visible;
-
-            if (nadosave.Count == 0)
-            {
-
-                Close();
-            }
-            else
-            {
-                backgroundWorker.RunWorkerAsync();
-            }
-
-        }
+       
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

@@ -1,0 +1,18 @@
+﻿<Window x:Class="TreeCadN.uploadPROGR.dialprogr"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TreeCadN.uploadPROGR"
+        mc:Ignorable="d"
+        Title="Скачать с сервера" Height="465.615" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="241*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <ListBox x:Name="lb1" />
+        <Button Content="Скачать" HorizontalAlignment="Left" Margin="215,4,0,0" VerticalAlignment="Top" Width="75" Height="22" Grid.Row="1" Click="Button_Click"/>
+
+    </Grid>
+</Window>

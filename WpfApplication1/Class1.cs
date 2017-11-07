@@ -26,8 +26,9 @@ namespace TreeCadN
         public string papka_s_foto = Environment.CurrentDirectory + @"\";
         public string index1idotd, index2idotd;
         public string Bazis;
-        private object Ambiente;
-        private object xamb, aamain, engine;
+        public object Ambiente;
+        public object xamb, aamain, engine;
+        public string pathordini;
 
         public string attiva(String s, String Valori, String DES, String PX, String PY, String param)
         {
@@ -35,6 +36,9 @@ namespace TreeCadN
 
 
             string returnValue = "";
+            INIManager inifile = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            pathordini = Environment.CurrentDirectory + @"\" + inifile.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+
             try
             {
                 INIManager client_man;
@@ -70,10 +74,20 @@ namespace TreeCadN
                         break;
                     case "GNviewer":
 
-                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoprocedure");//версия клиента
+                        //client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        //  path_sysdba = client_man.GetPrivateString("Infogen", "percorsoprocedure");//версия клиента
 
                         GNviewer(Environment.CurrentDirectory + @"\GIULIANOVARS\procedure");
+
+                        break;
+                    case "uploadPROGR":
+
+                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+
+                        uploadPROGR(Environment.CurrentDirectory + @"\" + path_sysdba);
+                        //получим номер заказа  
+                        //  this.Ambiente = xAmbiente;
 
                         break;
                 }
@@ -354,7 +368,7 @@ namespace TreeCadN
 
 
 
-           // string path = @"C:\evolution\giulianovars\GIULIANOVARS\procedure";
+            // string path = @"C:\evolution\giulianovars\GIULIANOVARS\procedure";
             string[] dirs = Directory.GetFiles(path, "*.exe");
 
 
@@ -429,6 +443,29 @@ namespace TreeCadN
             }
         }
 
+
+        public void uploadPROGR(string path)
+        {
+            //получим номер заказа  
+            this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+            object info = getParamG(xamb, "info");
+            string nomzakaza = getParam(info, "Numero").ToString();
+            int skolko0 = 6 - nomzakaza.Length;
+            string evename = "";
+            for (int i = 0; i < skolko0; i++)
+            {
+                evename += "0";
+            }
+            evename += nomzakaza + ".eve";
+            string evepath = path + @"\" + evename;
+
+
+            uploadPROGR.uploadPROGR sss = new uploadPROGR.uploadPROGR(evepath, this);
+            sss.ShowDialog();
+
+
+
+        }
 
         public List<UpdateUPD> UPdate = new List<UpdateUPD>();
         public void UPDATE()

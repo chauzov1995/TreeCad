@@ -9,10 +9,10 @@
       <Value Profile="(Default)">-100</Value>
     </Setting>
     <Setting Name="Left1" Type="System.Double" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Left2" Type="System.Double" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="tabControl1" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>

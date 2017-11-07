@@ -301,10 +301,11 @@ namespace TreeCadN
 
         void pars(string vh_str)
         {
+
             string[] elems = vh_str.Split(';');
             for (int i = 0; i < elems.Count(); i++)
             {
-               if (elems[i] != "")
+                if (elems[i] != "")
                 {
 
                     string[] znach = elems[i].Split('~');
@@ -314,38 +315,69 @@ namespace TreeCadN
                     if (Convert.ToInt32(znach[6]) > nom_PP) nom_PP = Convert.ToInt32(znach[6]);
 
 
-                    string article = znach[1].Replace('@', ',');
+                    string article = znach[1].Replace('@', ',').Replace('$', ';');
                     if (article == "***" || article == "*" || article == "15R***" || article == "SAD***")
                     {
-                        name = znach[7].Replace('@', ',');
+                        name = znach[7].Replace('@', ',').Replace('$', ';');
 
                     }
                     else
                     {
-                        name = (gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',')))).TName;
+                        name = (gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',').Replace('$', ';')))).TName;
 
                     }
                     //t-техника a-аксесуар
 
-                    texnika poluch = (gr1.Find(x => x.Article.Equals(article.Replace('@', ','))));
+                    texnika poluch1 = new texnika();
+                    poluch1 = (gr1.Find(x => x.Article.Equals(article.Replace('@', ',').Replace('$', ';'))));
+
+                    texnika poluch = new texnika();
+                    poluch.Article = poluch1.Article;
+                    poluch.baseprice = poluch1.baseprice;
+                    poluch.Group = poluch1.Group;
+                    poluch.GroupName = poluch1.GroupName;
+                    poluch.GROUP_dlyaspicif = poluch1.GROUP_dlyaspicif;
+                    poluch.ID = poluch1.ID;
+                    poluch.kolvo = poluch1.kolvo;
+                    poluch.nom_pp = poluch1.nom_pp;
+                    poluch.OTD = poluch1.OTD;
+                    poluch.priceredak = poluch1.priceredak;
+                    poluch.Prim = poluch1.Prim;
+                    poluch.sort = poluch1.sort;
+                    poluch.TName = poluch1.TName;
+                    poluch.type = poluch1.type;
+                    poluch.UnitsId = poluch1.UnitsId;
+                    poluch.UnitsName = poluch1.UnitsName;
+                    poluch.vived = poluch1.vived;
 
                     poluch.TName = name;
-                    poluch.OTD = znach[3].Replace('@', ',');//отделка
-                    poluch.Prim = znach[4].Replace('@', ',');//примечание
-                    poluch.type = znach[0].Replace('@', ',');//типп аксес или техн
-                    poluch.kolvo = Convert.ToSingle(znach[2].Replace('@', ','));//Колво
-                    poluch.nom_pp = Convert.ToInt32(znach[6].Replace('@', ','));//ид позиция
-                    poluch.priceredak = Convert.ToSingle(znach[9].Replace('@', ','));//цена ред
-                   // poluch.GROUP_dlyaspicif = znach[5].Replace('@', ',');//группа специфик
-                 
+                    poluch.OTD = znach[3].Replace('@', ',').Replace('$', ';');//отделка
+                    poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
+                    poluch.type = znach[0].Replace('@', ',').Replace('$', ';');//типп аксес или техн
+                    poluch.kolvo = Convert.ToSingle(znach[2].Replace('@', ',').Replace('.', ',').Replace('$', ';'));//Колво
+
+
+                    poluch.priceredak = Convert.ToSingle(znach[9].Replace('@', ',').Replace('.', ',').Replace('$', ';'));//цена ред
+                                                                                                       // poluch.GROUP_dlyaspicif = znach[5].Replace('@', ',');//группа специфик
+                    if (gr3.Find(x => x.nom_pp.Equals(Convert.ToInt32(znach[6].Replace('@', ',').Replace('$', ';')))) == null)
+                    {
+                        poluch.nom_pp = Convert.ToInt32(znach[6].Replace('@', ',').Replace('$', ';'));//ид позиция
+                    }
+                    else
+                    {
+                        nom_PP++;
+                        poluch.nom_pp = nom_PP;
+
+                    }
+
 
                     gr3.Add(poluch);
-               
+
                 }
             }
-         
+
             g3.ItemsSource = gr3;
-           
+
 
         }
 
@@ -436,7 +468,7 @@ namespace TreeCadN
                                 if ((tv1.SelectedItem as MenuItem).type == "t*" ||
                                     (tv1.SelectedItem as MenuItem).type == "a*")
                                 {//если выбрали в названии
-                           
+
 
                                     if ((e.Item as texnika).type == "a" && (tv1.SelectedItem as MenuItem).type == "a*") e.Accepted = true;
 
@@ -533,7 +565,8 @@ namespace TreeCadN
 
         private void g1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            texnika poluch = g1.SelectedItem as texnika;
+            texnika poluch = new texnika();
+            poluch = g1.SelectedItem as texnika;
             Grid_select(poluch);
 
         }
@@ -647,20 +680,20 @@ st14.Width.ToString() + ";";
 
                 string name = "";
 
-                if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@');
+                if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@').Replace(';', '$');
 
 
 
-                t += otvet_massiv.type.Replace(',', '@') + "~" +
-                otvet_massiv.Article.Replace(',', '@') + "~" +
-                otvet_massiv.kolvo.ToString().Replace(',', '@') + "~" +
-                otvet_massiv.OTD.Replace(',', '@') + "~" +
-                otvet_massiv.Prim.Replace(',', '@') + "~" +
-                otvet_massiv.GROUP_dlyaspicif.Replace(',', '@') + "~" +
-                otvet_massiv.nom_pp.ToString().Replace(',', '@') + "~" +
+                t += otvet_massiv.type.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.Article.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.kolvo.ToString().Replace(',', '.').Replace(';', '$') + "~" +
+                otvet_massiv.OTD.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.Prim.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.GROUP_dlyaspicif.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.nom_pp.ToString().Replace(',', '@').Replace(';', '$') + "~" +
                 name + "~" +
-                otvet_massiv.UnitsName.Replace(',', '@') + "~" +
-                otvet_massiv.priceredak.ToString().Replace(',', '@') + ";";
+                otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + ";";
                 //      MessageBox.Show(text_otvet);
             }
 
@@ -734,7 +767,7 @@ st14.Width.ToString() + ";";
                 }
                 else
                 {
-                    MessageBox.Show("Сначала выбирите элемент, который необходимо редактировать, затем нажмите эту кнопку снова");
+                    MessageBox.Show("Сначала выберите элемент, который необходимо редактировать, затем нажмите эту кнопку снова");
 
                 }
             }
@@ -781,8 +814,9 @@ st14.Width.ToString() + ";";
             {
                 if (e.Key == Key.Enter)
                 {
-
-                    //              Grid_select();
+                    texnika poluch = new texnika();
+                    poluch = g1.SelectedItem as texnika;
+                    Grid_select(poluch);
 
 
                 }
@@ -814,14 +848,35 @@ st14.Width.ToString() + ";";
 
         }
 
-        void Grid_select(texnika poluch)
+        void Grid_select(texnika poluch1)
         {
 
 
             List<texnika> kotor_v_gr3 = gr3.FindAll(FindComputer);
 
 
-         
+            texnika poluch = new texnika();
+            poluch.Article = poluch1.Article;
+            poluch.baseprice = poluch1.baseprice;
+            poluch.Group = poluch1.Group;
+            poluch.GroupName = poluch1.GroupName;
+            poluch.GROUP_dlyaspicif = poluch1.GROUP_dlyaspicif;
+            poluch.ID = poluch1.ID;
+            poluch.kolvo = poluch1.kolvo;
+            poluch.nom_pp = poluch1.nom_pp;
+            poluch.OTD = poluch1.OTD;
+            poluch.priceredak = poluch1.priceredak;
+            poluch.Prim = poluch1.Prim;
+            poluch.sort = poluch1.sort;
+            poluch.TName = poluch1.TName;
+            poluch.type = poluch1.type;
+            poluch.UnitsId = poluch1.UnitsId;
+            poluch.UnitsName = poluch1.UnitsName;
+            poluch.vived = poluch1.vived;
+
+
+
+
             g3.SelectedItem = index_for_poisl;
             if (kotor_v_gr3.Count <= 0)
             {//если такой нет

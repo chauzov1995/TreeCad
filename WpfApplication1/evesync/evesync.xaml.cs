@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -52,13 +53,14 @@ namespace TreeCadN.evesync
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-        //    MessageBox.Show("Сейчас будет открыто окно для авторизации, после успешного входа просто закройте его");
+            //    MessageBox.Show("Сейчас будет открыто окно для авторизации, после успешного входа просто закройте его");
             yadisk.Authorization();
             yadisk.tokenfromsetting();
-            if(yadisk.OAuthp != ""){
+            if (yadisk.OAuthp != "")
+            {
                 tb1.Content = "Авторизован";
             }
-          
+
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
@@ -178,7 +180,15 @@ namespace TreeCadN.evesync
 
         }
 
-    
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+
+
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+
+
+        }
     }
 
 

@@ -80,6 +80,13 @@ namespace TreeCadN.evesync
                 ps.OAuth = account.access_token;
                 ps.Save();
 
+
+                yadisk yadisk1 = new yadisk();
+                yadisk1.tokenfromsetting();
+                yadisk1.combat_zapros("CREATEDIR", @"GN_arhiv");
+
+
+
                 Grid.SetColumnSpan(browser, 1);
                 // browser.SetValue(Grid.ColumnSpan, 1); .Grid.ColumnSpan
                 //   Close();

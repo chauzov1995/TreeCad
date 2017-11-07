@@ -53,8 +53,10 @@ namespace TreeCadN.kommunikacii
             this.pathBD = pathBD;
             BD.path = pathBD; //укажем файл бд
 
-            INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
-             admin = client_man.GetPrivateString("giulianovars", "3dsadmin");//версия клиента
+     
+
+            INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            admin = client_man.GetPrivateString("giulianovars", "3dsadmin");//версия клиента
             if (admin == "1")
             {
                 label1.Visibility = Visibility.Visible;
