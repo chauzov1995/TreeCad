@@ -49,6 +49,13 @@ namespace TreeCadN.evesync
             }
 
 
+
+       //     yadisk yadisk1 = new yadisk();
+       //     yadisk1.tokenfromsetting();
+       //     yadisk1.combat_zapros("PROPFIND", @"GN_arhiv");
+
+
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -256,19 +263,20 @@ namespace TreeCadN.evesync
 
                         break;
                     case "PROPFIND":
-
+                       
                         string prop = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
                          <propfind xmlns=""DAV:"">
                             
                         </propfind>";
-                        url = "https://webdav.yandex.ru/" + path;
+                        url = "https://webdav.yandex.ru" ;
+
                         webClient.Headers.Add("Authorization", "OAuth " + OAuthp);
                         webClient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
                         webClient.Headers.Add("Accept", "*/*");
                         webClient.Headers.Add("Depth", "0");
 
-                        var response = webClient.UploadString(url, "PROPFIND", prop);
-                        MessageBox.Show(response.ToString());
+                        var response = webClient.UploadString(url, "PROPFIND", "");
+                   //     MessageBox.Show(response.ToString());
 
 
                         break;
@@ -276,7 +284,7 @@ namespace TreeCadN.evesync
                         url = "https://webdav.yandex.ru/?userinfo";
                         webClient.Headers.Add("Authorization", "OAuth " + OAuthp);
                         Login = webClient.UploadString(url, "GET ", "").ToString();
-                        MessageBox.Show(Login.ToString());
+                  //      MessageBox.Show(Login.ToString());
 
                         break;
 

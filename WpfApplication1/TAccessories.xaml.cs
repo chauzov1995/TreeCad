@@ -23,6 +23,7 @@ namespace TreeCadN
     /// </summary>
     public partial class TAccessories : Window
     {
+
         static BD_Connect BD = new BD_Connect();
         public string text_otvet;
 
@@ -52,13 +53,14 @@ namespace TreeCadN
             InitializeComponent();
             BD.path = path; //укажем файл бд
             this.text_otvet = text;
-
+            log.Add("Запуск окна");
             timer.Tick += new EventHandler(timerTick);
             timer.Interval = new TimeSpan(0, 0, 0, 0, 500);
-
+            log.Add("Запуск таймера");
             loadpage();//загрузка полож окна
 
             //отделка
+            log.Add("Подключимся к бд");
             OleDbDataReader reader_otd = BD.conn("SELECT Id, Name FROM TOtdelka order by Name ASC");
             todelka.Add(new todelka() { ID = "", nameotd = "" });
             while (reader_otd.Read())
@@ -76,7 +78,7 @@ namespace TreeCadN
 
                 }
             }
-
+            log.Add("установим отделку");
             otdelka.ItemsSource = todelka;
 
             //ед изм
@@ -97,11 +99,11 @@ namespace TreeCadN
 
                 }
             }
-
+            log.Add("установим ед изм");
             edizmer.ItemsSource = izmer;
 
 
-
+            log.Add("загрузим аксссуары");
             //аксессуары
             OleDbDataReader reader_GRACC = BD.conn("SELECT TPrice1.Articul, TUnits.UnitsID, TPrice1.TKOEFGROUP_ID, TUnits.UnitsName, TPrice1.MName, TPrice1.MatID,  TPrice1.PriceID,  TPrice1.Price, TMAT.MATNAME,  TPrice1.Visibl FROM (TPrice1  LEFT OUTER JOIN  TMAT ON TPrice1.MatID = TMAT.MATID) LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID  ");
             //LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID
@@ -152,7 +154,7 @@ namespace TreeCadN
 
                 sort_forg1++;
             }
-
+            log.Add("Загрузим технику");
             //техника
             OleDbDataReader reader = BD.conn("SELECT TTxPrice1.Article, TTxPrice1.TName, TTxPrice1.TKOEFGROUP_ID, TTxPrice1.TPriceID, TTxPrice1.TexID, TTxPrice1.Price, TTexnics.TexType  FROM TTxPrice1  LEFT OUTER JOIN  TTexnics ON  TTxPrice1.TexID = TTexnics.TexID  ");
             while (reader.Read())
@@ -216,7 +218,7 @@ namespace TreeCadN
 
             MenuItem root = new MenuItem() { Title = "Все", type = "at*" };
             MenuItem childItem1 = new MenuItem() { Title = "Аксессуары", type = "a*" };
-
+            log.Add("Загрузим матид");
             OleDbDataReader readertreeeacc = BD.conn("select T.MATID,MATNAME from TMAT T, TPrice1 T1 where T1.MATID = T.MATID  group by T.MATID,T.MATNAME ORDER BY T.MATNAME ASC");
 
             while (readertreeeacc.Read())
@@ -232,7 +234,7 @@ namespace TreeCadN
 
             root.Items.Add(childItem1);
             childItem1 = new MenuItem() { Title = "Техника", type = "t*" };
-
+            log.Add("загрузим ттехникс");
             OleDbDataReader reader_texCB = BD.conn("select T.TexID,TexType from TTexnics T, TTxPrice1 T1 where T1.TexID=T.TexID  group by T.TEXID,T.TexType ORDER BY T.TexType ASC ");
 
             while (reader_texCB.Read())
@@ -256,7 +258,7 @@ namespace TreeCadN
 
             // tv1.ItemsSource = groups;
 
-
+            log.Add("парсим строку");
             pars(text);
 
 
@@ -303,62 +305,90 @@ namespace TreeCadN
         {
 
             string[] elems = vh_str.Split(';');
+
+            log.Add("запуск цикла парсим");
+            log.Add("входная строка " + vh_str);
             for (int i = 0; i < elems.Count(); i++)
             {
                 if (elems[i] != "")
                 {
-
+                    log.Add("строка " + elems[i]);
                     string[] znach = elems[i].Split('~');
 
                     string name;
 
                     if (Convert.ToInt32(znach[6]) > nom_PP) nom_PP = Convert.ToInt32(znach[6]);
 
-
-                    string article = znach[1].Replace('@', ',').Replace('$', ';');
-                    if (article == "***" || article == "*" || article == "15R***" || article == "SAD***")
-                    {
-                        name = znach[7].Replace('@', ',').Replace('$', ';');
-
-                    }
-                    else
-                    {
-                        name = (gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',').Replace('$', ';')))).TName;
-
-                    }
-                    //t-техника a-аксесуар
-
-                    texnika poluch1 = new texnika();
-                    poluch1 = (gr1.Find(x => x.Article.Equals(article.Replace('@', ',').Replace('$', ';'))));
-
                     texnika poluch = new texnika();
-                    poluch.Article = poluch1.Article;
-                    poluch.baseprice = poluch1.baseprice;
-                    poluch.Group = poluch1.Group;
-                    poluch.GroupName = poluch1.GroupName;
-                    poluch.GROUP_dlyaspicif = poluch1.GROUP_dlyaspicif;
-                    poluch.ID = poluch1.ID;
-                    poluch.kolvo = poluch1.kolvo;
-                    poluch.nom_pp = poluch1.nom_pp;
-                    poluch.OTD = poluch1.OTD;
-                    poluch.priceredak = poluch1.priceredak;
-                    poluch.Prim = poluch1.Prim;
-                    poluch.sort = poluch1.sort;
-                    poluch.TName = poluch1.TName;
-                    poluch.type = poluch1.type;
-                    poluch.UnitsId = poluch1.UnitsId;
-                    poluch.UnitsName = poluch1.UnitsName;
-                    poluch.vived = poluch1.vived;
+                    try
+                    {
 
-                    poluch.TName = name;
+                        string article = znach[1].Replace('@', ',').Replace('$', ';');
+                        if (article == "***" || article == "*" || article == "15R***" || article == "SAD***")
+                        {
+                            name = znach[7].Replace('@', ',').Replace('$', ';');
+
+                        }
+                        else
+                        {
+                            name = (gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',').Replace('$', ';')))).TName;
+
+                        }
+                        //t-техника a-аксесуар
+
+
+
+
+                        texnika poluch1 = new texnika();
+                        poluch1 = (gr1.Find(x => x.Article.Equals(article.Replace('@', ',').Replace('$', ';'))));
+
+
+
+
+                        poluch.Article = poluch1.Article;
+                        poluch.baseprice = poluch1.baseprice;
+                        poluch.Group = poluch1.Group;
+                        poluch.GroupName = poluch1.GroupName;
+                        poluch.GROUP_dlyaspicif = poluch1.GROUP_dlyaspicif;
+                        poluch.ID = poluch1.ID;
+                        poluch.kolvo = poluch1.kolvo;
+                        poluch.nom_pp = poluch1.nom_pp;
+                        poluch.OTD = poluch1.OTD;
+                        poluch.priceredak = poluch1.priceredak;
+                        poluch.Prim = poluch1.Prim;
+                        poluch.sort = poluch1.sort;
+                        poluch.TName = poluch1.TName;
+                        poluch.type = poluch1.type;
+                        poluch.UnitsId = poluch1.UnitsId;
+                        poluch.UnitsName = poluch1.UnitsName;
+                        poluch.vived = poluch1.vived;
+                        poluch.TName = name;
+                        poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
+                        poluch.colortext = "x:Null";
+
+                    }
+                    catch
+                    {
+                        poluch.TName = znach[7].Replace('@', ',').Replace('$', ';');
+                        poluch.Article = znach[1].Replace('@', ',').Replace('$', ';');
+                        poluch.Prim = "!Артикула нет в базе!".Replace('@', ',').Replace('$', ';');//примечание
+                        poluch.colortext = "#FFDE0606";
+                    }
+                   
                     poluch.OTD = znach[3].Replace('@', ',').Replace('$', ';');//отделка
-                    poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
                     poluch.type = znach[0].Replace('@', ',').Replace('$', ';');//типп аксес или техн
                     poluch.kolvo = Convert.ToSingle(znach[2].Replace('@', ',').Replace('.', ',').Replace('$', ';'));//Колво
 
 
                     poluch.priceredak = Convert.ToSingle(znach[9].Replace('@', ',').Replace('.', ',').Replace('$', ';'));//цена ред
-                                                                                                       // poluch.GROUP_dlyaspicif = znach[5].Replace('@', ',');//группа специфик
+
+
+
+
+
+
+
+                    // poluch.GROUP_dlyaspicif = znach[5].Replace('@', ',');//группа специфик
                     if (gr3.Find(x => x.nom_pp.Equals(Convert.ToInt32(znach[6].Replace('@', ',').Replace('$', ';')))) == null)
                     {
                         poluch.nom_pp = Convert.ToInt32(znach[6].Replace('@', ',').Replace('$', ';'));//ид позиция
@@ -371,11 +401,12 @@ namespace TreeCadN
                     }
 
 
+
                     gr3.Add(poluch);
 
                 }
             }
-
+            log.Add("закончили парсить установим в гр3");
             g3.ItemsSource = gr3;
 
 
@@ -578,6 +609,8 @@ namespace TreeCadN
 
         void loadpage()
         {
+
+            log.Add("установим размеры окна окна");
             Properties.Settings_AT ps = Properties.Settings_AT.Default;
             if (ps.Top == -100)
             {
@@ -873,7 +906,7 @@ st14.Width.ToString() + ";";
             poluch.UnitsId = poluch1.UnitsId;
             poluch.UnitsName = poluch1.UnitsName;
             poluch.vived = poluch1.vived;
-
+            poluch.colortext = poluch1.colortext;
 
 
 
@@ -1120,6 +1153,7 @@ st14.Width.ToString() + ";";
         public bool vived { get; set; }
         public int sort { get; set; }
         public string GROUP_dlyaspicif { get; set; }
+        public string colortext { get; set; }
     }
     public class todelka
     {

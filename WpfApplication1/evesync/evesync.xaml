@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TreeCadN.evesync"
         xmlns:my="clr-namespace:System.ComponentModel;assembly=System"
         mc:Ignorable="d"
-        Title="Синхронизация заказов с ЯндексДиском" Height="219.374" Width="403.124" ResizeMode="CanMinimize" Icon="/TreeCadN;component/Foto/favicons.png" WindowStartupLocation="CenterScreen">
+        Title="Синхронизация заказов с ЯндексДиском" Height="228.041" Width="403.124" ResizeMode="CanMinimize" Icon="/TreeCadN;component/Foto/favicons.png" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <my:BackgroundWorker
       x:Key="backgroundWoker"

@@ -7,8 +7,10 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="64"/>
-            <RowDefinition Height="10*"/>
-            <RowDefinition Height="8*"/>
+            <RowDefinition Height="203*" MinHeight="100"/>
+
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="156*" MinHeight="100"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -94,14 +96,14 @@
 
         </Grid >
 
-        <DataGrid x:Name="g3" Grid.Row="2"  Margin="5,10,5,5" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" Grid.ColumnSpan="3" AllowDrop="True" CellEditEnding="g3_CellEditEnding_1" BeginningEdit="g3_BeginningEdit_1" PreparingCellForEdit="g3_PreparingCellForEdit" PreviewTextInput="g3_PreviewTextInput" MouseUp="g3_MouseUp" RowEditEnding="g3_RowEditEnding"   >
+        <DataGrid x:Name="g3" Grid.Row="3"  Margin="5" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" Grid.ColumnSpan="3" AllowDrop="True" CellEditEnding="g3_CellEditEnding_1" BeginningEdit="g3_BeginningEdit_1" PreparingCellForEdit="g3_PreparingCellForEdit" PreviewTextInput="g3_PreviewTextInput" MouseUp="g3_MouseUp" RowEditEnding="g3_RowEditEnding"   >
             <DataGrid.Columns>
 
                 <DataGridTextColumn x:Name="st1"  Header="№п.п." Binding="{Binding nom_pp}" Width="60"  />
-                <DataGridTextColumn x:Name="st2" Header="Артикул" Binding="{Binding Article}" Width="60"  />
-                <DataGridTextColumn x:Name="st3" Header="Название"  Binding="{Binding TName}"  Width="*"  />
+                <DataGridTextColumn x:Name="st2" Header="Артикул" Binding="{Binding Article}" Width="60"  Foreground="{Binding colortext}" />
+                <DataGridTextColumn x:Name="st3" Header="Название"  Binding="{Binding TName}"  Width="*"/>
                 <DataGridTextColumn x:Name="st4" Header="Примечание"  Binding="{Binding Prim}"  Width="*" />
-                <DataGridComboBoxColumn Width="150" x:Name="otdelka"  Header="Отделка"
+                <DataGridComboBoxColumn Width="150" x:Name="otdelka"  Header="Отделка" 
                          SelectedValueBinding="{Binding OTD}" 
                     SelectedValuePath="ID"
                     DisplayMemberPath="nameotd"  />
@@ -128,7 +130,7 @@
 
 
 
-        <Grid Margin="0" Grid.Row="3" Grid.ColumnSpan="3">
+        <Grid Margin="0" Grid.Row="4" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="267*"/>
@@ -140,13 +142,15 @@
             <Button x:Name="btn4" Content="Редактировать [F1]" Margin="5" Click="Button_Click_4"/>
         </Grid>
         <TreeView x:Name="tv1" Margin="5,5,0,5" Grid.Row="1"  SelectedItemChanged="tv1_SelectedItemChanged" BorderThickness="1,1,0,1">
-        <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type local:MenuItem}" ItemsSource="{Binding Items}">
-                <TextBlock Text="{Binding Title}" MinWidth="150"/>
-            </HierarchicalDataTemplate>
-        </TreeView.ItemTemplate>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type local:MenuItem}" ItemsSource="{Binding Items}">
+                    <TextBlock Text="{Binding Title}" MinWidth="150"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
         </TreeView>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,5" Grid.Row="1" Background="#FF828790"/>
+        <GridSplitter HorizontalAlignment="Stretch" Height="2" Margin="4" Grid.Row="2" Grid.ColumnSpan="3" RenderTransformOrigin="0.5,0.5"/>
+
 
 
 
