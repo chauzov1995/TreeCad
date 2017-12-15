@@ -24,20 +24,48 @@ namespace TreeCadN.uploadPROGR
         public dialprogr(neqweqe neqqqqq)
         {
             InitializeComponent();
-          this.neqqqqq = neqqqqq;
-          
+            this.neqqqqq = neqqqqq;
+            log.Add("подключаемся к фтп");
+
+
+            List<string> eve = new List<string>();
+
+
+            WebClient client = new WebClient();
+            var url = "http://ecad.giulianovars.ru/zakaz/";
+            var response = client.DownloadString(url);
+            string[] masssiv = response.Split(new string[] { ".eve\">" }, StringSplitOptions.None);
+
+
+            foreach (string elem in masssiv)
+            {
+                string element = elem.Split(new string[] { ".eve</a>" }, StringSplitOptions.None).First();
+
+                if (element.Length <= 6)
+                {
+
+
+
+                    eve.Add(element + ".eve");
+
+                }
+            }
+
+
+            /*
+
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://ecad.giulianovars.ru/public/zakaz//");
 
             request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
             request.Credentials = new NetworkCredential("ecad_ftp", "bFqeNo4Xp2");
             FtpWebResponse response = (FtpWebResponse)request.GetResponse();
 
-
+            log.Add("запрос к фтп успех");
             Stream responseStream = response.GetResponseStream();
             StreamReader reader = new StreamReader(responseStream);
             string spisokfiles = reader.ReadToEnd();
             string[] tolb1 = spisokfiles.Split('\n');
-
+            log.Add(spisokfiles);
             for (int i = 0; i < tolb1.Length; i++)
             {
                 tolb1[i] = tolb1[i].Split(' ').Last();
@@ -45,7 +73,7 @@ namespace TreeCadN.uploadPROGR
             }
 
             lb1.ItemsSource = tolb1;
-
+           
 
 
             //  MessageBox.Show(reader.ReadToEnd());
@@ -54,35 +82,33 @@ namespace TreeCadN.uploadPROGR
             responseStream.Close();
             response.Close();
             Console.Read();
+             */
 
 
-
-            List<nazveve> eve = new List<nazveve>();
-            eve.Add(new nazveve
-            {
-                name = "",
-                path = ""
-            });
-            //  lb1.ItemsSource();
+            lb1.ItemsSource = eve;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+
+
+
+
             //MessageBox.Show("http://ecad.giulianovars.ru/zakaz/" + (lb1.SelectedItem as string));
             WebClient client = new WebClient();
             var url = "http://ecad.giulianovars.ru/zakaz/" + (lb1.SelectedItem as string);
-
             INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-
             string tmppath = Environment.CurrentDirectory + @"\" + path_sysdba + @"\000001.eve";
-
-           // MessageBox.Show(tmppath);
+            log.Add("Путь куда установили " + tmppath);
+            // MessageBox.Show(tmppath);
             client.DownloadFile(url, tmppath);//скачаем новую
 
 
             neqqqqq.getParam(neqqqqq.xamb, "carica", neqqqqq.pathordini + @"\000001.eve");
             Close();
+
+            MessageBox.Show("Готово, теперь в номере заказа укажите 1");
         }
     }
     class nazveve

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,9 +39,15 @@ namespace TreeCadN.uploadPROGR
             this.pb1.Visibility = Visibility.Hidden;
 
 
+           this.btn2.Visibility = Visibility.Hidden;
 
+
+           // DirectoryInfo sdsd = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
+        //    log.Add("путь к ини"+ sdsd + @"\ecadpro.ini");
             INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
             string admin = client_man.GetPrivateString("giulianovars", "3dsadmin");//версия клиента
+          //  MessageBox.Show("путь к ини" + sdsd + @"\ecadpro.ini");
+         
             if (admin == "1")
             {
                 btn2.Visibility = Visibility.Visible;

@@ -65,12 +65,13 @@
         <StackPanel  Margin="0,0,20,0" Width="150">
             <Button x:Name="btn_zhivoy" Margin="0 4 0 0"   Height="30" Content="&quot;Я живой&quot;" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" Click="btn_zhivoy_Click"/>
             <Button x:Name="proxy_setting"  Margin="0,4,0,0"  Height="30" Content="Настройка прокси" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" Click="proxy_setting_Click"/>
-           
-            <Button x:Name="btnShowSelectedItem"    Height="30" Content="Подтвердить" Click="btnShowSelectedItem_Click" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" IsDefault="True" Margin="0,240,0,0"/>
+            <TextBlock x:Name="tv_tek" TextWrapping="Wrap" Text="Ваша ver 1.0.1133" Padding="5,0" Margin="0,5,0,0"/>
+            <TextBlock x:Name="tv_ak" TextWrapping="Wrap" Text="Актуальная ver 1.0.1133" Padding="5,0"/>
+            <Button x:Name="btnShowSelectedItem"    Height="30" Content="Подтвердить" Click="btnShowSelectedItem_Click" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" IsDefault="True" Margin="0,203,0,0"/>
 
 
             <Button x:Name="btnSelectLast"  Height="30" Content="Отмена" Click="btnSelectLast_Click" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" IsCancel="True" Margin="0,4,0,0"   VerticalAlignment="Bottom" VerticalContentAlignment="Stretch"/>
-
+          
 
         </StackPanel>
     </StackPanel>

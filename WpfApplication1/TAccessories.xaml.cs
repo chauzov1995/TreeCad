@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.OleDb;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -80,7 +81,7 @@ namespace TreeCadN
             }
             log.Add("установим отделку");
             otdelka.ItemsSource = todelka;
-
+            //.ItemsSource = todelka;
             //ед изм
             OleDbDataReader reader_izmer = BD.conn("SELECT UnitsID, UnitsName FROM TUnits order by UnitsName ASC");
 
@@ -355,9 +356,9 @@ namespace TreeCadN
                         poluch.nom_pp = poluch1.nom_pp;
                         poluch.OTD = poluch1.OTD;
                         poluch.priceredak = poluch1.priceredak;
-                        poluch.Prim = poluch1.Prim;
+                       // poluch.Prim = poluch1.Prim;
                         poluch.sort = poluch1.sort;
-                        poluch.TName = poluch1.TName;
+                     //   poluch.TName = poluch1.TName;
                         poluch.type = poluch1.type;
                         poluch.UnitsId = poluch1.UnitsId;
                         poluch.UnitsName = poluch1.UnitsName;
@@ -373,6 +374,10 @@ namespace TreeCadN
                         poluch.Article = znach[1].Replace('@', ',').Replace('$', ';');
                         poluch.Prim = "!Артикула нет в базе!".Replace('@', ',').Replace('$', ';');//примечание
                         poluch.colortext = "#FFDE0606";
+
+                        poluch.GROUP_dlyaspicif = "";
+                        
+                        poluch.UnitsName = "";
                     }
                    
                     poluch.OTD = znach[3].Replace('@', ',').Replace('$', ';');//отделка
@@ -715,7 +720,7 @@ st14.Width.ToString() + ";";
 
                 if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@').Replace(';', '$');
 
-
+              
 
                 t += otvet_massiv.type.Replace(',', '@').Replace(';', '$') + "~" +
                 otvet_massiv.Article.Replace(',', '@').Replace(';', '$') + "~" +
@@ -728,6 +733,7 @@ st14.Width.ToString() + ";";
                 otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
                 otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + ";";
                 //      MessageBox.Show(text_otvet);
+              
             }
 
 
@@ -919,6 +925,7 @@ st14.Width.ToString() + ";";
                 gr3.Add(poluch);
                 g3.ItemsSource = null;
                 g3.ItemsSource = gr3;
+             
                 //   g3.Style = DataGridViewTriState.True;
 
             }
@@ -1184,7 +1191,20 @@ st14.Width.ToString() + ";";
 
 
 
-
+    class AgeToColorConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        // Все проверки для краткости выкинул
+        return (string)value == "!Артикула нет в базе!" ? 
+            new SolidColorBrush(Colors.Red)
+            : new SolidColorBrush(Colors.Black);
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new Exception("The method or operation is not implemented.");
+    }
+}
 
 
 }

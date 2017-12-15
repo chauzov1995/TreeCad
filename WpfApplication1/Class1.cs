@@ -559,7 +559,18 @@ namespace TreeCadN
                 authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
 
 
-                string url = "http://ecad.giulianovars.ru/php/license/load_page_for_dll.php?authotiz_root=" + authotiz_root;
+
+
+                string client_ver="";
+                string path = Environment.CurrentDirectory + @"\giulianovars\procedure\updN.ini";
+                if (File.Exists(path))
+                {
+                    INIManager client_man = new INIManager(path);
+                    client_ver = client_man.GetPrivateString("GN_UPD", "last_upd");//версия клиента
+                }
+
+
+                string url = "http://ecad.giulianovars.ru/php/license/load_page_for_dll.php?authotiz_root=" + authotiz_root+ "&upd_time=" + client_ver;
                 var response = client.DownloadData(url);
                 string str = System.Text.Encoding.UTF8.GetString(response);
                 string[] parse = str.Split('=');
@@ -568,8 +579,11 @@ namespace TreeCadN
                 email_root = parse[1];
                 abilitato_root = parse[2];
                 moduli_root = parse[3];
+             
+                string actual_ver = "Актуальная ver " + parse[4];
+                string  tekver = "Текущяя ver " + parse[5];
 
-                license f3 = new license(id_clienta_root, email_root, authotiz_root, moduli_root, abilitato_root, client);
+                license f3 = new license(id_clienta_root, email_root, authotiz_root, moduli_root, abilitato_root, client, actual_ver, tekver);
                 f3.ShowDialog(); //блокируется основная форма
             }
             catch (WebException ex)

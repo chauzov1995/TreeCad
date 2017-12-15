@@ -87,6 +87,11 @@ namespace TreeCadN.kommunikacii
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            
+
+
+
+
             if (File.Exists(tb1.Text) && tb1.Text != "")
             {
                 if (File.Exists(tb2.Text) || tb2.Text == "")

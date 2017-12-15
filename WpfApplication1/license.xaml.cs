@@ -30,7 +30,7 @@ namespace TreeCadN
 
 
 
-        public license(string id_clienta_root, string email_root, string authotiz_root, string moduli_root, string abilitato_root, WebClient client)
+        public license(string id_clienta_root, string email_root, string authotiz_root, string moduli_root, string abilitato_root, WebClient client, string actual_ver, string tekver)
         {
 
             InitializeComponent();
@@ -40,6 +40,13 @@ namespace TreeCadN
             this.authotiz_root = authotiz_root;
             this.moduli_root = moduli_root;
             this.abilitato_root = abilitato_root;
+
+         
+            tv_tek.Text = tekver;
+            tv_ak.Text = actual_ver;
+
+
+
             otrisovka();
         }
 
@@ -64,6 +71,8 @@ namespace TreeCadN
             items.Add(new Licenz { id = "4", lic = "Sketch Up", price = "2", modul_Act = moduli_pars[8] });
             items.Add(new Licenz { id = "5", lic = "Предметы для обстановки помещений", price = "3", modul_Act = moduli_pars[11] });
             items.Add(new Licenz { id = "6", lic = "Спецэффекты (плавное открывание дверей и пр.)", price = "3", modul_Act = moduli_pars[2] });
+
+         
 
             zapros_na_server();
 
