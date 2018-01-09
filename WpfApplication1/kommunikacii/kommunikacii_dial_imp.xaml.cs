@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using HelixToolkit.Wpf;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
@@ -14,7 +15,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
+
 
 namespace TreeCadN.kommunikacii
 {
@@ -26,6 +29,9 @@ namespace TreeCadN.kommunikacii
         public string pathBD = "";
         public Models3d model = new Models3d();
         public treespis category = new treespis();
+
+
+        //private const string MODEL_PATH = @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\3dsObject\User\Розетки\1_131483728943324771.3ds";
 
         public kommunikacii_dial_imp(string pathBD, Models3d model, treespis category)
         {
@@ -56,11 +62,22 @@ namespace TreeCadN.kommunikacii
                 ty.Text = model.y;
                 tz.Text = model.z;
 
+                ModelVisual3D device3D = new ModelVisual3D();
+                Model3D dmodel3ds = Display3d(model.path);
 
+                device3D.Content = dmodel3ds;
+
+                viewPort3d.Children.Add(device3D);
+                viewPort3d.ZoomExtents();
             }
 
 
+
+
+
         }
+
+        ModelVisual3D lastmodel;
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -70,6 +87,35 @@ namespace TreeCadN.kommunikacii
             {
                 tb1.Text = openFileDialog1.FileName;
 
+
+
+
+
+
+
+
+
+
+
+                ModelVisual3D device3D = new ModelVisual3D();
+                Model3D dmodel3ds = Display3d(openFileDialog1.FileName);
+
+                device3D.Content = dmodel3ds;
+                // Add to view port
+                if (lastmodel != null)
+                {
+                    viewPort3d.Children.Remove(lastmodel);
+                }
+
+                viewPort3d.Children.Add(device3D);
+                viewPort3d.ZoomExtents();
+
+                tx.Text = dmodel3ds.Bounds.SizeX.ToString("0");
+                ty.Text = dmodel3ds.Bounds.SizeZ.ToString("0");
+                tz.Text = dmodel3ds.Bounds.SizeY.ToString("0");
+
+
+                lastmodel = device3D;
             }
 
         }
@@ -87,7 +133,7 @@ namespace TreeCadN.kommunikacii
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            
+
 
 
 
@@ -266,7 +312,78 @@ namespace TreeCadN.kommunikacii
         }
 
 
+        private Model3D Display3d(string model)
+        {
+            Model3D device = null;
+            try
+            {
+                //Adding a gesture here
+                viewPort3d.RotateGesture = new MouseGesture(MouseAction.LeftClick);
 
+                //Import 3D model file
+                ModelImporter import = new ModelImporter();
+
+                //Load the 3D model file
+                device = import.Load(model);
+
+
+
+
+            }
+            catch (Exception e)
+            {
+                // Handle exception in case can not find the 3D model file
+                MessageBox.Show("Exception Error : " + e.StackTrace);
+            }
+            return device;
+        }
+
+        private void tx_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+            if (cb_1.IsChecked == true && (tx.Text != "" && ty.Text != "" && tz.Text != "") && (sender as TextBox).IsFocused)
+            {
+
+                double koef = Convert.ToDouble(tx.Text) / pre_x;
+                ty.Text = (pre_y * koef).ToString("0");
+                tz.Text = (pre_z * koef).ToString("0");
+            }
+        }
+        private void ty_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+            if (cb_1.IsChecked == true && (tx.Text != "" && ty.Text != "" && tz.Text != "") && (sender as TextBox).IsFocused)
+            {
+
+                double koef = Convert.ToDouble(ty.Text) / pre_y;
+                tx.Text = (pre_x * koef).ToString("0");
+                tz.Text = (pre_z * koef).ToString("0");
+            }
+        }
+        private void tz_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+            if (cb_1.IsChecked == true && (tx.Text != "" && ty.Text != "" && tz.Text != "") && (sender as TextBox).IsFocused)
+            {
+
+                double koef = Convert.ToDouble(tz.Text) / pre_z;
+                tx.Text = (pre_x * koef).ToString("0");
+                ty.Text = (pre_y * koef).ToString("0");
+
+            }
+        }
+
+        double pre_x, pre_y, pre_z;
+
+        private void cb_1_Checked(object sender, RoutedEventArgs e)
+        {
+            if (cb_1.IsChecked == true)
+            {
+                pre_x = Convert.ToDouble(tx.Text);
+                pre_y = Convert.ToDouble(ty.Text);
+                pre_z = Convert.ToDouble(tz.Text);
+            }
+        }
 
 
     }

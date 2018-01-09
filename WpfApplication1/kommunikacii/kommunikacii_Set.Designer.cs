@@ -12,7 +12,7 @@ namespace TreeCadN.kommunikacii {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.3.0.0")]
     internal sealed partial class kommunikacii_Set : global::System.Configuration.ApplicationSettingsBase {
         
         private static kommunikacii_Set defaultInstance = ((kommunikacii_Set)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new kommunikacii_Set())));

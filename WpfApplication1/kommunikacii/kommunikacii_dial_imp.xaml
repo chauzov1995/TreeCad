@@ -3,29 +3,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:helix="http://helix-toolkit.org/wpf"
         xmlns:local="clr-namespace:TreeCadN.kommunikacii"
+       
         mc:Ignorable="d"
-        Title="Добавление пользовательского 3d объекта" Height="348.884" Width="506.172" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="Добавление пользовательского 3d объекта" Height="393.884" Width="736.672" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
-        <Button Content="Обзор" HorizontalAlignment="Left" Margin="417,77,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <TextBox x:Name="tb1" HorizontalAlignment="Left" Height="23" Margin="11,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="401" ToolTip="Укажите путь к 3ds файлу"/>
-        <TextBox x:Name="tb2" HorizontalAlignment="Left" Height="23" Margin="11,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="401" ToolTip="Укажите путь к Картинке, которая буте отображаться, при поиске объекта"/>
-        <Button Content="Обзор" HorizontalAlignment="Left" Margin="417,128,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-        <Button Content="Сохранить" HorizontalAlignment="Left" Margin="415,278,0,0" VerticalAlignment="Top" Width="75" Height="31" Click="Button_Click_2"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400"/>
+            <ColumnDefinition Width="275*"/>
+        </Grid.ColumnDefinitions>
+        <Button Content="Обзор" HorizontalAlignment="Left" Margin="315,76,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <TextBox AllowDrop="true" x:Name="tb1" HorizontalAlignment="Left" Height="23" Margin="11,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="299" ToolTip="Укажите путь к 3ds файлу" />
+        <TextBox x:Name="tb2"  HorizontalAlignment="Left" Height="23" Margin="11,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="299" ToolTip="Укажите путь к Картинке, которая буте отображаться, при поиске объекта" />
+        <Button Content="Обзор" HorizontalAlignment="Left" Margin="315,128,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
         <TextBlock HorizontalAlignment="Left" Margin="11,59,0,0" TextWrapping="Wrap" Text="Выберите 3ds объект*" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="11,110,0,0" TextWrapping="Wrap" Text="Добавьте картинку" VerticalAlignment="Top"/>
-        <TextBox x:Name="tx" HorizontalAlignment="Left" Height="23" Margin="60,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewTextInput="tx_PreviewTextInput" PreviewKeyDown="tx_PreviewKeyDown"/>
-        <TextBox x:Name="ty" HorizontalAlignment="Left" Height="23" Margin="191,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewKeyDown="ty_PreviewKeyDown" PreviewTextInput="ty_PreviewTextInput"/>
-        <TextBox x:Name="tz" HorizontalAlignment="Left" Height="23" Margin="340,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewKeyDown="tz_PreviewKeyDown" PreviewTextInput="tz_PreviewTextInput"/>
-        <TextBox x:Name="tb3" HorizontalAlignment="Left" Height="23" Margin="10,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="401" ToolTip="Картинка для отображения УГО на чертеже"/>
-        <Button x:Name="btn1" Content="Обзор" HorizontalAlignment="Left" Margin="415,251,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_3"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,187,0,0" TextWrapping="Wrap" Text="Ширина" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="147,187,0,0" TextWrapping="Wrap" Text="Высота" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="290,187,0,0" TextWrapping="Wrap" Text="Глубина" VerticalAlignment="Top"/>
+        <TextBox x:Name="tx" HorizontalAlignment="Left" Height="23" Margin="251,165,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewTextInput="tx_PreviewTextInput" PreviewKeyDown="tx_PreviewKeyDown" TextChanged="tx_TextChanged"/>
+        <TextBox x:Name="ty" HorizontalAlignment="Left" Height="23" Margin="251,193,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewKeyDown="ty_PreviewKeyDown" PreviewTextInput="ty_PreviewTextInput" TextChanged="ty_TextChanged"/>
+        <TextBox x:Name="tz" HorizontalAlignment="Left" Height="22" Margin="251,221,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59" PreviewKeyDown="tz_PreviewKeyDown" PreviewTextInput="tz_PreviewTextInput" TextChanged="tz_TextChanged"/>
+        <TextBox x:Name="tb3" HorizontalAlignment="Left" Height="23" Margin="9,273,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" ToolTip="Картинка для отображения УГО на чертеже"/>
+        <Button x:Name="btn1" Content="Обзор" HorizontalAlignment="Left" Margin="314,271,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_3"/>
+        <TextBlock HorizontalAlignment="Left" Margin="202,167,0,0" TextWrapping="Wrap" Text="Ширина" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="208,195,0,0" TextWrapping="Wrap" Text="Высота" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="203,222,0,0" TextWrapping="Wrap" Text="Глубина" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,164,0,0" TextWrapping="Wrap" Text="Габариты" VerticalAlignment="Top" Width="100"/>
-        <TextBlock HorizontalAlignment="Left" Margin="11,233,0,0" TextWrapping="Wrap" Text="Добавьте картинку для Условно Графического Обозначения (УГО)" VerticalAlignment="Top"/>
-        <TextBox x:Name="tb4" HorizontalAlignment="Left" Height="23" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="480" ToolTip="Введите наименование объекта"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,255,0,0" TextWrapping="Wrap" Text="Добавьте картинку для Условно Графического Обозначения (УГО)" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb4" HorizontalAlignment="Left" Height="23" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" ToolTip="Введите наименование объекта"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,8,0,0" TextWrapping="Wrap" Text="Наименование" VerticalAlignment="Top"/>
+        <Grid Margin="0" Grid.Column="1" Background="#FFF1F1F1">
+            <helix:HelixViewport3D x:Name="viewPort3d" ZoomExtentsWhenLoaded="true" Margin="5,5,5,40" 
+                                 
+                                   >
+                <!-- Remember to add light to the scene -->
+                <helix:DefaultLights/>
+            </helix:HelixViewport3D>
+            <Button Content="Сохранить" HorizontalAlignment="Right" Margin="0,0,5,5" VerticalAlignment="Bottom" Width="75" Height="30" Click="Button_Click_2" Grid.Column="1"/>
 
+        </Grid>
+        <CheckBox x:Name="cb_1" Content="Сохранять пропорции" HorizontalAlignment="Left" Margin="34,198,0,0" VerticalAlignment="Top" Checked="cb_1_Checked"/>
     </Grid>
-</Window>
+    </Window>
