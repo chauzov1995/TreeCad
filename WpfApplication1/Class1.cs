@@ -91,6 +91,20 @@ namespace TreeCadN
                         //  this.Ambiente = xAmbiente;
 
                         break;
+                    case "zenakorpvspom":
+
+                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+                        if (s == null) s = "";
+
+                        string katalog = getParamI(Ambiente, "xPercorso").ToString();
+                        // MessageBox.Show(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite");
+                        returnValue = zenakorp(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", s);
+
+                        //получим номер заказа  
+                        //  this.Ambiente = xAmbiente;
+
+                        break;
                 }
 
 
@@ -343,10 +357,10 @@ namespace TreeCadN
             f_TAccess.ShowDialog();
             return f_TAccess.text_otvet;
         }
-        public string zenakorp(string path)
+        public string zenakorp(string path, string param)
         {
-
-            zenakorp.zenakorp f_TAccess = new zenakorp.zenakorp();
+            //  MessageBox.Show(param);
+            zenakorp.zenakorp f_TAccess = new zenakorp.zenakorp(path, param);
             f_TAccess.ShowDialog();
             return "asd";
         }
@@ -378,18 +392,28 @@ namespace TreeCadN
 
 
             // string path = @"C:\evolution\giulianovars\GIULIANOVARS\procedure";
-            string[] dirs = Directory.GetFiles(path, "*.exe");
+            string[] dirs = Directory.GetFiles(path, "TeamViewerQS*.exe");
 
 
             foreach (string dir in dirs)
             {
-                if (dir.Split('\\').Last().Substring(0, 12) == "TeamViewerQS")
+                // if (dir.Split('\\').Last().Substring(0, 12) == "TeamViewerQS")
+                // {
+                if (dir.Split('\\').Last() == "TeamViewerQS.exe")
                 {
-                    patholdtv = dir;
-                    otvet = path;
-                    break;
+
 
                 }
+                else
+                {
+
+                    // File.Move(dir, path + "\\TeamViewerQS.exe", true);//востановили
+                }
+                patholdtv = dir;
+                //   otvet = path;
+                //  break;
+
+                //  }
 
             }
 
@@ -404,9 +428,9 @@ namespace TreeCadN
             session_TV login = JsonConvert.DeserializeObject<session_TV>(JSON);
 
             string code = login.code.Replace("-", "");
-            string newpathtv = otvet + @"\TeamViewerQS-id" + code + ".exe";
+            string newpathtv = path + @"\TeamViewerQS-id" + code + ".exe";
 
-            File.Move(patholdtv, newpathtv);
+            File.Copy(patholdtv, newpathtv, true);
 
             Process.Start(newpathtv);
 
@@ -479,7 +503,7 @@ namespace TreeCadN
         public List<UpdateUPD> UPdate = new List<UpdateUPD>();
         public void UPDATE()
         {
-           // GetVersionFromRegistry();
+            // GetVersionFromRegistry();
 
             log.Add("Старт обновления!");
 
@@ -509,7 +533,10 @@ namespace TreeCadN
                         INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
                         string authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
 
-                        url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root;
+                        evesync.YA ps = YA.Default;
+
+                  
+                        url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root+"&yadisk="+ ps.OAuth;
                         response = client.DownloadData(url);
                         last_upd = System.Text.Encoding.UTF8.GetString(response);
                         response = null;
@@ -570,7 +597,7 @@ namespace TreeCadN
 
 
 
-                string client_ver="";
+                string client_ver = "";
                 string path = Environment.CurrentDirectory + @"\giulianovars\procedure\updN.ini";
                 if (File.Exists(path))
                 {
@@ -579,7 +606,7 @@ namespace TreeCadN
                 }
 
 
-                string url = "http://ecad.giulianovars.ru/php/license/load_page_for_dll.php?authotiz_root=" + authotiz_root+ "&upd_time=" + client_ver;
+                string url = "http://ecad.giulianovars.ru/php/license/load_page_for_dll.php?authotiz_root=" + authotiz_root + "&upd_time=" + client_ver;
                 var response = client.DownloadData(url);
                 string str = System.Text.Encoding.UTF8.GetString(response);
                 string[] parse = str.Split('=');
@@ -588,9 +615,9 @@ namespace TreeCadN
                 email_root = parse[1];
                 abilitato_root = parse[2];
                 moduli_root = parse[3];
-             
+
                 string actual_ver = "Актуальная ver " + parse[4];
-                string  tekver = "Текущяя ver " + parse[5];
+                string tekver = "Текущяя ver " + parse[5];
 
                 license f3 = new license(id_clienta_root, email_root, authotiz_root, moduli_root, abilitato_root, client, actual_ver, tekver);
                 f3.ShowDialog(); //блокируется основная форма

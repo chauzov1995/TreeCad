@@ -275,7 +275,7 @@ namespace вызов
             Object instane = Activator.CreateInstance(ourClass);
             MethodInfo meth = ourClass.GetMethod("zenakorp"); //нужен тот Show, который не принимает параметров
             object result = meth.Invoke(instane, new object[] {
-                textBox4.Text
+                textBox4.Text,"KSS; 150; 360; 560"
             
 
 

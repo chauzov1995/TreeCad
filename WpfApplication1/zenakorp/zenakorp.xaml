@@ -5,21 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeCadN.zenakorp"
         mc:Ignorable="d"
-        Title="zenakorp" Height="500" Width="500">
+        Title="Цена корпуса" Height="330" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" MinWidth="500">
     <Grid >
-        <Grid x:Name="gr_ob" VerticalAlignment="Top" Loaded="gr_ob_Loaded" >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="437*"/>
-            <RowDefinition Height="30"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition Width="592*"/>
-        </Grid.ColumnDefinitions>
-        <Grid x:Name="gr_centr" Grid.Column="1" Background="#33A0E9FF" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-        <Grid x:Name="gr_left" Background="#3380FF64" VerticalAlignment="Bottom" />
-        <Grid x:Name="gr_bot" Grid.Column="1"  Grid.Row="1" Background="#33FF4747" HorizontalAlignment="Left"/>
-    </Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="195,322,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center"/>
+
+
+        <Grid x:Name="gr_ob" VerticalAlignment="Top" Loaded="gr_ob_Loaded" Margin="0,40,0,0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="437*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="592*"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="gr_centr" Grid.Column="1" Background="#33A0E9FF" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+            <Grid x:Name="gr_left" Background="#3380FF64" VerticalAlignment="Bottom" />
+            <Grid x:Name="gr_bot" Grid.Column="1"  Grid.Row="1" Background="#33FF4747" HorizontalAlignment="Left"/>
+        </Grid>
+        <Grid VerticalAlignment="Bottom" Height="100">
+            <Button Content="Цвет" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Background="#995FC72F"/>
+            <Button Content="Цвет" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="75" Background="#99E4D220"/>
+            <Label Content="- стандартный корпус" HorizontalAlignment="Left" Margin="90,6,0,0" VerticalAlignment="Top"/>
+            <Label Content="- нестандартный корпус" HorizontalAlignment="Left" Margin="90,33,0,0" VerticalAlignment="Top"/>
+            <TextBlock x:Name="tb1" HorizontalAlignment="Left" Margin="254,11,0,0" TextWrapping="Wrap" Text="Арт." VerticalAlignment="Top" FontSize="24" />
+
+        </Grid>
+        <ListBox x:Name="btngrid" Height="40" VerticalAlignment="Top" SelectionChanged="btngrid_SelectionChanged" BorderThickness="0" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border  BorderBrush="#FF666666" BorderThickness="2">
+                    <TextBlock Text="{Binding}" Padding="3" Background="{x:Null}"/>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
     </Grid>
 </Window>
