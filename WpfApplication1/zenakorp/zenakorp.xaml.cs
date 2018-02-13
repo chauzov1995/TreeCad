@@ -82,7 +82,7 @@ namespace TreeCadN.zenakorp
 
             //    gr_ob.Items.Add(new T});
 
-            SQLiteDataReader myReader = conTreeCadBD.connect("SELECT distinct DIML FROM ARTICOLI Where CodiceBarra like '+X" + mod + p + "'  order by DIML asc ", path);
+            SQLiteDataReader myReader = conTreeCadBD.connect("SELECT distinct DIML FROM ARTICOLI Where CodiceBarra like '" + mod + p + "'  order by DIML asc ", path);
             List<string> strl = new List<string>();
             while (myReader.Read())
             {
@@ -93,7 +93,7 @@ namespace TreeCadN.zenakorp
 
 
 
-            myReader = conTreeCadBD.connect("SELECT distinct DIMA FROM ARTICOLI Where CodiceBarra like '+X" + mod + p + "' order by DIMA asc", path);
+            myReader = conTreeCadBD.connect("SELECT distinct DIMA FROM ARTICOLI Where CodiceBarra like '" + mod + p + "' order by DIMA asc", path);
             List<string> stra = new List<string>();
             while (myReader.Read())
             {
@@ -103,7 +103,7 @@ namespace TreeCadN.zenakorp
 
 
 
-            myReader = conTreeCadBD.connect("SELECT COD, DIMA, DIML, DIMP, Price FROM ARTICOLI Where CodiceBarra like '+X" + mod + p + "'", path);
+            myReader = conTreeCadBD.connect("SELECT COD, DIMA, DIML, DIMP, Price FROM ARTICOLI Where CodiceBarra like '" + mod + p + "'", path);
 
             while (myReader.Read())
             {
@@ -198,7 +198,7 @@ namespace TreeCadN.zenakorp
                             // MessageBox.Show( (sender as Button).Tag.ToString());
 
 
-                            tb1.Text = "Арт. " + zena_mass.COD + " (" + zena_mass.DIMA + "x" + zena_mass.DIML + "x" + zena_mass.DIMP + ") $" + zena_mass.Price;
+                            tb1.Text = "Арт. " + zena_mass.COD + " (" + zena_mass.DIMA + "x" + zena_mass.DIML + "x" + zena_mass.DIMP + ") Цена - " + zena_mass.Price;
 
                             //   boola = false;
                             // booll = false;
@@ -238,7 +238,9 @@ namespace TreeCadN.zenakorp
 
                     //stra[i] + " x " + strl[j] + 
                     if (zena == "") zena = "нет цены";
-                    tbTemp.Content = "$" + zena;
+                    tbTemp.Content =  zena;
+                    tbTemp.FontSize = 16;
+                    tbTemp.FontWeight = FontWeights.SemiBold;
                     gr_centr.Children.Add(tbTemp);
                     Grid.SetRow(tbTemp, i);
                     Grid.SetColumn(tbTemp, j);
@@ -247,9 +249,12 @@ namespace TreeCadN.zenakorp
 
             }
             float width = ((countl + 1) * 80);
+            float height = ((counta) * 50) + 200;
+            this.Height = height;
             if (width > 500)
             {
                 this.Width = width;
+
             }
 
         }
@@ -267,7 +272,7 @@ namespace TreeCadN.zenakorp
             var obj = razmerzen.Find(x => x.COD.Equals(artik));
             string zena = obj.Price;
             if (zena == "") zena = "нет цены";
-            tb1.Text = "Арт. " + artik + " (" + obj.DIML + "x" + obj.DIMA + "x" + obj.DIMP + ") $" + zena;
+            tb1.Text = "Арт. " + artik + " (" + obj.DIMA + "x" + obj.DIML + "x" + obj.DIMP + ") Цена - " + zena;
             //    tb1.Foreground = (sender as Button).Background;
         }
 
@@ -302,7 +307,7 @@ namespace TreeCadN.zenakorp
 
     class conTreeCadBD
     {
-        
+
         public static SQLiteDataReader connect(string zapros, string path)
         {
 
@@ -317,7 +322,7 @@ namespace TreeCadN.zenakorp
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
 
-          //  m_dbConnection.Close();
+            //  m_dbConnection.Close();
             return reader;
 
 

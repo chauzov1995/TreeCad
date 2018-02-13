@@ -22,12 +22,12 @@
             <Grid x:Name="gr_left" Background="#3380FF64" VerticalAlignment="Bottom" />
             <Grid x:Name="gr_bot" Grid.Column="1"  Grid.Row="1" Background="#33FF4747" HorizontalAlignment="Left"/>
         </Grid>
-        <Grid VerticalAlignment="Bottom" Height="100">
+        <Grid Height="100" VerticalAlignment="Bottom">
             <Button Content="Цвет" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Background="#995FC72F"/>
             <Button Content="Цвет" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="75" Background="#99E4D220"/>
             <Label Content="- стандартный корпус" HorizontalAlignment="Left" Margin="90,6,0,0" VerticalAlignment="Top"/>
             <Label Content="- нестандартный корпус" HorizontalAlignment="Left" Margin="90,33,0,0" VerticalAlignment="Top"/>
-            <TextBlock x:Name="tb1" HorizontalAlignment="Left" Margin="254,11,0,0" TextWrapping="Wrap" Text="Арт." VerticalAlignment="Top" FontSize="24" />
+            <TextBlock x:Name="tb1" HorizontalAlignment="Left" Margin="251,10,0,0" TextWrapping="Wrap" Text="Арт." VerticalAlignment="Top" FontSize="20" />
 
         </Grid>
         <ListBox x:Name="btngrid" Height="40" VerticalAlignment="Top" SelectionChanged="btngrid_SelectionChanged" BorderThickness="0" >
