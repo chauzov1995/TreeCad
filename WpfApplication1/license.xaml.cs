@@ -375,18 +375,18 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
     public static class Obnov_dll_N
     {
-        public static void Create()
+        public static void Create(string catalog)
         {
             try
             {
                 string localpath = (new FileInfo(Assembly.GetExecutingAssembly().Location).Directory).ToString();
-                string TreeCadNpath = localpath + @"\Giulianovars\PROCEDURE\TreeCadN.dll";
+                string TreeCadNpath = localpath + @"\"+ catalog + @"\PROCEDURE\TreeCadN.dll";
 
                 log.Add("обновление dll путь к длл " + TreeCadNpath);
 
 
                 WebClient client1 = new WebClient();
-                var url1 = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1";
+                var url1 = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1&catalog="+ catalog;
                 string response1 = client1.DownloadString(url1);
 
                 log.Add("обновление dll хэш с сервера " + response1);

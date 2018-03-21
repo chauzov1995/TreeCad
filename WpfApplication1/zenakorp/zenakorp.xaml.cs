@@ -305,7 +305,7 @@ namespace TreeCadN.zenakorp
 
 
 
-    class conTreeCadBD
+    public class conTreeCadBD
     {
 
         public static SQLiteDataReader connect(string zapros, string path)

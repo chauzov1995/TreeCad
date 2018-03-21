@@ -44,6 +44,7 @@ namespace TreeCadN
             {
                 INIManager client_man;
                 string path_sysdba;
+                string katalog = "";
 
                 switch (param)
                 {
@@ -97,12 +98,31 @@ namespace TreeCadN
                         path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
                         if (s == null) s = "";
 
-                        string katalog = getParamI(Ambiente, "xPercorso").ToString();
+                         katalog = getParamI(Ambiente, "xPercorso").ToString();
                         // MessageBox.Show(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite");
                         returnValue = zenakorp(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", s);
 
                         //получим номер заказа  
                         //  this.Ambiente = xAmbiente;
+
+                        break;
+
+                    case "findprice":
+
+                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+
+
+                     
+                         katalog = getParamI(Ambiente, "xPercorso").ToString();
+
+                   
+                        string b = GNfindprice(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite");
+                           
+                        getParam(Ambiente, "CaricaRiga2", "", b);
+
+                        //Param(getParam(aamain, "Main"), "CambiaRegola"); //обновление сцену
+                         //returnValue = GNfindprice();
 
                         break;
                 }
@@ -343,6 +363,17 @@ namespace TreeCadN
             f_prim.ShowDialog();
             return f_prim.text_otvet;
         }
+
+        public string GNfindprice(string path)
+        {
+           
+            findprice.findprice f_prim = new findprice.findprice(path);
+            f_prim.ShowDialog();
+
+            return f_prim.text_otvet;
+        }
+
+
         public string GNPrimNAUTO(string path, int filtr, ref string text)
         {
             Prim2 f_prim = new Prim2(path + @"\system.mdb", text);
@@ -501,8 +532,10 @@ namespace TreeCadN
         }
 
         public List<UpdateUPD> UPdate = new List<UpdateUPD>();
-        public void UPDATE()
+        public void UPDATE(ref object xAmbiente)
         {
+            this.Ambiente = xAmbiente;
+            string catalog = getParamI(Ambiente, "xPercorso").ToString();
             // GetVersionFromRegistry();
 
             log.Add("Старт обновления!");
@@ -510,12 +543,12 @@ namespace TreeCadN
             try
             {
                 log.Add("обновление dll treecadN ред");
-                Obnov_dll_N.Create();//обновление dll treecadN ред
+                Obnov_dll_N.Create(catalog);//обновление dll treecadN ред
 
                 WebClient client = new WebClient();
                 WebProxy myProxy = new proxy_LPS().init();
                 client.Proxy = myProxy;
-                string path = Environment.CurrentDirectory + @"\giulianovars\procedure\updN.ini";
+                string path = Environment.CurrentDirectory + @"\"+ catalog + @"\procedure\updN.ini";
                 FileInfo fileInf = new FileInfo(path);
                 if (fileInf.Exists)//если файл существет
                 {
@@ -528,6 +561,7 @@ namespace TreeCadN
                     log.Add("версия клиента" + client_ver);
                     if (client_ver != "") //если в файле есть запись о последнем обновлении
                     {
+
                         log.Add("если в файле есть запись о последнем обновлении");
                         //получим код авторизации
                         INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
@@ -535,8 +569,8 @@ namespace TreeCadN
 
                         evesync.YA ps = YA.Default;
 
-                  
-                        url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root+"&yadisk="+ ps.OAuth;
+
+                        url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root + "&yadisk=" + ps.OAuth;
                         response = client.DownloadData(url);
                         last_upd = System.Text.Encoding.UTF8.GetString(response);
                         response = null;
