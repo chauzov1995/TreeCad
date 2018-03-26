@@ -543,8 +543,8 @@ namespace TreeCadN.findprice
                                 lb3bool = true;
                                 foreach (TARTCODE elem in lb3.SelectedItems)
                                 {
-                                  //  var massiv1 = ((TARTICLES)e.Item).TARTCODE_STR_3.Split(';');
-                                   //  if(!massiv1.Contains(elem.id_for3)) lb3bool = false;
+                                    var massiv1 = ((TARTICLES)e.Item).TARTCODE_STR_3.Split(';');
+                                     if(!massiv1.Contains(elem.id_for3)) lb3bool = false;
                                    
                                      ////   otv += ";" + elem.id_for3;
                                 }
