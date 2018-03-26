@@ -11,10 +11,10 @@
             <RowDefinition Height="300"/>
             <RowDefinition Height="64"/>
             <RowDefinition Height="163*"/>
-            <RowDefinition Height="43*"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="lb4" Margin="5" Grid.Row="2" Loaded="lb4_Loaded" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" IsReadOnly="True"   >
+        <DataGrid x:Name="lb4" Margin="5" Grid.Row="2" Loaded="lb4_Loaded" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" IsReadOnly="True" MouseDoubleClick="lb4_MouseDoubleClick"   >
             <DataGrid.Columns>
                 <DataGridTextColumn   Header="Артикул" Binding="{Binding TARTCODE_ITOG}" Width="110"  />
                 <DataGridTextColumn   Header="Название" Binding="{Binding NAME}" Width="60*"  />
@@ -56,10 +56,48 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <ListBox x:Name="lb1" Margin="5" SelectionChanged="lb1_SelectionChanged"/>
-            <ListBox x:Name="lb2" Margin="5" SelectionChanged="lb1_SelectionChanged" Grid.Column="1"/>
-            <ListBox x:Name="lb3" Margin="5" SelectionChanged="lb1_SelectionChanged" Grid.Column="2"/>
+            <ListBox x:Name="lb1" Margin="5" SelectionChanged="lb1_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding ARTCODE}"></TextBlock>
+                            <TextBlock Text=" - "></TextBlock>
+                            <TextBlock Text="{Binding NAME}"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox x:Name="lb2" Margin="5" Grid.Column="1" SelectionChanged="lb1_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding ARTCODE}"></TextBlock>
+                            <TextBlock Text=" - "></TextBlock>
+                            <TextBlock Text="{Binding NAME}"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox x:Name="lb3" Margin="5" Grid.Column="2" SelectionMode="Multiple" SelectionChanged="lb1_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding ARTCODE}"></TextBlock>
+                            <TextBlock Text=" - "></TextBlock>
+                            <TextBlock Text="{Binding NAME}"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
-        <Button Content="ОК" HorizontalAlignment="Left" Margin="707,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75" Click="Button_Click_2"/>
+        <Grid Margin="0" Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="121*"/>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="90"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Создать" Margin="5" Click="Button_Click_2" Grid.Column="1"/>
+            <Button Content="Отмена" Margin="5" Grid.Column="2" Click="Button_Click_3"/>
+        </Grid>
     </Grid>
 </Window>

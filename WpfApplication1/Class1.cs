@@ -98,7 +98,7 @@ namespace TreeCadN
                         path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
                         if (s == null) s = "";
 
-                         katalog = getParamI(Ambiente, "xPercorso").ToString();
+                        katalog = getParamI(Ambiente, "xPercorso").ToString();
                         // MessageBox.Show(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite");
                         returnValue = zenakorp(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", s);
 
@@ -113,16 +113,18 @@ namespace TreeCadN
                         path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
 
 
-                     
-                         katalog = getParamI(Ambiente, "xPercorso").ToString();
 
-                   
+                        katalog = getParamI(Ambiente, "xPercorso").ToString();
+
+
                         string b = GNfindprice(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite");
-                           
-                        getParam(Ambiente, "CaricaRiga2", "", b);
 
+                        if (b == "")
+                        {
+                            getParam(Ambiente, "CaricaRiga2", "", b);
+                        }
                         //Param(getParam(aamain, "Main"), "CambiaRegola"); //обновление сцену
-                         //returnValue = GNfindprice();
+                        //returnValue = GNfindprice();
 
                         break;
                 }
@@ -366,7 +368,7 @@ namespace TreeCadN
 
         public string GNfindprice(string path)
         {
-           
+
             findprice.findprice f_prim = new findprice.findprice(path);
             f_prim.ShowDialog();
 
@@ -548,7 +550,7 @@ namespace TreeCadN
                 WebClient client = new WebClient();
                 WebProxy myProxy = new proxy_LPS().init();
                 client.Proxy = myProxy;
-                string path = Environment.CurrentDirectory + @"\"+ catalog + @"\procedure\updN.ini";
+                string path = Environment.CurrentDirectory + @"\" + catalog + @"\procedure\updN.ini";
                 FileInfo fileInf = new FileInfo(path);
                 if (fileInf.Exists)//если файл существет
                 {

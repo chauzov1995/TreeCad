@@ -290,7 +290,7 @@ namespace вызов
             Object instane = Activator.CreateInstance(ourClass);
             MethodInfo meth = ourClass.GetMethod("GNfindprice"); //нужен тот Show, который не принимает параметров
             object result = meth.Invoke(instane, new object[] {
-            //    textBox4.Text,"KSS; 150; 360; 560"
+           @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\GIULIANOVARS\procedure\3CadBase.sqlite"
 
 
 

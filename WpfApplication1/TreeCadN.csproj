@@ -127,6 +127,11 @@
     <Compile Include="findprice\findprice.xaml.cs">
       <DependentUpon>findprice.xaml</DependentUpon>
     </Compile>
+    <Compile Include="findprice\Settings1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings1.settings</DependentUpon>
+    </Compile>
     <Compile Include="GNviewer\teamv.xaml.cs">
       <DependentUpon>teamv.xaml</DependentUpon>
     </Compile>
@@ -300,6 +305,10 @@
     <None Include="evesync\YA.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>YA.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="findprice\Settings1.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
     </None>
     <None Include="kommunikacii\kommunikacii_Set.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
