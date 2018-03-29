@@ -15,6 +15,7 @@ using System.Windows;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace вызов
 {
@@ -92,14 +93,52 @@ namespace вызов
         private void button4_Click(object sender, EventArgs e)
         {
 
-            File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"C:\evolution\giulianovars\TreeCadN.dll", true);
+         
+
+            try
+            {
+                foreach (Process proc in Process.GetProcessesByName("giulianovars"))
+                {
+                    proc.Kill();
+                }
+            }
+            catch (Exception ex)
+            {
+                // MessageBox.Show(ex.Message);
+            }
             MessageBox.Show("Готово");
+            File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"C:\evolution\giulianovars\TreeCadN.dll", true);
+ 
+
+            Process.Start(@"C:\evolution\giulianovars\giulianovars.exe");
+
+
+
+
+
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"C:\evolution\eCadPro\TreeCadN.dll", true);
+         
+
+
+            try
+            {
+                foreach (Process proc in Process.GetProcessesByName("ecadpro"))
+                {
+                    proc.Kill();
+                }
+            }
+            catch (Exception ex)
+            {
+                // MessageBox.Show(ex.Message);
+            }
             MessageBox.Show("Готово");
+            File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"C:\evolution\eCadPro\TreeCadN.dll", true);
+            
+            Process.Start(@"C:\evolution\eCadPro\eCadPro.exe");
+
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -290,12 +329,27 @@ namespace вызов
             Object instane = Activator.CreateInstance(ourClass);
             MethodInfo meth = ourClass.GetMethod("GNfindprice"); //нужен тот Show, который не принимает параметров
             object result = meth.Invoke(instane, new object[] {
-           @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\GIULIANOVARS\procedure\3CadBase.sqlite"
+           @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\GIULIANOVARS\procedure\3CadBase.sqlite", "1BR"
 
 
 
             });
             // textBox3.Text = result.ToString();
         }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            Assembly s = Assembly.LoadFile(Environment.CurrentDirectory + @"\TreeCadN.dll");
+            Type ourClass = s.GetType("TreeCadN.neqweqe", true, true);
+            Object instane = Activator.CreateInstance(ourClass);
+            MethodInfo meth = ourClass.GetMethod("GNfastbuild"); //нужен тот Show, который не принимает параметров
+            object result = meth.Invoke(instane, new object[] {
+      
+
+
+            });
+        }
+
+     
     }
 }

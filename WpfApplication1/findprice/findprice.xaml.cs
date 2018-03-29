@@ -33,8 +33,9 @@ namespace TreeCadN.findprice
         string path;
         string pred = "", predpred = "";
         public string text_otvet = "";
+        string modello;
 
-        public findprice(string path)
+        public findprice(string path, string modello)
         {
             InitializeComponent();
 
@@ -45,7 +46,7 @@ namespace TreeCadN.findprice
 
 
             this.path = path;
-
+            this.modello = modello;
 
 
             load_spis_art();
@@ -54,6 +55,10 @@ namespace TreeCadN.findprice
             timer.Interval = new TimeSpan(0, 0, 0, 0, 500);
 
             firstbukvalb1();
+
+
+
+            ta.Focus();
         }
 
         void loadpage()
@@ -93,6 +98,8 @@ namespace TreeCadN.findprice
             List<TARTCODE> Tartcode_for1 = new List<TARTCODE>();
             List<TARTCODE> Tartcode_for2 = new List<TARTCODE>();
             List<TARTCODE> Tartcode_for3 = new List<TARTCODE>();
+
+
 
 
             int chet = 0;
@@ -146,7 +153,12 @@ namespace TreeCadN.findprice
             myReader.Close();
 
 
-
+            Tartcode_for1.Sort(delegate (TARTCODE us1, TARTCODE us2)
+            { return us1.ARTCODE.CompareTo(us2.ARTCODE); });
+            Tartcode_for2.Sort(delegate (TARTCODE us1, TARTCODE us2)
+            { return us1.ARTCODE.CompareTo(us2.ARTCODE); });
+            Tartcode_for3.Sort(delegate (TARTCODE us1, TARTCODE us2)
+            { return us1.ARTCODE.CompareTo(us2.ARTCODE); });
 
             lb1.ItemsSource = Tartcode_for1;
             lb2.ItemsSource = Tartcode_for2;
@@ -178,7 +190,7 @@ namespace TreeCadN.findprice
 
 
 
-            path = @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\GIULIANOVARS\procedure\3CadBase.sqlite";
+            // path = @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\GIULIANOVARS\procedure\3CadBase.sqlite";
             SQLiteDataReader myReader = conTreeCadBD.connect("SELECT * FROM TARTICLES WHERE TARTCODE_ITOG LIKE  '" + findart + "%' LIMIT 20", path);
 
 
@@ -338,19 +350,71 @@ namespace TreeCadN.findprice
             viewSource1.Filter += viewSource_Filter1;
             viewSource1.SortDescriptions.Add(new SortDescription("TARTCODE_ITOG", ListSortDirection.Ascending));
             lb4.ItemsSource = viewSource1.View;
+
+            formor_razmerow();
         }
 
         private void timerTick(object sender, EventArgs e)
         {
             viewSource1.View.Refresh();
+
+
             timer.Stop();
+            formor_razmerow();
+        }
+
+
+        void formor_razmerow()
+        {
+
+            List<string> v = new List<string>();
+            List<string> g = new List<string>();
+            List<string> s = new List<string>();
+       
+            foreach (TARTICLES elem in lb4.Items)
+            {
+                v.Add(elem.V);
+                s.Add(elem.S);
+                g.Add(elem.G);
+            }
+
+
+            List<int> v1 = v.ConvertAll<int>(delegate (string i) { return Convert.ToInt32(i); });
+            List<int> s1 = s.ConvertAll<int>(delegate (string i) { return Convert.ToInt32(i); });
+            List<int> g1 = g.ConvertAll<int>(delegate (string i) { return Convert.ToInt32(i); });
+            v1.Sort();
+            s1.Sort();
+            g1.Sort();
+
+
+            v = new List<string>();
+            s = new List<string>();
+            g = new List<string>();
+            v.Add("");
+            s.Add("");
+            g.Add("");
+            v.AddRange( v1.ConvertAll<string>(delegate (int i) { return i.ToString(); }));
+            s.AddRange(s1.ConvertAll<string>(delegate (int i) { return i.ToString(); }));
+            g.AddRange(g1.ConvertAll<string>(delegate (int i) { return i.ToString(); }));
+
+               // v.FirstOrDefault("",true);
+               // g.Add("");
+                // s.Add("");
+
+
+            tbv.ItemsSource = v.Distinct();
+            tbs.ItemsSource = s.Distinct();
+            tbg.ItemsSource = g.Distinct();
+
+
+
         }
 
         void load_spis_art()
         {
 
 
-            path = @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\GIULIANOVARS\procedure\3CadBase.sqlite";
+            //  path = @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\GIULIANOVARS\procedure\3CadBase.sqlite";
             SQLiteDataReader myReader = conTreeCadBD.connect("SELECT * FROM TARTICLES WHERE 1", path);
 
 
@@ -367,6 +431,7 @@ namespace TreeCadN.findprice
                     TARTCODE_ID = myReader["TARTCODE_ID"].ToString(),
                     TARTCODE_ID2 = myReader["TARTCODE_ID2"].ToString(),
                     TARTCODE_STR_3 = myReader["TARTCODE_STR_3"].ToString(),
+                    TREECAD_DIS = myReader["TREECAD_DIS"].ToString(),
 
                 });
 
@@ -383,23 +448,15 @@ namespace TreeCadN.findprice
             timer.Start();
         }
 
-        private void tbv_TextChanged(object sender, TextChangedEventArgs e)
+        private void tbg_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             timer.Stop();
             timer.Start();
         }
 
-        private void tbs_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            timer.Stop();
-            timer.Start();
-        }
 
-        private void tbg_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            timer.Stop();
-            timer.Start();
-        }
+
+
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
@@ -433,18 +490,23 @@ namespace TreeCadN.findprice
 
 
 
+            var elemsel = (lb4.SelectedItem as TARTICLES);
+
+            //   string t = (lb4.SelectedItem as TARTICLES).TREECAD_DIS;
+
+            //1ML2091,, Шкаф - стол, SkafStol; MehOtkr = 02; Otkr = 1; L = 300; A = 355; P = 560; ModFasad = 19.08,1ML,2091,,
+
+            //            t = "1ML2091,,Шкаф-стол,SkafStol;MehOtkr=02;Otkr=1;L=300;A=355;P=560;ModFasad=19.08,1ML,2091,,";
+            // string t = modello + elemsel.TARTCODE_ITOG + ",," + elemsel.NAME + "," + elemsel.TREECAD_DIS + ";L = " + elemsel.V + "; A = " + elemsel.S + "; P = " + elemsel.G + "," + modello + "," + elemsel.TARTCODE_ITOG + ",,";
 
 
-            string t = (lb4.SelectedItem as TARTICLES).TARTCODE_ITOG;
-
-
-            t = "1ML2091,,Шкаф-стол,SkafStol;MehOtkr=02;Otkr=1;L=300;A=355;P=560;ModFasad=19.08,1ML,2091,,";
+            string str = modello + elemsel.TARTCODE_ITOG + "," + modello + elemsel.TARTCODE_ITOG + "," + elemsel.NAME + "," + elemsel.TREECAD_DIS + ";L = " + elemsel.S + "; A = " + elemsel.V + "; P = " + elemsel.G + "," + modello + "," + elemsel.TARTCODE_ITOG + "," + elemsel.TARTCODE_ITOG + ",";
 
             if (zakrit_ok)
             {
                 //    MessageBox.Show(t);
-                this.text_otvet = t;
-
+                this.text_otvet = str;
+                //   MessageBox.Show(t);
             }
 
 
@@ -452,10 +514,13 @@ namespace TreeCadN.findprice
         }
 
 
-
+        object predlb1;
         private void lb1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+          
+            predlb1 = lb1.SelectedItem;
             viewSource1.View.Refresh();
+            formor_razmerow();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -479,6 +544,47 @@ namespace TreeCadN.findprice
 
                 MessageBox.Show(asda);
         }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            lb1.SelectedIndex = -1;
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            lb2.SelectedIndex = -1;
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            lb3.SelectedIndex = -1;
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            ta.Text = "";
+        }
+
+        private void Button_Click_8(object sender, RoutedEventArgs e)
+        {
+            topis.Text = "";
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                zakrit_ok = true;
+                Close();
+            }
+            if (e.Key == Key.Escape)
+            {
+
+                Close();
+            }
+        }
+
+
 
         void viewSource_Filter1(object sender, FilterEventArgs e)
         {
@@ -516,7 +622,6 @@ namespace TreeCadN.findprice
                             }
                             else
                             {
-
                                 if (((lb1.SelectedItem as TARTCODE).ID) == ((TARTICLES)e.Item).TARTCODE_ID)
                                 {
                                     lb1bool = true;
@@ -528,37 +633,27 @@ namespace TreeCadN.findprice
                             }
                             else
                             {
-
                                 if (((lb2.SelectedItem as TARTCODE).ID) == ((TARTICLES)e.Item).TARTCODE_ID2)
                                 {
                                     lb2bool = true;
                                 }
                             }
-                            if (lb3.SelectedItems == null)
+                            if (lb3.SelectedItem == null)
                             {
                                 lb3bool = true;
                             }
                             else
                             {
                                 lb3bool = true;
+                                string elemea = ((TARTICLES)e.Item).TARTCODE_STR_3.Trim(';');
+                                string[] massiv1 = elemea.Split(',');
                                 foreach (TARTCODE elem in lb3.SelectedItems)
                                 {
-                                    var massiv1 = ((TARTICLES)e.Item).TARTCODE_STR_3.Split(';');
-                                     if(!massiv1.Contains(elem.id_for3)) lb3bool = false;
-                                   
-                                     ////   otv += ";" + elem.id_for3;
+                                    if (!massiv1.Contains(elem.id_for3)) lb3bool = false;
                                 }
-                                ////if (((TARTICLES)e.Item).TARTCODE_STR_3.IndexOf(otv) >= 0) lb3bool = true;
-
-
-
                             }
-
                             if (lb1bool && lb2bool && lb3bool) e.Accepted = true;
-
                         }
-
-
                     }
                 }
 
@@ -593,6 +688,8 @@ namespace TreeCadN.findprice
         public string TARTCODE_ID2 { get; set; }
         public string TARTCODE_STR_3 { get; set; }
         public string ARTTYPE { get; set; }
+        public string TREECAD_DIS { get; set; }
+
         public string V { get; set; }
         public string S { get; set; }
         public string G { get; set; }

@@ -112,19 +112,24 @@ namespace TreeCadN
                         client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
                         path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
 
+                        this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+                        object info = getParamG(xamb, "info");
+                        string modello = getParam(info, "modello").ToString();
+
 
 
                         katalog = getParamI(Ambiente, "xPercorso").ToString();
 
+                        //   MessageBox.Show(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite");
+                        string b = GNfindprice(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", modello);
 
-                        string b = GNfindprice(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite");
+                        setParamP(Ambiente, "Codice", "");//очистить
+                        getParam(Ambiente, "CaricaRiga2", "s", b);
+                        // getParam(Ambiente, "CalcPosBox");
 
-                        if (b == "")
-                        {
-                            getParam(Ambiente, "CaricaRiga2", "", b);
-                        }
-                        //Param(getParam(aamain, "Main"), "CambiaRegola"); //обновление сцену
-                        //returnValue = GNfindprice();
+
+
+
 
                         break;
                 }
@@ -366,13 +371,54 @@ namespace TreeCadN
             return f_prim.text_otvet;
         }
 
-        public string GNfindprice(string path)
+        public string GNfindprice(string path, string modello)
         {
 
-            findprice.findprice f_prim = new findprice.findprice(path);
+            findprice.findprice f_prim = new findprice.findprice(path, modello);
             f_prim.ShowDialog();
 
             return f_prim.text_otvet;
+        }
+
+
+        public string GNfastbuild()
+        {
+
+            fastbuild.fast_build f_prim = new fastbuild.fast_build();
+            f_prim.ShowDialog();
+
+            return "";
+        }
+
+        public string GNfindprice1(ref object xAmbiente)
+        {
+            this.Ambiente = xAmbiente;
+            this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+            string katalog = getParamI(Ambiente, "xPercorso").ToString();
+
+            if (katalog.ToUpper() == "GIULIANOVARSA")
+            {
+                string path = Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite";
+
+                object info = getParamG(xamb, "info");
+                string modello = getParam(info, "modello").ToString();
+                findprice.findprice f_prim = new findprice.findprice(path, modello);
+                f_prim.ShowDialog();
+
+
+
+                setParamP(Ambiente, "Codice", "");//очистить
+
+
+
+                getParam(Ambiente, "CaricaRiga2", "s", f_prim.text_otvet);
+
+                return f_prim.text_otvet;
+            }
+            else
+            {
+                return "";
+            }
         }
 
 

@@ -5,7 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeCadN.findprice"
         mc:Ignorable="d"
-        Title="findprice" Height="600" Width="800" Closing="Window_Closing">
+        Title="Поиск" Height="600" Width="800" Closing="Window_Closing" MinHeight="600" MinWidth="800" KeyUp="Window_KeyUp" Icon="/TreeCadN;component/Foto/favicons.png">
+
+    <Window.Resources>
+        <Style x:Key="myListboxStyle">
+            <Style.Resources>
+                <!-- Item TextColor -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                <!-- Background of selected item when focussed -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FFABCDFF" />
+                <!-- Background of selected item when not focussed -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#FFABCDFF" />
+
+
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="300"/>
@@ -14,7 +30,7 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="lb4" Margin="5" Grid.Row="2" Loaded="lb4_Loaded" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" IsReadOnly="True" MouseDoubleClick="lb4_MouseDoubleClick"   >
+        <DataGrid x:Name="lb4" Margin="5" Grid.Row="2" Loaded="lb4_Loaded" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" IsReadOnly="True" MouseDoubleClick="lb4_MouseDoubleClick" TabIndex="6"   >
             <DataGrid.Columns>
                 <DataGridTextColumn   Header="Артикул" Binding="{Binding TARTCODE_ITOG}" Width="110"  />
                 <DataGridTextColumn   Header="Название" Binding="{Binding NAME}" Width="60*"  />
@@ -28,35 +44,74 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="110"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
                 <RowDefinition Height="32"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="ta" Margin="5" TextWrapping="Wrap" Grid.Row="1" TextChanged="ta_TextChanged"/>
-            <Label Content="Ариткул" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538"/>
-            <Button Content="Очистить всё" Margin="5" Click="Button_Click" Grid.Row="1" Grid.Column="5"/>
 
-            <TextBox x:Name="tbv" Margin="5" TextWrapping="Wrap" Grid.Row="1" Grid.Column="2" TextChanged="tbv_TextChanged"/>
-            <TextBox x:Name="tbs" Margin="5" TextWrapping="Wrap" Grid.Row="1" Grid.Column="3" TextChanged="tbs_TextChanged"/>
-            <TextBox x:Name="tbg" Margin="5" TextWrapping="Wrap" Grid.Row="1" Grid.Column="4" TextChanged="tbg_TextChanged"/>
+
+            <StackPanel Grid.Row="1">
+                <Border BorderThickness="1" BorderBrush="#FFBCC4C5" Margin="5">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="23"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="ta"  TextWrapping="Wrap" TextChanged="ta_TextChanged" BorderBrush="{x:Null}" Background="{x:Null}" BorderThickness="0" TabIndex="1"/>
+                        <Button Content="X" IsTabStop="False"  Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Click="Button_Click_7" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+
+
+            <Label Content="Ариткул" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538"/>
+            <Button Content="Очистить всё" Margin="5" Click="Button_Click" Grid.Row="1" Grid.Column="5" TabIndex="39"/>
+
+            <ComboBox x:Name="tbv" Margin="5"  Grid.Row="1" Grid.Column="2"  TabIndex="3" SelectionChanged="tbg_SelectionChanged" IsEditable="True"/>
+            <ComboBox x:Name="tbs" Margin="5"  Grid.Row="1" Grid.Column="3" TabIndex="4" SelectionChanged="tbg_SelectionChanged" IsEditable="True"/>
+            <ComboBox x:Name="tbg" Margin="5"  Grid.Row="1" Grid.Column="4"  TabIndex="5" SelectionChanged="tbg_SelectionChanged" IsEditable="True"/>
             <Label Content="В" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" Grid.Column="2"/>
             <Label Content="Ш" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="3.255,0.538" Grid.Column="3"/>
             <Label Content="Г" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="3.255,0.538" Grid.Column="4"/>
-            <TextBox x:Name="topis" Margin="5" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" TextChanged="topis_TextChanged"/>
+            <StackPanel  Grid.Column="1" Grid.Row="1">
+                <Border BorderThickness="1" BorderBrush="#FFBCC4C5" Margin="5">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="23"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="topis"  TextWrapping="Wrap" TextChanged="topis_TextChanged" BorderBrush="{x:Null}" Background="{x:Null}" BorderThickness="0" TabIndex="2"/>
+                        <Button Content="X" IsTabStop="False"  Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Click="Button_Click_8" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+
+
+
+
+
+
             <Label Content="Описание" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" Grid.Column="1"/>
         </Grid>
         <Grid>
+            <Grid.RowDefinitions>
+
+                <RowDefinition Height="53*"/>
+                <RowDefinition Height="27"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <ListBox x:Name="lb1" Margin="5" SelectionChanged="lb1_SelectionChanged">
+            <ListBox x:Name="lb1" Margin="5" SelectionChanged="lb1_SelectionChanged" Grid.Row="0" Style="{StaticResource myListboxStyle}" TabIndex="9">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -67,7 +122,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <ListBox x:Name="lb2" Margin="5" Grid.Column="1" SelectionChanged="lb1_SelectionChanged">
+            <ListBox x:Name="lb2" Margin="5" Grid.Column="1" SelectionChanged="lb1_SelectionChanged" Grid.Row="0" Style="{StaticResource myListboxStyle}" TabIndex="11">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -78,7 +133,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <ListBox x:Name="lb3" Margin="5" Grid.Column="2" SelectionMode="Multiple" SelectionChanged="lb1_SelectionChanged">
+            <ListBox x:Name="lb3" Margin="5" Grid.Column="2" SelectionMode="Multiple" SelectionChanged="lb1_SelectionChanged" Grid.Row="0" Style="{StaticResource myListboxStyle}" TabIndex="13">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -89,15 +144,18 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <Button Grid.Row="1" Content="Очистить" HorizontalAlignment="Right" Margin="5,0,5,5" Padding="10,1" Click="Button_Click_4" TabIndex="10"/>
+            <Button Grid.Row="1" Content="Очистить" HorizontalAlignment="Right" Margin="5,0,5,5" Padding="10,1" Grid.Column="1" Click="Button_Click_5" TabIndex="12"/>
+            <Button Grid.Row="1" Content="Очистить" HorizontalAlignment="Right" Margin="5,0,5,5" Padding="10,1" Grid.Column="2" Click="Button_Click_6" TabIndex="14"/>
         </Grid>
         <Grid Margin="0" Grid.Row="3">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="121*"/>
-                <ColumnDefinition Width="90"/>
-                <ColumnDefinition Width="90"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
-            <Button Content="Создать" Margin="5" Click="Button_Click_2" Grid.Column="1"/>
-            <Button Content="Отмена" Margin="5" Grid.Column="2" Click="Button_Click_3"/>
+            <Button Content="Создать (Ctrl+Enter)" Margin="5" Click="Button_Click_2" TabIndex="7" Grid.Column="1"/>
+            <Button Content="Отмена (Esc)" Margin="5" Grid.Column="2" Click="Button_Click_3" TabIndex="8"/>
         </Grid>
     </Grid>
 </Window>

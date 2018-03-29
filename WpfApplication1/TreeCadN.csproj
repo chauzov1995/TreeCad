@@ -124,6 +124,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>YA.settings</DependentUpon>
     </Compile>
+    <Compile Include="fastbuild\fast build.xaml.cs">
+      <DependentUpon>fast build.xaml</DependentUpon>
+    </Compile>
     <Compile Include="findprice\findprice.xaml.cs">
       <DependentUpon>findprice.xaml</DependentUpon>
     </Compile>
@@ -223,6 +226,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="evesync\saveeve.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="fastbuild\fast build.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
