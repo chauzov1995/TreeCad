@@ -21,8 +21,8 @@ namespace TreeCadN
     [ComVisible(true)]
     public class neqweqe
     {
-        public string path1 = "";
-        public string str1 = "", str2 = "";
+        //  public string path1 = "";
+        //   public string str1 = "", str2 = "";
 
         public string papka_s_foto = Environment.CurrentDirectory + @"\";
         public string index1idotd, index2idotd;
@@ -33,108 +33,42 @@ namespace TreeCadN
 
         public string attiva(String s, String Valori, String DES, String PX, String PY, String param)
         {
-
-
-
             string returnValue = "";
-            INIManager inifile = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-            pathordini = Environment.CurrentDirectory + @"\" + inifile.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-
             try
             {
-                INIManager client_man;
-                string path_sysdba;
-                string katalog = "";
-
+                string katalog = getParamI(Ambiente, "xPercorso").ToString();
+                if (s == null) s = "";
                 switch (param)
                 {
                     case "TAccess":
-                        //   DirectoryInfo sdsd = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
-                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-                        if (s == null) s = "";
-                        returnValue = TAccess(Environment.CurrentDirectory + @"\" + path_sysdba, 1, s);
+                        returnValue = TAccess(GetPathMDB(katalog), 1, s);
                         break;
-
-
-
                     case "Kommunikacii":
-
-                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-                        returnValue = Kommunikacii(Environment.CurrentDirectory + @"\" + path_sysdba);
-
+                        returnValue = Kommunikacii(GetPathMDB(katalog));
                         break;
-
                     case "evesync":
-
-                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-
-                        evesync(Environment.CurrentDirectory + @"\" + path_sysdba);
-
+                        evesync(GetPathMDB(katalog));
                         break;
                     case "GNviewer":
-
-                        //client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                        //  path_sysdba = client_man.GetPrivateString("Infogen", "percorsoprocedure");//версия клиента
-
                         GNviewer(Environment.CurrentDirectory + @"\GIULIANOVARS\procedure");
-
                         break;
                     case "uploadPROGR":
-
-                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-
-                        uploadPROGR(Environment.CurrentDirectory + @"\" + path_sysdba);
-                        //получим номер заказа  
-                        //  this.Ambiente = xAmbiente;
-
+                        var ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        var path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+                        uploadPROGR(Environment.CurrentDirectory + @"\" + path_ecadpro);
                         break;
                     case "zenakorpvspom":
-
-                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-                        if (s == null) s = "";
-
-                        katalog = getParamI(Ambiente, "xPercorso").ToString();
-                        // MessageBox.Show(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite");
                         returnValue = zenakorp(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", s);
-
-                        //получим номер заказа  
-                        //  this.Ambiente = xAmbiente;
-
                         break;
-
                     case "findprice":
-
-                        client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                        path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-
                         this.xamb = getParam(Ambiente, "GetObject", "XAMB");
                         object info = getParamG(xamb, "info");
                         string modello = getParam(info, "modello").ToString();
-
-
-
-                        katalog = getParamI(Ambiente, "xPercorso").ToString();
-
-                        //   MessageBox.Show(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite");
                         string b = GNfindprice(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", modello);
-
-                        setParamP(Ambiente, "Codice", "");//очистить
-                        getParam(Ambiente, "CaricaRiga2", "s", b);
-                        // getParam(Ambiente, "CalcPosBox");
-
-
-
-
-
+                        setParamP(Ambiente, "Codice", "");//очистить название артикула
+                        getParam(Ambiente, "CaricaRiga2", "s", b);//заменить артикул или создать новый
                         break;
                 }
-
-
             }
             catch (Exception e)
             {
@@ -306,25 +240,27 @@ namespace TreeCadN
 
         #endregion
 
-        public string GNOTD(string path, string str)
+        public string GNOTD(ref object xAmbiente, string str)
         {
+            this.Ambiente = xAmbiente;
+            string katalog = getParamI(Ambiente, "xPercorso").ToString();
 
-            str1 = str;
-            str2 = str;
-            path1 = path;
+            string str1 = str;
+            string str2 = str;
+            string path1 = GetPathMDB(katalog);
+            bool uslovvipol = false;
 
 
             if (prov_vh_str_na_prigodnostb(str1) == 9)
             {
-                zagruz();
-
+                uslovvipol = true;
             }
             else
             {
                 if (str1 == "")
                 {
                     str1 = "0;0;0;0;0;0;0;;;1^2^3^4^5^6^7^22^33^37^40^46^50^51";
-                    zagruz();
+                    uslovvipol = true;
                 }
                 else
                 {
@@ -335,24 +271,26 @@ namespace TreeCadN
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
                         str1 = "0;0;0;0;0;0;0;;;1^2^3^4^5^6^7^22^33^37^40^46^50^51";
-                        zagruz();
-
+                        uslovvipol = true;
                     }
                     else
                     {
                         MessageBox.Show("Извините, программа не может работать по таким значениям, Исправьте их вручную и попробуйте заново \r\nФормат по умолчанию 0;0;0;0;0;0;0;;;0");
-
                     }
                 }
-
+            }
+            if (uslovvipol)
+            {
+                Window1 f1 = new Window1(path1, str1);
+                f1.ShowDialog(); //блокируется основная форма
+                return f1.str2;
+            }
+            else
+            {
+                return str2;
             }
 
 
-
-
-
-
-            return str2;
         }
 
 
@@ -364,12 +302,41 @@ namespace TreeCadN
 
             return Bazis;
         }
-        public string GNPrimN(string path, int filtr, ref string text)
+        public string GNPrimN(ref object xAmbiente, int filtr, ref string text)
         {
-            Prim f_prim = new Prim(path + @"\system.mdb", text);
+            this.Ambiente = xAmbiente;
+            string katalog = getParamI(Ambiente, "xPercorso").ToString();
+
+
+            Prim f_prim = new Prim(GetPathMDB(katalog), text);
             f_prim.ShowDialog();
             return f_prim.text_otvet;
         }
+
+
+
+
+        public string GNfastbuild()
+        {
+
+            //    fastbuild.fast_build f_prim = new fastbuild.fast_build();
+            //    f_prim.ShowDialog();
+
+            return "";
+        }
+
+        public string GNfastbuild1(ref object xAmbiente)
+        {
+            this.Ambiente = xAmbiente;
+
+            var id = Process.GetCurrentProcess().Parent();
+
+            fastbuild.fast_build f_prim = new fastbuild.fast_build(id);
+            f_prim.Show();
+
+            return "";
+        }
+
 
         public string GNfindprice(string path, string modello)
         {
@@ -378,16 +345,6 @@ namespace TreeCadN
             f_prim.ShowDialog();
 
             return f_prim.text_otvet;
-        }
-
-
-        public string GNfastbuild()
-        {
-
-            fastbuild.fast_build f_prim = new fastbuild.fast_build();
-            f_prim.ShowDialog();
-
-            return "";
         }
 
         public string GNfindprice1(ref object xAmbiente)
@@ -417,22 +374,26 @@ namespace TreeCadN
             }
             else
             {
+                MessageBox.Show("Поиск работает только в новой базе");
                 return "";
             }
         }
 
 
-        public string GNPrimNAUTO(string path, int filtr, ref string text)
+        public string GNPrimNAUTO(ref object xAmbiente, int filtr, ref string text)
         {
-            Prim2 f_prim = new Prim2(path + @"\system.mdb", text);
+            this.Ambiente = xAmbiente;
+            string katalog = getParamI(Ambiente, "xPercorso").ToString();
+
+            Prim2 f_prim = new Prim2(GetPathMDB(katalog), text);
             f_prim.ShowDialog();
             return f_prim.text_otvet;
         }
 
         public string TAccess(string path, int filtr, string text)
         {
-
-            TAccessories f_TAccess = new TAccessories(path + @"\system.mdb", text);
+            //  MessageBox.Show(path);
+            TAccessories f_TAccess = new TAccessories(path, text);
             f_TAccess.ShowDialog();
             return f_TAccess.text_otvet;
         }
@@ -448,7 +409,7 @@ namespace TreeCadN
         public string Kommunikacii(string path)
         {
 
-            kommunikacii.kommunikacii_main f_kommunikacii = new kommunikacii.kommunikacii_main(path + @"\system.mdb");
+            kommunikacii.kommunikacii_main f_kommunikacii = new kommunikacii.kommunikacii_main(path);
             f_kommunikacii.ShowDialog();
             log.Add(f_kommunikacii.selectedModel);
             return f_kommunikacii.selectedModel;
@@ -456,7 +417,7 @@ namespace TreeCadN
 
         public void evesync(string path)
         {
-            evesync.evesync f_evesync = new evesync.evesync(path + @"\system.mdb", path);
+            evesync.evesync f_evesync = new evesync.evesync(path, path);
             f_evesync.ShowDialog();
 
 
@@ -546,11 +507,11 @@ namespace TreeCadN
 
 
 
+                string katalog = getParamI(Ambiente, "xPercorso").ToString();
 
 
 
-
-                evesync.saveeve saveeve = new evesync.saveeve(path_sysdba + @"\system.mdb", evepath);
+                evesync.saveeve saveeve = new evesync.saveeve(GetPathMDB(katalog), evepath);
                 saveeve.Show();
             }
         }
@@ -717,28 +678,31 @@ namespace TreeCadN
 
 
 
-
-
-
-
-
-
-
-
-        void zagruz()
+        string GetPathMDB(string catalog)
         {
-            //try
-            //{
 
-            Window1 f1 = new Window1(this);
-            f1.ShowDialog(); //блокируется основная форма
+            var client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            var path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("Ошибка: " + ex.Message);
-            //}
+
+
+
+            switch (catalog.ToUpper())
+            {
+
+                case "GIULIANOVARSA":
+                    return Environment.CurrentDirectory + @"\" + path_sysdba + @"\systema.mdb";
+                default:
+                    return Environment.CurrentDirectory + @"\" + path_sysdba + @"\system.mdb";
+            }
         }
+
+
+
+
+
+
+
 
         int prov_vh_str_na_prigodnostb(string str1)
         {
@@ -907,5 +871,36 @@ namespace TreeCadN
         public string end_customer_link { get; set; }
         public string supporter_link { get; set; }
     }
+    public static class ProcessExtensions
+    {
+        private static string FindIndexedProcessName(int pid)
+        {
+            var processName = Process.GetProcessById(pid).ProcessName;
+            var processesByName = Process.GetProcessesByName(processName);
+            string processIndexdName = null;
 
+            for (var index = 0; index < processesByName.Length; index++)
+            {
+                processIndexdName = index == 0 ? processName : processName + "#" + index;
+                var processId = new PerformanceCounter("Process", "ID Process", processIndexdName);
+                if ((int)processId.NextValue() == pid)
+                {
+                    return processIndexdName;
+                }
+            }
+
+            return processIndexdName;
+        }
+
+        private static Process FindPidFromIndexedProcessName(string indexedProcessName)
+        {
+            var parentId = new PerformanceCounter("Process", "Creating Process ID", indexedProcessName);
+            return Process.GetProcessById((int)parentId.NextValue());
+        }
+
+        public static Process Parent(this Process process)
+        {
+            return FindPidFromIndexedProcessName(FindIndexedProcessName(process.Id));
+        }
+    }
 }

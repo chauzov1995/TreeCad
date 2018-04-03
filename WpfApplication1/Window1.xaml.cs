@@ -26,7 +26,7 @@ namespace TreeCadN
 
         static BD_Connect BD = new BD_Connect();
         //   public string vh_func_path = "";
-        public string vh_func_str = "";
+        public string vh_func_str = "", str2="";
 
         public string papka_s_foto = Environment.CurrentDirectory + @"\GIULIANOVARS\";
 
@@ -47,20 +47,17 @@ namespace TreeCadN
         bool reload_text = false;
         object item_forind1, item_forind2;
 
-        neqweqe newneqqw;
 
 
-        public Window1(neqweqe nneqwq)
+        public Window1(string path, string str1)
         {
             InitializeComponent();
 
             try
             {
-                newneqqw = nneqwq;
-
-                //   vh_func_path = newneqqw.path1;
-                vh_func_str = newneqqw.str1;
-                BD.path = newneqqw.path1; //укажем файл бд
+                str2 = str1;
+                          vh_func_str = str1;
+                BD.path = path; //укажем файл бд
 
 
 
@@ -781,7 +778,7 @@ namespace TreeCadN
             //  history_func();
 
 
-            newneqqw.str2 = vh_func_str;
+            str2 = vh_func_str;
 
             Close();
         }
