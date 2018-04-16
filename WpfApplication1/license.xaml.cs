@@ -384,7 +384,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
                 log.Add("обновление dll путь к длл " + TreeCadNpath);
 
-
+              //  MessageBox.Show(catalog);
                 WebClient client1 = new WebClient();
                 var url1 = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1&catalog="+ catalog;
                 string response1 = client1.DownloadString(url1);

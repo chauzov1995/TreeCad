@@ -61,10 +61,16 @@ namespace TreeCadN
                         returnValue = zenakorp(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", s);
                         break;
                     case "findprice":
+
+
+
                         this.xamb = getParam(Ambiente, "GetObject", "XAMB");
                         object info = getParamG(xamb, "info");
                         string modello = getParam(info, "modello").ToString();
+
+                       
                         string b = GNfindprice(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", modello);
+                       
                         setParamP(Ambiente, "Codice", "");//очистить название артикула
                         getParam(Ambiente, "CaricaRiga2", "s", b);//заменить артикул или создать новый
                         break;
@@ -78,6 +84,8 @@ namespace TreeCadN
         }
         public void SetAmbiente(ref object x)
         {
+
+            //перед аттиваой устанавливается амбиенти
             Ambiente = x;
         }
         public void Termina()
@@ -240,14 +248,13 @@ namespace TreeCadN
 
         #endregion
 
-        public string GNOTD(ref object xAmbiente, string str)
+        public string GNOTD(string path, string str)//для старых версий тех у кого ещё стоит старый размерный ряд
         {
-            this.Ambiente = xAmbiente;
-            string katalog = getParamI(Ambiente, "xPercorso").ToString();
+
 
             string str1 = str;
             string str2 = str;
-            string path1 = GetPathMDB(katalog);
+            string path1 = path;
             bool uslovvipol = false;
 
 
@@ -294,6 +301,16 @@ namespace TreeCadN
         }
 
 
+
+        public string GNOTD1(ref object xAmbiente, string str)//для новых версий
+        {
+            this.Ambiente = xAmbiente;
+            string katalog = getParamI(Ambiente, "xPercorso").ToString();
+            string path = GetPathMDB(katalog);
+            return GNOTD(path, str);
+        }
+
+
         public string BASIS()
         {
             Basis f_Basis = new Basis(this);
@@ -302,13 +319,21 @@ namespace TreeCadN
 
             return Bazis;
         }
-        public string GNPrimN(ref object xAmbiente, int filtr, ref string text)
+        public string GNPrimN1(ref object xAmbiente, int filtr, ref string text)
         {
             this.Ambiente = xAmbiente;
             string katalog = getParamI(Ambiente, "xPercorso").ToString();
 
+            return GNPrimN(GetPathMDB(katalog), filtr, ref text);
 
-            Prim f_prim = new Prim(GetPathMDB(katalog), text);
+        }
+        public string GNPrimN(string path, int filtr, ref string text)
+        {
+
+            if (path.Split('.').Last() != "mdb") path += @"\system.mdb";
+
+
+            Prim f_prim = new Prim(path, text);
             f_prim.ShowDialog();
             return f_prim.text_otvet;
         }
@@ -319,19 +344,18 @@ namespace TreeCadN
         public string GNfastbuild()
         {
 
-            //    fastbuild.fast_build f_prim = new fastbuild.fast_build();
-            //    f_prim.ShowDialog();
+
+            fastbuild.fast_build f_prim = new fastbuild.fast_build();
+            f_prim.Show();
 
             return "";
         }
 
         public string GNfastbuild1(ref object xAmbiente)
         {
-            this.Ambiente = xAmbiente;
 
-            var id = Process.GetCurrentProcess().Parent();
 
-            fastbuild.fast_build f_prim = new fastbuild.fast_build(id);
+            fastbuild.fast_build f_prim = new fastbuild.fast_build();
             f_prim.Show();
 
             return "";
@@ -359,6 +383,7 @@ namespace TreeCadN
 
                 object info = getParamG(xamb, "info");
                 string modello = getParam(info, "modello").ToString();
+                
                 findprice.findprice f_prim = new findprice.findprice(path, modello);
                 f_prim.ShowDialog();
 
@@ -541,16 +566,27 @@ namespace TreeCadN
         }
 
         public List<UpdateUPD> UPdate = new List<UpdateUPD>();
-        public void UPDATE(ref object xAmbiente)
+
+        public void UPDATE1(ref object xAmbiente)//для новой
         {
             this.Ambiente = xAmbiente;
-            string catalog = getParamI(Ambiente, "xPercorso").ToString();
-            // GetVersionFromRegistry();
+            CATALOGGN = getParamI(Ambiente, "xPercorso").ToString();
+            UPDATE();
+
+        }
+        string CATALOGGN = "Giulianovars";
+        public void UPDATE()
+        {
+            // this.Ambiente = xAmbiente;
+            //  string catalog = "Giulianovars";// getParamI(Ambiente, "xPercorso").ToString();
+
 
             log.Add("Старт обновления!");
 
             try
             {
+
+                string catalog = CATALOGGN;
                 log.Add("обновление dll treecadN ред");
                 Obnov_dll_N.Create(catalog);//обновление dll treecadN ред
 

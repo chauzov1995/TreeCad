@@ -517,7 +517,7 @@ namespace TreeCadN.findprice
         object predlb1;
         private void lb1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-          
+       
             predlb1 = lb1.SelectedItem;
             viewSource1.View.Refresh();
             formor_razmerow();

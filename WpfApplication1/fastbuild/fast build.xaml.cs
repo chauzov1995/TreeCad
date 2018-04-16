@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+
 namespace TreeCadN.fastbuild
 {
     /// <summary>
@@ -21,30 +22,58 @@ namespace TreeCadN.fastbuild
     /// </summary>
     public partial class fast_build : Window
     {
-        public fast_build(Process parrent)
+
+
+        System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+
+
+        public fast_build()
         {
             InitializeComponent();
 
-         
-
-            parrent = Process.GetCurrentProcess();
+        
 
 
 
-            MessageBox.Show(parrent.ProcessName);
-            IntPtr asdasd = parrent.MainWindowHandle;
-            
 
-            ShowWindow(asdasd, 6);
-            //     parrent.
-            //
-            //            if (this.WindowState == FormWindowState.Minimized)
-            //      {
 
-            //   }
         }
 
+      
+
+        const int SW_RESTORE = 9;
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
         [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hwnd, int cmd);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        static extern bool IsIconic(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        static extern bool IsZoomed(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Process parrent = Process.GetProcessesByName("giulianovars")[0];
+            MessageBox.Show(parrent.ProcessName);
+            IntPtr hWnd = parrent.MainWindowHandle;
+
+            if (IsZoomed(hWnd))
+            {
+               // ShowWindow(hWnd, SW_RESTORE);
+                MessageBox.Show("Свёрнуто");
+            }
+            else
+            {
+                MessageBox.Show("Развернуто");
+            }
+        }
     }
 }
