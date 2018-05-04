@@ -11,7 +11,7 @@
             <RowDefinition Height="241*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="lb1" />
+        <ListBox x:Name="lb1" MouseDoubleClick="lb1_MouseDoubleClick" />
         <Button Content="Скачать" HorizontalAlignment="Left" Margin="215,4,0,4" Width="75" Grid.Row="1" Click="Button_Click"/>
 
     </Grid>

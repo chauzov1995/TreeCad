@@ -500,8 +500,8 @@ namespace TreeCadN.findprice
             // string t = modello + elemsel.TARTCODE_ITOG + ",," + elemsel.NAME + "," + elemsel.TREECAD_DIS + ";L = " + elemsel.V + "; A = " + elemsel.S + "; P = " + elemsel.G + "," + modello + "," + elemsel.TARTCODE_ITOG + ",,";
 
 
-            string str = modello + elemsel.TARTCODE_ITOG + "," + modello + elemsel.TARTCODE_ITOG + "," + elemsel.NAME + "," + elemsel.TREECAD_DIS + ";L = " + elemsel.S + "; A = " + elemsel.V + "; P = " + elemsel.G + "," + modello + "," + elemsel.TARTCODE_ITOG + "," + elemsel.TARTCODE_ITOG + ",";
-
+            string str = modello + elemsel.TARTCODE_ITOG + "," + modello + elemsel.TARTCODE_ITOG + "," + elemsel.NAME.Replace(',','.') + "," + elemsel.TREECAD_DIS + ";L = " + elemsel.S + "; A = " + elemsel.V + "; P = " + elemsel.G + "," + modello + "," + elemsel.TARTCODE_ITOG + "," + elemsel.TARTCODE_ITOG + ",";
+          
             if (zakrit_ok)
             {
                 //    MessageBox.Show(t);

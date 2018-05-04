@@ -22,6 +22,7 @@ namespace TreeCadN.uploadPROGR
     /// </summary>
     public partial class uploadPROGR : Window
     {
+        public string retzakaz;
         private BackgroundWorker backgroundWorker;
         string path;
         neqweqe neqqqqq;
@@ -161,8 +162,8 @@ namespace TreeCadN.uploadPROGR
         {
             dialprogr dial = new dialprogr(neqqqqq);
             dial.ShowDialog();
-
-          
+            retzakaz = dial.retzakaz;
+            Close();
             //    getParam(xamb, "carica", path.ToString());
         }
     }

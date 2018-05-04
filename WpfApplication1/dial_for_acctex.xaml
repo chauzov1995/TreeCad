@@ -71,6 +71,7 @@
         <TextBlock Margin="5,0" TextWrapping="Wrap" Text="Цена ред." Grid.Row="4" VerticalAlignment="Bottom" Height="16" Grid.Column="4" Grid.ColumnSpan="3"/>
         <TextBox x:Name="rsktb3_Copy" Margin="5" TextWrapping="Wrap" Grid.Row="5" Grid.Column="3" PreviewTextInput="rsktb3_Copy_PreviewTextInput" TabIndex="7" PreviewKeyDown="rsktb3_Copy_PreviewKeyDown"/>
         <TextBox x:Name="rsktb3_Copy1" Margin="5" TextWrapping="Wrap" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3" PreviewTextInput="rsktb3_Copy1_PreviewTextInput" TabIndex="8" PreviewKeyDown="rsktb3_Copy1_PreviewKeyDown"/>
+        <TextBox x:Name="lb_TKOEFGROUP_ID" Margin="5" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Height="23"/>
 
 
 

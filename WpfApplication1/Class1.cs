@@ -70,7 +70,8 @@ namespace TreeCadN
 
                        
                         string b = GNfindprice(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", modello);
-                       
+                        b= b.Replace(Environment.NewLine, "" );
+                        log.Add("строка постоения : "+b);
                         setParamP(Ambiente, "Codice", "");//очистить название артикула
                         getParam(Ambiente, "CaricaRiga2", "s", b);//заменить артикул или создать новый
                         break;
@@ -558,9 +559,11 @@ namespace TreeCadN
             string evepath = path + @"\" + evename;
 
 
-            uploadPROGR.uploadPROGR sss = new uploadPROGR.uploadPROGR(evepath, this);
-            sss.ShowDialog();
+                uploadPROGR.uploadPROGR sss = new uploadPROGR.uploadPROGR(evepath, this);
+               sss.ShowDialog();
 
+         //   MessageBox.Show(nomzakaza);
+           //     getParam(info, "Numero", "1");
 
 
         }
@@ -570,7 +573,7 @@ namespace TreeCadN
         public void UPDATE1(ref object xAmbiente)//для новой
         {
             this.Ambiente = xAmbiente;
-            CATALOGGN = getParamI(Ambiente, "xPercorso").ToString();
+            CATALOGGN = "Giulianovarsa";// getParamI(Ambiente, "xPercorso").ToString();
             UPDATE();
 
         }
@@ -614,10 +617,11 @@ namespace TreeCadN
 
                         evesync.YA ps = YA.Default;
 
-
+                      
                         url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root + "&yadisk=" + ps.OAuth;
                         response = client.DownloadData(url);
                         last_upd = System.Text.Encoding.UTF8.GetString(response);
+                       
                         response = null;
                         log.Add(url);
 
@@ -650,6 +654,7 @@ namespace TreeCadN
             {
                 //  MessageBox.Show(e.Message);
             }
+       
         }
 
 

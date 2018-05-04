@@ -20,6 +20,7 @@ namespace TreeCadN.uploadPROGR
     /// </summary>
     public partial class dialprogr : Window
     {
+        public string retzakaz;
         neqweqe neqqqqq;
         public dialprogr(neqweqe neqqqqq)
         {
@@ -90,6 +91,10 @@ namespace TreeCadN.uploadPROGR
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            skachatb();
+        }
+        void skachatb()
+        {
 
 
 
@@ -108,7 +113,15 @@ namespace TreeCadN.uploadPROGR
             neqqqqq.getParam(neqqqqq.xamb, "carica", neqqqqq.pathordini + @"\000001.eve");
             Close();
 
+            retzakaz = "1";
             MessageBox.Show("Готово, теперь в номере заказа укажите 1");
+
+
+        }
+
+        private void lb1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            skachatb();
         }
     }
     class nazveve

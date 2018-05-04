@@ -75,5 +75,10 @@ namespace TreeCadN.fastbuild
                 MessageBox.Show("Развернуто");
             }
         }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -38,6 +38,18 @@ namespace TreeCadN
             rsktb2.Text = otvet.TName;
             rsktb3.Text = otvet.kolvo.ToString();
 
+
+           INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
+            string admin = client_man.GetPrivateString("giulianovars", "3dsadmin");//версия клиента
+                                                                                   //  MessageBox.Show("путь к ини" + sdsd + @"\ecadpro.ini");
+            lb_TKOEFGROUP_ID.Visibility = Visibility.Hidden;
+            if (admin == "1")
+            {
+                lb_TKOEFGROUP_ID.Visibility = Visibility.Visible;
+                lb_TKOEFGROUP_ID.Text = otvet.GROUP_dlyaspicif.ToString();
+            }
+           
+
             rsktb4.Text = otvet.Prim;
 
             rsktb3_Copy.Text = otvet.baseprice.ToString();
