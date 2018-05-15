@@ -68,12 +68,15 @@ namespace TreeCadN
                         object info = getParamG(xamb, "info");
                         string modello = getParam(info, "modello").ToString();
 
-                       
+
                         string b = GNfindprice(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", modello);
-                        b= b.Replace(Environment.NewLine, "" );
-                        log.Add("строка постоения : "+b);
+                        b = b.Replace(Environment.NewLine, "");
+                        log.Add("строка постоения : " + b);
+                      
                         setParamP(Ambiente, "Codice", "");//очистить название артикула
                         getParam(Ambiente, "CaricaRiga2", "s", b);//заменить артикул или создать новый
+
+                        returnValue = b;
                         break;
                 }
             }
@@ -384,7 +387,7 @@ namespace TreeCadN
 
                 object info = getParamG(xamb, "info");
                 string modello = getParam(info, "modello").ToString();
-                
+
                 findprice.findprice f_prim = new findprice.findprice(path, modello);
                 f_prim.ShowDialog();
 
@@ -559,11 +562,11 @@ namespace TreeCadN
             string evepath = path + @"\" + evename;
 
 
-                uploadPROGR.uploadPROGR sss = new uploadPROGR.uploadPROGR(evepath, this);
-               sss.ShowDialog();
+            uploadPROGR.uploadPROGR sss = new uploadPROGR.uploadPROGR(evepath, this);
+            sss.ShowDialog();
 
-         //   MessageBox.Show(nomzakaza);
-           //     getParam(info, "Numero", "1");
+            //   MessageBox.Show(nomzakaza);
+            //     getParam(info, "Numero", "1");
 
 
         }
@@ -591,7 +594,13 @@ namespace TreeCadN
 
                 string catalog = CATALOGGN;
                 log.Add("обновление dll treecadN ред");
-                Obnov_dll_N.Create(catalog);//обновление dll treecadN ред
+                //MessageBox.Show(CATALOGGN);
+
+                //получим код авторизации
+                INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
+                string authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
+                
+                Obnov_dll_N.Create(catalog, authotiz_root);//обновление dll treecadN ред
 
                 WebClient client = new WebClient();
                 WebProxy myProxy = new proxy_LPS().init();
@@ -611,17 +620,14 @@ namespace TreeCadN
                     {
 
                         log.Add("если в файле есть запись о последнем обновлении");
-                        //получим код авторизации
-                        INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
-                        string authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
-
+                    
                         evesync.YA ps = YA.Default;
 
-                      
+
                         url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root + "&yadisk=" + ps.OAuth;
                         response = client.DownloadData(url);
                         last_upd = System.Text.Encoding.UTF8.GetString(response);
-                       
+
                         response = null;
                         log.Add(url);
 
@@ -654,7 +660,7 @@ namespace TreeCadN
             {
                 //  MessageBox.Show(e.Message);
             }
-       
+
         }
 
 

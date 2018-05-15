@@ -375,7 +375,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
     public static class Obnov_dll_N
     {
-        public static void Create(string catalog)
+        public static void Create(string catalog, string authotiz_root)
         {
             try
             {
@@ -386,11 +386,12 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
               //  MessageBox.Show(catalog);
                 WebClient client1 = new WebClient();
-                var url1 = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1&catalog="+ catalog;
+                var url1 = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1&catalog="+ catalog+ "&authotiz_root="+ authotiz_root;
                 string response1 = client1.DownloadString(url1);
 
                 log.Add("обновление dll хэш с сервера " + response1);
 
+                //dll нуждается в обновлении
                 if (hash_value(TreeCadNpath) != response1)
                 {
                     log.Add("обновление dll нуждается в обновлении");
@@ -404,8 +405,8 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
                     string tmppath = Path.GetTempPath() + @"\TreeCadN.dll";
 
-
-                    client.DownloadFile(url, tmppath);//скачаем новую
+                    //скачаем новую
+                    client.DownloadFile(url, tmppath);
 
 
                     RIPEMD160 myRIPEMD160 = RIPEMD160Managed.Create();
@@ -415,7 +416,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     string hash = BitConverter.ToString(hashValue).Replace("-", String.Empty);
 
 
-                    if (hash == response1)
+                    if (hash == response1)//заменим на новую
                     {
                         log.Add("заменим на новую - успех");
                         File.Copy(tmppath, TreeCadNpath, true);//заменим на новую

@@ -26,7 +26,7 @@ namespace TreeCadN
 
         static BD_Connect BD = new BD_Connect();
         //   public string vh_func_path = "";
-        public string vh_func_str = "", str2="";
+        public string vh_func_str = "", str2 = "";
 
         public string papka_s_foto = Environment.CurrentDirectory + @"\GIULIANOVARS\";
 
@@ -56,7 +56,7 @@ namespace TreeCadN
             try
             {
                 str2 = str1;
-                          vh_func_str = str1;
+                vh_func_str = str1;
                 BD.path = path; //укажем файл бд
 
 
@@ -98,7 +98,7 @@ namespace TreeCadN
             seldopotd.Clear();
             seldopotd.Add(new Person()
             {
-
+                ID = "1",
                 NAME = "Нет"
             });
             comboBox1.SelectedIndex = 0;
@@ -130,9 +130,9 @@ namespace TreeCadN
             string s = "";
 
             string[] words = TekOtdelka.index10.Split('^');
-            for (int x = 0; x < words.Length ; x++)
+            for (int x = 0; x < words.Length; x++)
             {
-              
+
                 if (x == 0)
                 {
                     s += "WHERE ID=" + words[x];//Индекс Внешней пласти	
@@ -169,21 +169,21 @@ namespace TreeCadN
         void load_tekst()
         {
             string s = "";
-           
-                string[] words = TekOtdelka.index10.Split('^');
-                for (int x = 0; x <= words.Length - 1; x++)
-                {
-                    if (x == 0)
-                    {
-                        s += "WHERE IDGroup=" + words[x];//Индекс Внешней пласти	
-                    }
-                    else
-                    {
-                        s += " or IDGroup=" + words[x];//Индекс Внешней пласти
-                    }
 
+            string[] words = TekOtdelka.index10.Split('^');
+            for (int x = 0; x <= words.Length - 1; x++)
+            {
+                if (x == 0)
+                {
+                    s += "WHERE IDGroup=" + words[x];//Индекс Внешней пласти	
                 }
-            
+                else
+                {
+                    s += " or IDGroup=" + words[x];//Индекс Внешней пласти
+                }
+
+            }
+
             OleDbDataReader reader = BD.conn("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup FROM TOtdelka " + s + "  ORDER BY Name ASC");
             idselect = new List<Person>();
             idselect.Add(new Person()//нулевая отделка
@@ -697,23 +697,17 @@ namespace TreeCadN
         void zakrit_OK()
         {
 
-            if (comboBox1.SelectedIndex == 0)
+
+            try
             {
-                TekOtdelka.index6 = "0";
+                TekOtdelka.index6 = seldopotd[(comboBox1.SelectedIndex)].ID;
+            }
+            catch
+            {
+                TekOtdelka.index6 = "1";
 
             }
-            else
-            {
-                try
-                {
-                    TekOtdelka.index6 = seldopotd[(comboBox1.SelectedIndex)].ID;
-                }
-                catch
-                {
-                    TekOtdelka.index6 = "0";
 
-                }
-            }
 
             TekOtdelka.index8 = textBox2.Text;
 
