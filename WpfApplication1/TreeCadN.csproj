@@ -144,9 +144,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
-    <Compile Include="GNviewer\teamv.xaml.cs">
-      <DependentUpon>teamv.xaml</DependentUpon>
-    </Compile>
     <Compile Include="kommunikacii\kommunikacii_Set.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -243,10 +240,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="findprice\findprice.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GNviewer\teamv.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

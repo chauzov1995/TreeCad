@@ -72,7 +72,7 @@ namespace TreeCadN
                         string b = GNfindprice(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", modello);
                         b = b.Replace(Environment.NewLine, "");
                         log.Add("строка постоения : " + b);
-                      
+
                         setParamP(Ambiente, "Codice", "");//очистить название артикула
                         getParam(Ambiente, "CaricaRiga2", "s", b);//заменить артикул или создать новый
 
@@ -453,59 +453,62 @@ namespace TreeCadN
         }
         public void GNviewer(string path)
         {
-
-
-            string otvet = "";
-            string patholdtv = "";
-
-
-
-            // string path = @"C:\evolution\giulianovars\GIULIANOVARS\procedure";
-            string[] dirs = Directory.GetFiles(path, "TeamViewerQS*.exe");
-
-
-            foreach (string dir in dirs)
+            //path -путь к тимвиверу
+            var sad = MessageBox.Show( "Сейчас запустится Фабричный TeamViewer, текущий  будет закрыт. Продолжить?", "Внимание", MessageBoxButton.OKCancel,MessageBoxImage.Warning);
+            if (sad==MessageBoxResult.OK)
             {
-                // if (dir.Split('\\').Last().Substring(0, 12) == "TeamViewerQS")
-                // {
-                if (dir.Split('\\').Last() == "TeamViewerQS.exe")
+                string otvet = "";
+                string patholdtv = "";
+
+
+
+                //на случай если как то переминована тв
+                string[] dirs = Directory.GetFiles(path, "TeamViewerQS*.exe");
+                foreach (string dir in dirs)
                 {
-
-
+                    patholdtv = dir;
                 }
-                else
+
+                WebClient webClient = new WebClient();
+                string url;
+                url = "https://webapi.teamviewer.com/api/v1/sessions";
+                webClient.Headers.Add("Authorization", "Bearer 2875381-8jCmpdsLcQm5FelCc9rv");
+                webClient.Headers.Add("Content-Type", "application/json");
+
+
+                string JSON = webClient.UploadString(url, "POST", @"{""groupid"" : ""g18888010""}");
+                session_TV login = JsonConvert.DeserializeObject<session_TV>(JSON);
+
+                string code = login.code.Replace("-", "");
+
+
+                string tmppath = Path.GetTempPath();
+
+
+                string[] dirs2 = Directory.GetFiles(tmppath, "TeamViewerQS*.exe");
+                foreach (string dir in dirs2)
                 {
-
-                    // File.Move(dir, path + "\\TeamViewerQS.exe", true);//востановили
+                    File.Delete(dir);//востановили
                 }
-                patholdtv = dir;
-                //   otvet = path;
-                //  break;
 
-                //  }
+
+
+
+                string newpathtv = tmppath + @"TeamViewerQS-id" + code + ".exe";
+
+                File.Copy(patholdtv, newpathtv, true);
+
+                //удалим текущий процесс тимвивера, (мало ли запущина боле новая версия)
+                foreach (Process proc in Process.GetProcessesByName("TeamViewer"))
+                {
+                    proc.Kill();
+                }
+
+                //запустим тимвивер КУЭС
+                Process.Start(newpathtv);
+
 
             }
-
-            WebClient webClient = new WebClient();
-            string url;
-            url = "https://webapi.teamviewer.com/api/v1/sessions";
-            webClient.Headers.Add("Authorization", "Bearer 2875381-8jCmpdsLcQm5FelCc9rv");
-            webClient.Headers.Add("Content-Type", "application/json");
-
-
-            string JSON = webClient.UploadString(url, "POST", @"{""groupid"" : ""g18888010""}");
-            session_TV login = JsonConvert.DeserializeObject<session_TV>(JSON);
-
-            string code = login.code.Replace("-", "");
-            string newpathtv = path + @"\TeamViewerQS-id" + code + ".exe";
-
-            File.Copy(patholdtv, newpathtv, true);
-
-            Process.Start(newpathtv);
-
-
-            //GNviewer.teamv timview = new GNviewer.teamv("");
-            //  timview.ShowDialog();
 
 
         }
@@ -599,7 +602,7 @@ namespace TreeCadN
                 //получим код авторизации
                 INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
                 string authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
-                
+
                 Obnov_dll_N.Create(catalog, authotiz_root);//обновление dll treecadN ред
 
                 WebClient client = new WebClient();
@@ -620,7 +623,7 @@ namespace TreeCadN
                     {
 
                         log.Add("если в файле есть запись о последнем обновлении");
-                    
+
                         evesync.YA ps = YA.Default;
 
 
