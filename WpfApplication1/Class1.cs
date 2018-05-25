@@ -53,6 +53,7 @@ namespace TreeCadN
                         GNviewer(Environment.CurrentDirectory + @"\GIULIANOVARS\procedure");
                         break;
                     case "uploadPROGR":
+                      
                         var ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
                         var path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
                         uploadPROGR(Environment.CurrentDirectory + @"\" + path_ecadpro);
@@ -62,9 +63,9 @@ namespace TreeCadN
                         break;
                     case "findprice":
 
-
-
+                      
                         this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+                        this.aamain = getParam(Ambiente, "GetObject", "aaMain");
                         object info = getParamG(xamb, "info");
                         string modello = getParam(info, "modello").ToString();
 
@@ -73,9 +74,13 @@ namespace TreeCadN
                         b = b.Replace(Environment.NewLine, "");
                         log.Add("строка постоения : " + b);
 
-                        setParamP(Ambiente, "Codice", "");//очистить название артикула
-                        getParam(Ambiente, "CaricaRiga2", "s", b);//заменить артикул или создать новый
+                   //   setParamP(Ambiente, "Codice", "");//очистить название артикула
 
+                        // setParamP(Ambiente, "gDisSetFocus", "");//заменить артикул или создать новый
+                     
+                      
+                        getParam(Ambiente, "CaricaRiga2", "s", b);//заменить артикул или создать новый
+                         // getParamI(Ambiente, "gDisSetFocus");//заменить артикул или создать новый
                         returnValue = b;
                         break;
                 }
@@ -315,14 +320,7 @@ namespace TreeCadN
         }
 
 
-        public string BASIS()
-        {
-            Basis f_Basis = new Basis(this);
-            f_Basis.ShowDialog();
-
-
-            return Bazis;
-        }
+     
         public string GNPrimN1(ref object xAmbiente, int filtr, ref string text)
         {
             this.Ambiente = xAmbiente;
@@ -565,12 +563,11 @@ namespace TreeCadN
             string evepath = path + @"\" + evename;
 
 
-            uploadPROGR.uploadPROGR sss = new uploadPROGR.uploadPROGR(evepath, this);
+            // uploadPROGR.uploadPROGR sss = new uploadPROGR.uploadPROGR(evepath, this);
+            uploadPROGR.dialprogr_new sss = new uploadPROGR.dialprogr_new(evepath, this);
             sss.ShowDialog();
 
-            //   MessageBox.Show(nomzakaza);
-            //     getParam(info, "Numero", "1");
-
+        
 
         }
 

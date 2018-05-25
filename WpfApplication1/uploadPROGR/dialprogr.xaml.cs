@@ -110,13 +110,16 @@ namespace TreeCadN.uploadPROGR
             client.DownloadFile(url, tmppath);//скачаем новую
 
 
-            neqqqqq.getParam(neqqqqq.xamb, "carica", neqqqqq.pathordini + @"\000001.eve");
-            Close();
+        
 
             retzakaz = "1";
-            MessageBox.Show("Готово, теперь в номере заказа укажите 1");
 
 
+            neqqqqq.getParam(neqqqqq.xamb, "carica", tmppath);
+            neqqqqq.getParamI(neqqqqq.Ambiente, "bcarica");
+            //  MessageBox.Show("Готово, теперь в номере заказа укажите 1");
+
+            Close();
         }
 
         private void lb1_MouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -303,7 +303,7 @@ namespace вызов
             Object instane = Activator.CreateInstance(ourClass);
             MethodInfo meth = ourClass.GetMethod("uploadPROGR"); //нужен тот Show, который не принимает параметров
             object result = meth.Invoke(instane, new object[] {
-            @"C:\!qwerty\TreeCadN\WpfApplication1\bin\Debug\GIULIANOVARS\procedure"
+            @"C:\evolution\giulianovars\_ecadpro\ordini"
                 });
         }
 

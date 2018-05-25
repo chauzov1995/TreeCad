@@ -106,9 +106,6 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Basis.xaml.cs">
-      <DependentUpon>Basis.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Class1.cs" />
     <Compile Include="dialog_univi.xaml.cs">
       <DependentUpon>dialog_univi.xaml</DependentUpon>
@@ -192,14 +189,17 @@
     <Compile Include="Update.xaml.cs">
       <DependentUpon>Update.xaml</DependentUpon>
     </Compile>
-    <Compile Include="uploadPROGR\dialprogr.xaml.cs">
-      <DependentUpon>dialprogr.xaml</DependentUpon>
+    <Compile Include="uploadPROGR\dialprogr_new.xaml.cs">
+      <DependentUpon>dialprogr_new.xaml</DependentUpon>
     </Compile>
-    <Compile Include="uploadPROGR\uploadPROGR.xaml.cs">
-      <DependentUpon>uploadPROGR.xaml</DependentUpon>
+    <Compile Include="uploadPROGR\uploadPROGR_new.xaml.cs">
+      <DependentUpon>uploadPROGR_new.xaml</DependentUpon>
     </Compile>
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uploadPROGR\dialprogr.xaml.cs">
+      <DependentUpon>dialprogr.xaml</DependentUpon>
     </Compile>
     <Compile Include="Prim2.xaml.cs">
       <DependentUpon>Prim2.xaml</DependentUpon>
@@ -207,10 +207,6 @@
     <Compile Include="zenakorp\zenakorp.xaml.cs">
       <DependentUpon>zenakorp.xaml</DependentUpon>
     </Compile>
-    <Page Include="Basis.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="dialog_univi.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -232,6 +228,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="evesync\saveeve.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uploadPROGR\dialprogr.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -271,11 +271,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="uploadPROGR\dialprogr.xaml">
+    <Page Include="uploadPROGR\dialprogr_new.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="uploadPROGR\uploadPROGR.xaml">
+    <Page Include="uploadPROGR\uploadPROGR_new.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
