@@ -201,12 +201,12 @@ namespace TreeCadN.kommunikacii
                                     ty.Text + "','" +
                                     tz.Text + "', '" +
                                     category.id + "')");
-                                MessageBox.Show("Объект успешно добавлен");
+                              //  MessageBox.Show("Объект успешно добавлен");
                             }
                             else
                             {
                                 BD.conn("UPDATE `import3ds` SET `nazv`='" + nazv + "',  `path3ds`='" + tb1.Text + "', `pathjpg`='" + tb2.Text + "', `pathjpgugo`='" + tb3.Text + "', `x`='" + tx.Text + "', `y`='" + ty.Text + "', `z`='" + tz.Text + "'  WHERE id=" + model.id);
-                                MessageBox.Show("Объект успешно изменён");
+                             //   MessageBox.Show("Объект успешно изменён");
 
 
                             }

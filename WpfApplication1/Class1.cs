@@ -47,7 +47,10 @@ namespace TreeCadN
                         returnValue = Kommunikacii(GetPathMDB(katalog));
                         break;
                     case "evesync":
-                        evesync(GetPathMDB(katalog));
+                        var ini2 = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                        var path_ordini = ini2.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+                      
+                        evesync(GetPathMDB(katalog), path_ordini);
                         break;
                     case "GNviewer":
                         GNviewer(Environment.CurrentDirectory + @"\GIULIANOVARS\procedure");
@@ -442,9 +445,9 @@ namespace TreeCadN
             return f_kommunikacii.selectedModel;
         }
 
-        public void evesync(string path)
+        public void evesync(string path, string pathordini)
         {
-            evesync.evesync f_evesync = new evesync.evesync(path, path);
+            evesync.evesync f_evesync = new evesync.evesync(path, pathordini);
             f_evesync.ShowDialog();
 
 
@@ -512,9 +515,11 @@ namespace TreeCadN
         }
         public void evesync_save(ref object xAmbiente)
         {
+            //MessageBox.Show("asda");
             YA ps = YA.Default;
             if (ps.isSave)
             {
+              //  MessageBox.Show("asda");
                 INIManager client_man;
                 string path_sysdba;
                 client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
@@ -627,7 +632,7 @@ namespace TreeCadN
                         url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root + "&yadisk=" + ps.OAuth;
                         response = client.DownloadData(url);
                         last_upd = System.Text.Encoding.UTF8.GetString(response);
-
+                     ////   MessageBox.Show(last_upd);
                         response = null;
                         log.Add(url);
 

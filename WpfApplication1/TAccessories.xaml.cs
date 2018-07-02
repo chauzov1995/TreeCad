@@ -412,8 +412,9 @@ namespace TreeCadN
                 }
             }
             log.Add("закончили парсить установим в гр3");
+            g3.ItemsSource = null;
             g3.ItemsSource = gr3;
-
+            
 
         }
 
@@ -1118,6 +1119,11 @@ st14.Width.ToString() + ";";
             {
                 MessageBox.Show("Сначала выбирите элемент, который необходимо редактировать, затем нажмите эту кнопку снова");
 
+
+
+
+
+
             }
 
 
@@ -1128,16 +1134,51 @@ st14.Width.ToString() + ";";
 
         }
 
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            string t = "";
+            for (int i = 0; i < gr3.Count; i++)
+            {
+                texnika otvet_massiv = ((texnika)gr3[i]);
+
+                string name = "";
+
+                if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@').Replace(';', '$');
+
+
+
+                t += otvet_massiv.type.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.Article.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.kolvo.ToString().Replace(',', '.').Replace(';', '$') + "~" +
+                otvet_massiv.OTD.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.Prim.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.GROUP_dlyaspicif.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.nom_pp.ToString().Replace(',', '@').Replace(';', '$') + "~" +
+                name + "~" +
+                otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + ";";
+                //      MessageBox.Show(text_otvet);
+
+            }
+
+
+
+            Clipboard.SetText(t);
+
+           
 
 
 
 
 
+            MessageBox.Show("Теперь зайдите в кубик в другом проекте и нажмите кнопку \"2.Вставить\"");
+            Close();
+        }
 
-
-
-
-
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            pars(Clipboard.GetText()) ;
+        }
     }
 
     public class texnika

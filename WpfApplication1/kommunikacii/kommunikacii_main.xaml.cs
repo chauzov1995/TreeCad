@@ -40,10 +40,10 @@ namespace TreeCadN.kommunikacii
 
             lb4.Visibility = Visibility.Collapsed;
             lb1.Visibility = Visibility.Collapsed;
-            stpan.Visibility = Visibility.Collapsed;
+          //  stpan.Visibility = Visibility.Collapsed;
             btnserv.Visibility = Visibility.Collapsed;
-            label1.Visibility = Visibility.Collapsed;
-            stpan1.Visibility = Visibility.Collapsed;
+           
+           
 
             DirectoryInfo directory = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
 
@@ -65,7 +65,7 @@ namespace TreeCadN.kommunikacii
             else
             {
                 lb4.ContextMenu = null;
-
+                label1.Visibility = Visibility.Collapsed;
             }
 
 
@@ -1064,16 +1064,16 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 lb4.Visibility = Visibility.Visible;
                 lb1.Visibility = Visibility.Collapsed;
-                stpan.Visibility = Visibility.Collapsed;
-                stpan1.Visibility = Visibility.Visible;
+            //    stpan.Visibility = Visibility.Collapsed;
+              
                 //   label1.Visibility = Visibility.Visible;
             }
             else
             {
                 lb4.Visibility = Visibility.Collapsed;
                 lb1.Visibility = Visibility.Visible;
-                stpan.Visibility = Visibility.Visible;
-                stpan1.Visibility = Visibility.Collapsed;
+              //  stpan.Visibility = Visibility.Visible;
+               
                 //  label1.Visibility = Visibility.Collapsed;
             }
 
