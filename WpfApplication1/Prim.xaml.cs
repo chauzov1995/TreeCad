@@ -401,7 +401,9 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         public OleDbDataReader conn(string zapros)
         {
 
-            OleDbConnection conn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=" + path + "");//подключаемся к базе
+            log.Add("Путь к бд- " + path);
+            log.Add("строка подключ к бд- "+ @"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");
+            OleDbConnection conn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");//подключаемся к базе
             OleDbCommand cmd = new OleDbCommand();//инициализируем запрос
             cmd.Connection = conn;//подключаемся к бд
             conn.Open();//открываем соединение

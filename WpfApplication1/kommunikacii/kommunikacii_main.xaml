@@ -26,9 +26,7 @@
             <RowDefinition Height="393*"/>
             <RowDefinition Height="42"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="892"/>
-        </Grid.ColumnDefinitions>
+
         <Grid x:Name="stpan" Grid.Row="1" Margin="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="90"/>
@@ -44,7 +42,7 @@
 
         </Grid>
         <TabControl x:Name="tab1" Margin="5" VerticalContentAlignment="Stretch" SelectionChanged="tab1_SelectionChanged">
-            <TabItem Header="С сервера">
+            <TabItem x:Name="item1" Header="С сервера">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="250"/>
@@ -116,7 +114,7 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Пользовательские">
+            <TabItem x:Name="item2" Header="Пользовательские">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="250"/>
@@ -187,6 +185,7 @@
                         </Grid.ColumnDefinitions>
                         <Button Content="Добавить 3ds обьект" Margin="5" Padding="10,1" Click="Button_Click" />
                         <Button Content="Редактировать" Margin="5" Padding="10,1" Click="Button_Click_8" Grid.Column="1"  />
+                        <Button Content="Восстановить утерянные" Grid.Column="2" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="153" Click="Button_Click_9"/>
                     </Grid>
                 </Grid>
             </TabItem>

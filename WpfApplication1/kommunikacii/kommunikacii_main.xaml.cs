@@ -32,7 +32,7 @@ namespace TreeCadN.kommunikacii
         List<treespis> server = new List<treespis>();
 
         List<Models3d> server_obj = new List<Models3d>();
-        string dir3ds;
+        string dir3ds, dir3ds_user;
         string admin;
         public kommunikacii_main(string pathBD)
         {
@@ -48,7 +48,7 @@ namespace TreeCadN.kommunikacii
             DirectoryInfo directory = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
 
             dir3ds = directory + @"\3dsObject\Web\";
-
+            dir3ds_user = directory + @"\3dsObject\User\";
 
             this.pathBD = pathBD;
             BD.path = pathBD; //укажем файл бд
@@ -155,19 +155,19 @@ namespace TreeCadN.kommunikacii
 
         void lb1_napolnenie()//наполнение листбокса
         {
-
+          
             treespis Treespis = lb2.SelectedItem as treespis;
-
+         
             //    string path = Treespis.path;
 
-
+           
 
             List<Models3d> modeli = new List<Models3d>();
 
-
+          
 
             var reader = BD.conn("SELECT id, nazv, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category FROM `import3ds` WHERE category='" + Treespis.id + "'");
-            while (reader.Read())
+                      while (reader.Read())
             {
                 string jpg_path = reader["pathjpg"].ToString();
                 if (jpg_path == "")
@@ -194,19 +194,19 @@ namespace TreeCadN.kommunikacii
                 });
 
             }
-
+          
 
 
 
 
             lb1.ItemsSource = modeli;
-
+      
 
             try
             {
                 object selitem = lb1.Items[lb1_selitem];
 
-
+         
                 lb1.ScrollIntoView(selitem);
                 lb1.SelectedItem = (selitem);
             }
@@ -214,8 +214,8 @@ namespace TreeCadN.kommunikacii
             {
                 lb1.ScrollIntoView(null);
                 lb1.SelectedItem = (null);
-            }
-
+                     }
+           
 
         }
         void lb4_napolnenie()//наполнение листбокса
@@ -339,7 +339,8 @@ namespace TreeCadN.kommunikacii
                 //  var model = (lb2.SelectedItem as treespis).id;
                 kommunikacii_dial_imp dial = new kommunikacii_dial_imp(pathBD, null, (lb2.SelectedItem as treespis));
                 dial.ShowDialog();
-                lb1_napolnenie();
+                MessageBox.Show("Модель успешно создана");
+                              lb1_napolnenie();
             }
             else
             {
@@ -357,7 +358,7 @@ namespace TreeCadN.kommunikacii
             {
                 //  selectedModel = (lb1.SelectedValue as Models3d).path;
                 var file = lb1.SelectedValue as Models3d;
-                selectedModel = (file.path + @";" + file.name + ";" + file.jpg_ugo + ";" + file.x + ";" + file.y + ";" + file.z);
+             selectedModel = (file.path + @"^" + file.name + "^" + file.jpg_ugo + "^" + file.x + "^" + file.y + "^" + file.z);
                 // MessageBox.Show(file.path);
                 lb1_selitem = lb1.SelectedIndex;
             }
@@ -378,7 +379,10 @@ namespace TreeCadN.kommunikacii
 
         void close_server()
         {
-            if (lb4.Visibility == Visibility.Visible)
+            //  if (lb4.Visibility == Visibility.Visible)
+            //    {
+      
+            if (item1.IsSelected)
             {
 
 
@@ -386,22 +390,22 @@ namespace TreeCadN.kommunikacii
                 var model = (lb4.SelectedItem as Models3d);
                 string path_copy = dir3ds + Treespis.name + @"\";
                 Directory.CreateDirectory(path_copy);//создадим папку для weб
-
+              
 
                 string path3ds = "";
                 string pathjpg = "";
                 string pathjpgugo = "";
 
-
+              
                 if (model.path != "")
                 {
-
+                 
                     path3ds = path_copy + model.path;
                 }
                 //  MessageBox.Show("asdasd");
                 if (model.jpg_path != "")
                 {
-
+                 
                     pathjpg = path_copy + model.jpg_path;
                 }
                 if (model.jpg_ugo != "")
@@ -416,27 +420,27 @@ namespace TreeCadN.kommunikacii
                 {
 
                     (new WebClient()).DownloadFile(ecad + model.path, path3ds);//скачиваем картинку
-
+                 
                 }
                 if (!(File.Exists(pathjpg) || pathjpg == ""))
                 {
 
                     (new WebClient()).DownloadFile(ecad + model.jpg_path, pathjpg);//скачиваем картинку
-
+                  
                 }
                 if (!(File.Exists(pathjpgugo) || pathjpgugo == ""))
                 {
 
                     (new WebClient()).DownloadFile(ecad + model.jpg_ugo, pathjpgugo);//скачиваем картинку
-
+                   
                 }
-
+           
             }
 
 
 
 
-        }
+  }
 
 
 
@@ -560,7 +564,7 @@ namespace TreeCadN.kommunikacii
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            
             kommunikacii_Set ps = kommunikacii_Set.Default;
             ps.Top = this.Top;
             ps.Left = this.Left;
@@ -584,7 +588,7 @@ namespace TreeCadN.kommunikacii
 
 
             ps.Save();
-        }
+                    }
         void loadpage()
         {
             try
@@ -916,7 +920,7 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 var file = lb4.SelectedValue as Models3d;
                 //    MessageBox.Show(file.loc_3ds);
                 label1.Content = "Группа у пользователя - " + file.polzgroup;
-                selectedModel = (file.loc_3ds + @";" + file.name + ";" + file.loc_ugojpg + ";" + file.x + ";" + file.y + ";" + file.z);
+             selectedModel = (file.loc_3ds + @"^" + file.name + "^" + file.loc_ugojpg + "^" + file.x + "^" + file.y + "^" + file.z);
                 // MessageBox.Show(file.path);
                 lb4_selitem = lb4.SelectedIndex;
             }
@@ -1051,6 +1055,11 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 lb3napolnene();
                 lb4.ItemsSource = null;
             }
+        }
+
+        private void Button_Click_9(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void Button_Click_8(object sender, RoutedEventArgs e)

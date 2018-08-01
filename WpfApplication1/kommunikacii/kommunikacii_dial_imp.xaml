@@ -3,15 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:helix="http://helix-toolkit.org/wpf"
-        xmlns:local="clr-namespace:TreeCadN.kommunikacii"
+               xmlns:local="clr-namespace:TreeCadN.kommunikacii"
        
         mc:Ignorable="d"
-        Title="Добавление пользовательского 3d объекта" Height="393.884" Width="736.672" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="Добавление пользовательского 3d объекта" Height="393.884" Width="415.672" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400"/>
-            <ColumnDefinition Width="275*"/>
+            <ColumnDefinition Width="474"/>
         </Grid.ColumnDefinitions>
         <Button Content="Обзор" HorizontalAlignment="Left" Margin="315,76,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <TextBox AllowDrop="true" x:Name="tb1" HorizontalAlignment="Left" Height="23" Margin="11,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="299" ToolTip="Укажите путь к 3ds файлу" />
@@ -31,16 +29,9 @@
         <TextBlock HorizontalAlignment="Left" Margin="10,255,0,0" TextWrapping="Wrap" Text="Добавьте картинку для Условно Графического Обозначения (УГО)" VerticalAlignment="Top"/>
         <TextBox x:Name="tb4" HorizontalAlignment="Left" Height="23" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" ToolTip="Введите наименование объекта"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,8,0,0" TextWrapping="Wrap" Text="Наименование" VerticalAlignment="Top"/>
-        <Grid Margin="0" Grid.Column="1" Background="#FFF1F1F1">
-            <helix:HelixViewport3D x:Name="viewPort3d" ZoomExtentsWhenLoaded="true" Margin="5,5,5,40" 
-                                 
-                                   >
-                <!-- Remember to add light to the scene -->
-                <helix:DefaultLights/>
-            </helix:HelixViewport3D>
-            <Button Content="Сохранить" HorizontalAlignment="Right" Margin="0,0,5,5" VerticalAlignment="Bottom" Width="75" Height="30" Click="Button_Click_2" Grid.Column="1"/>
+        
+        <CheckBox x:Name="cb_1" Content="Сохранять пропорции" HorizontalAlignment="Left" Margin="34,198,0,0" VerticalAlignment="Top" Checked="cb_1_Checked" />
+        <Button Content="Сохранить" HorizontalAlignment="Right" Margin="0,0,84,10" VerticalAlignment="Bottom" Width="75" Height="30" Click="Button_Click_2"/>
 
-        </Grid>
-        <CheckBox x:Name="cb_1" Content="Сохранять пропорции" HorizontalAlignment="Left" Margin="34,198,0,0" VerticalAlignment="Top" Checked="cb_1_Checked"/>
     </Grid>
-    </Window>
+</Window>

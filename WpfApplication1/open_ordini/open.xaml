@@ -1,0 +1,90 @@
+﻿<Window x:Class="TreeCadN.open_ordini.open"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TreeCadN.open_ordini"
+        mc:Ignorable="d"
+        Title="Заказы" Height="450" Width="800" MinWidth="800" MinHeight="450" Closing="Window_Closing" >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180*"/>
+            <ColumnDefinition Width="180*"/>
+            <ColumnDefinition Width="180*"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="120"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="329*"/>
+            <RowDefinition Height="32"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="№ заказа" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom"/>
+        <Label Content="ФИО клиента" Grid.Column="1" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom"/>
+        <Label Content="Менеджер" Grid.Column="2" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom"/>
+
+
+        <StackPanel Grid.Row="1" Margin="0">
+            <Border BorderThickness="1" BorderBrush="#FFBCC4C5" Margin="5">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="23"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="t1"  TextWrapping="Wrap" TextChanged="t1_TextChanged" BorderBrush="{x:Null}" Background="{x:Null}" BorderThickness="0" TabIndex="1"/>
+                    <Button Content="X" IsTabStop="False"  Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Click="Button_Click_4" />
+                </Grid>
+            </Border>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1"  Margin="0">
+            <Border BorderThickness="1" BorderBrush="#FFBCC4C5" Margin="5">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="23"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="t2"  TextWrapping="Wrap" TextChanged="t1_TextChanged" BorderBrush="{x:Null}" Background="{x:Null}" BorderThickness="0" TabIndex="1"/>
+                    <Button Content="X" IsTabStop="False"  Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Click="Button_Click_5" />
+                </Grid>
+            </Border>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="2" Margin="0">
+            <Border BorderThickness="1" BorderBrush="#FFBCC4C5" Margin="5">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="23"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="t3"  TextWrapping="Wrap" TextChanged="t1_TextChanged" BorderBrush="{x:Null}" Background="{x:Null}" BorderThickness="0" TabIndex="1"/>
+                    <Button Content="X" IsTabStop="False"  Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Click="Button_Click_6" />
+                </Grid>
+            </Border>
+        </StackPanel>
+
+
+        <DataGrid x:Name="lb1" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False"  Margin="5" Grid.Row="2" Grid.ColumnSpan="4" Loaded="lb1_Loaded" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№ заказа" Binding="{Binding nomer_zakaza}"  Width="2*" />
+                <DataGridTextColumn Header="ФИО клиента" Binding="{Binding FIO_klienta}"  Width="4*"/>
+                <DataGridTextColumn Header="Сумма" Binding="{Binding id_zakaza}"  Width="2*"/>
+                <DataGridTextColumn Header="Курс" Binding="{Binding id_zakaza}"  Width="2*"/>
+                <DataGridTextColumn Header="Коэф. По мебели" Binding="{Binding id_zakaza}"  Width="2*"/>
+                <DataGridTextColumn Header="Коэф. По акс." Binding="{Binding id_zakaza}"  Width="2*"/>
+                <DataGridTextColumn Header="Дата последнего изменения" Binding="{Binding Date_last}"  Width="3*"/>
+                <DataGridTextColumn Header="Менеджер в салоне" Binding="{Binding manager_salons}"  Width="3*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Content="ОК" Margin="5,0,5,5" Click="Button_Click" Grid.Column="4" Height="30" VerticalAlignment="Bottom" Grid.Row="2" Grid.RowSpan="2"/>
+        <Button Content="Дублировать" Grid.Column="4" Margin="5,0,5,48" VerticalAlignment="Bottom" Height="30" Click="Button_Click_3" Grid.Row="2"/>
+        <Button Content="Удалить" Grid.Column="4" Margin="5,0,5,13" VerticalAlignment="Bottom" Height="30" Grid.Row="2" Click="Button_Click_8"/>
+        <Button x:Name="btn_share" Content="Скопировать заказы на шару" Grid.Column="4" Margin="5,89,5,0" VerticalAlignment="Top" Height="46" Background="#FF5DF1D6" Foreground="#FF1B7665" Click="Button_Click_2" ToolTip="Скопирует заказы из вашей локальной папки в общую папку" Grid.Row="2"/>
+        <Button Content="Очистить" Grid.Column="3" Margin="5" Grid.Row="1" VerticalAlignment="Center" Click="Button_Click_7"/>
+        <CheckBox Content="Показывать только моя заказы" Margin="5" Grid.Row="3" Grid.ColumnSpan="4"/>
+
+
+
+    </Grid>
+</Window>

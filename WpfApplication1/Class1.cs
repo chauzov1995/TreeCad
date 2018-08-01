@@ -15,6 +15,7 @@ using TreeCadN.evesync;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using Microsoft.Win32;
+using System.Data.SQLite;
 
 namespace TreeCadN
 {
@@ -34,6 +35,7 @@ namespace TreeCadN
         public string attiva(String s, String Valori, String DES, String PX, String PY, String param)
         {
             string returnValue = "";
+            object info;
             try
             {
                 string katalog = getParamI(Ambiente, "xPercorso").ToString();
@@ -44,32 +46,69 @@ namespace TreeCadN
                         returnValue = TAccess(GetPathMDB(katalog), 1, s);
                         break;
                     case "Kommunikacii":
+
                         returnValue = Kommunikacii(GetPathMDB(katalog));
+
+
                         break;
                     case "evesync":
                         var ini2 = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
                         var path_ordini = ini2.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-                      
+
                         evesync(GetPathMDB(katalog), path_ordini);
                         break;
                     case "GNviewer":
                         GNviewer(Environment.CurrentDirectory + @"\GIULIANOVARS\procedure");
                         break;
                     case "uploadPROGR":
+
+
+                        /*
+                    setParamP(info, "Numero", "1");
+                    getParam(info2, "Add", "_NOMEFILEPARETI", "000340");
+                     getParamI(xamb, "salva");//сохраним
+                 */
+
+
+                        //      getParam(info, "NumeroPut","17");
+                        //   MessageBox.Show(getParamI(info, "NuovoNumeroOrdine").ToString());
+                        //    info = getParamG(xamb, "INFO");
+                        //    object info2 = getParamG(info, "INFO");
+                        //   string FIO = getParam(info2, "Var", "CLI_1").ToString();
+                        //   string nomer = getParam(info, "Numero").ToString();
+
+
+                        this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+                        info = getParamG(xamb, "INFO");
+                        object info2 = getParamG(info, "INFO");
+                        string FIO = getParam(info2, "Var", "CLI_1").ToString();
+                        string nomer = getParam(info, "Numero").ToString();
                       
+
+
                         var ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
                         var path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-                        uploadPROGR(Environment.CurrentDirectory + @"\" + path_ecadpro);
+                       
+                        open_ordini.open sss = new open_ordini.open(this, FIO, nomer, GetPathMDB(katalog), Environment.CurrentDirectory + @"\" + path_ecadpro);
+                   
+                        sss.ShowDialog();
+                        /*    */
+                        /*
+                        dasda
+                      var ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                          var path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+                          uploadPROGR(Environment.CurrentDirectory + @"\" + path_ecadpro);
+                         */
                         break;
                     case "zenakorpvspom":
                         returnValue = zenakorp(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", s);
                         break;
                     case "findprice":
 
-                      
+
                         this.xamb = getParam(Ambiente, "GetObject", "XAMB");
                         this.aamain = getParam(Ambiente, "GetObject", "aaMain");
-                        object info = getParamG(xamb, "info");
+                        info = getParamG(xamb, "info");
                         string modello = getParam(info, "modello").ToString();
 
 
@@ -77,13 +116,13 @@ namespace TreeCadN
                         b = b.Replace(Environment.NewLine, "");
                         log.Add("строка постоения : " + b);
 
-                   //   setParamP(Ambiente, "Codice", "");//очистить название артикула
+                        //   setParamP(Ambiente, "Codice", "");//очистить название артикула
 
                         // setParamP(Ambiente, "gDisSetFocus", "");//заменить артикул или создать новый
-                     
-                      
+
+
                         getParam(Ambiente, "CaricaRiga2", "s", b);//заменить артикул или создать новый
-                         // getParamI(Ambiente, "gDisSetFocus");//заменить артикул или создать новый
+                                                                  // getParamI(Ambiente, "gDisSetFocus");//заменить артикул или создать новый
                         returnValue = b;
                         break;
                 }
@@ -260,6 +299,85 @@ namespace TreeCadN
 
         #endregion
 
+
+
+
+
+
+        public void copy_to_share()
+        {
+            SQLiteConnection m_dbConn = new SQLiteConnection();
+            SQLiteCommand m_sqlCmd = new SQLiteCommand();
+
+            var ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            var path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+            string dbFileName = Environment.CurrentDirectory + @"\" + path_ecadpro + @"\sample.sqlite";
+
+
+            if (!File.Exists(dbFileName))
+                SQLiteConnection.CreateFile(dbFileName);
+
+            try
+            {
+                m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
+                m_dbConn.Open();
+                m_sqlCmd.Connection = m_dbConn;
+
+                m_sqlCmd.CommandText = "CREATE TABLE IF NOT EXISTS ordini (id INTEGER PRIMARY KEY AUTOINCREMENT, file_path TEXT, FIO TEXT, nomer_zakaza TEXT UNIQUE, last_upd TEXT, manager TEXT)";
+                m_sqlCmd.ExecuteNonQuery();
+
+            }
+            catch (SQLiteException ex)
+            {
+
+                MessageBox.Show("Error: " + ex.Message);
+            }
+
+
+
+
+
+
+
+            string percorsoordini = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\_ecadpro\ordini";
+            string[] files = Directory.GetFiles(percorsoordini, "*.eve", SearchOption.TopDirectoryOnly);
+            if (files.Length == 0 || percorsoordini == (Environment.CurrentDirectory + @"\_ecadpro\ordini"))
+            {
+                MessageBox.Show("Нечего копировать");
+            }
+            else
+            {
+
+                this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+                object info = getParamG(xamb, "INFO");
+                object info2 = getParamG(info, "INFO");
+
+
+                if (!Directory.Exists(percorsoordini + @"\_old")) Directory.CreateDirectory(percorsoordini + @"\_old");
+                foreach (string file in files)
+                {
+                    string nomfile = file.Split('\\').Last().Split('.').First();
+                    getParam(xamb, "carica", file);
+                    string newnum = getParamI(info, "NuovoNumeroOrdine").ToString();
+                    setParamP(info, "Numero", newnum);
+                    getParam(info2, "Add", "_NOMEFILEPARETI", nomfile);
+                    getParamI(xamb, "salva");//сохраним
+                    if (File.Exists(percorsoordini + @"\_old\" + nomfile + ".eve")) File.Delete(percorsoordini + @"\_old\" + nomfile + ".eve");
+                    File.Move(file, percorsoordini + @"\_old\" + nomfile + ".eve");
+                    
+                    string FIO = getParam(info2, "Var", "CLI_1").ToString();
+                    string Manager = getParam(info2, "Var", "Manager").ToString();
+                    //     id, file_path, FIO, nomer_zakaza,
+                    string pattern = "000000";
+                    string nom_form = pattern.Remove(0, newnum.Length) + newnum;
+                    m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini (file_path, nomer_zakaza, FIO, manager) VALUES ('" + Environment.CurrentDirectory + @"\" + path_ecadpro + @"\" + nom_form + ".eve', '" + nom_form + "', '" + FIO + "','"+ Manager + "')";
+                    m_sqlCmd.ExecuteNonQuery();
+                }
+            }
+            m_dbConn.Close();
+            GC.Collect();
+        }
+
         public string GNOTD(string path, string str)//для старых версий тех у кого ещё стоит старый размерный ряд
         {
 
@@ -300,7 +418,9 @@ namespace TreeCadN
             }
             if (uslovvipol)
             {
-                Window1 f1 = new Window1(path1, str1);
+                string katalog = getParamI(Ambiente, "xPercorso").ToString();
+         
+                Window1 f1 = new Window1(path1, str1, katalog);
                 f1.ShowDialog(); //блокируется основная форма
                 return f1.str2;
             }
@@ -323,7 +443,7 @@ namespace TreeCadN
         }
 
 
-     
+
         public string GNPrimN1(ref object xAmbiente, int filtr, ref string text)
         {
             this.Ambiente = xAmbiente;
@@ -409,7 +529,12 @@ namespace TreeCadN
             }
         }
 
+        public void Openordini()
+        {
 
+            //  open_ordini.open sss = new open_ordini.open(this, "Чаузов", "332", GetPathMDB("GIULIANOVARSA"));
+            //   sss.ShowDialog();
+        }
         public string GNPrimNAUTO(ref object xAmbiente, int filtr, ref string text)
         {
             this.Ambiente = xAmbiente;
@@ -455,8 +580,8 @@ namespace TreeCadN
         public void GNviewer(string path)
         {
             //path -путь к тимвиверу
-            var sad = MessageBox.Show( "Сейчас запустится Фабричный TeamViewer, текущий  будет закрыт. Продолжить?", "Внимание", MessageBoxButton.OKCancel,MessageBoxImage.Warning);
-            if (sad==MessageBoxResult.OK)
+            var sad = MessageBox.Show("Сейчас запустится Фабричный TeamViewer, текущий  будет закрыт. Продолжить?", "Внимание", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            if (sad == MessageBoxResult.OK)
             {
                 string otvet = "";
                 string patholdtv = "";
@@ -519,7 +644,7 @@ namespace TreeCadN
             YA ps = YA.Default;
             if (ps.isSave)
             {
-              //  MessageBox.Show("asda");
+                //  MessageBox.Show("asda");
                 INIManager client_man;
                 string path_sysdba;
                 client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
@@ -572,7 +697,7 @@ namespace TreeCadN
             uploadPROGR.dialprogr_new sss = new uploadPROGR.dialprogr_new(evepath, this);
             sss.ShowDialog();
 
-        
+
 
         }
 
@@ -586,10 +711,32 @@ namespace TreeCadN
 
         }
         string CATALOGGN = "Giulianovars";
+
+
+        void upd_last_eve()
+        {
+
+            INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            string numeroordine = client_man.GetPrivateString("Infogen", "numeroordine");//версия клиента
+            string percorsoordini = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+            string[] files = Directory.GetFiles(Environment.CurrentDirectory + @"\" + percorsoordini, "*.eve", SearchOption.TopDirectoryOnly);
+            Array.Sort(files);
+            MessageBox.Show(files.Last());
+        }
+
+
         public void UPDATE()
         {
             // this.Ambiente = xAmbiente;
             //  string catalog = "Giulianovars";// getParamI(Ambiente, "xPercorso").ToString();
+            log.Add("вычислим последжний заказ");
+
+
+
+
+            //upd_last_eve();
+
+
 
 
             log.Add("Старт обновления!");
@@ -605,7 +752,7 @@ namespace TreeCadN
                 INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
                 string authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
 
-                Obnov_dll_N.Create(catalog, authotiz_root);//обновление dll treecadN ред
+                //   Obnov_dll_N.Create(catalog, authotiz_root);//обновление dll treecadN ред
 
                 WebClient client = new WebClient();
                 WebProxy myProxy = new proxy_LPS().init();
@@ -632,7 +779,7 @@ namespace TreeCadN
                         url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root + "&yadisk=" + ps.OAuth;
                         response = client.DownloadData(url);
                         last_upd = System.Text.Encoding.UTF8.GetString(response);
-                     ////   MessageBox.Show(last_upd);
+                        ////   MessageBox.Show(last_upd);
                         response = null;
                         log.Add(url);
 
@@ -693,7 +840,7 @@ namespace TreeCadN
 
 
                 string client_ver = "";
-                string path = Environment.CurrentDirectory + @"\giulianovars\procedure\updN.ini";
+                string path = Environment.CurrentDirectory + @"\giulianovarsa\procedure\updN.ini";
                 if (File.Exists(path))
                 {
                     INIManager client_man = new INIManager(path);
@@ -733,8 +880,8 @@ namespace TreeCadN
         string GetPathMDB(string catalog)
         {
 
-            var client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-            var path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+            //     var client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            //   var path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
 
 
 
@@ -743,9 +890,9 @@ namespace TreeCadN
             {
 
                 case "GIULIANOVARSA":
-                    return Environment.CurrentDirectory + @"\" + path_sysdba + @"\systema.mdb";
+                    return Environment.CurrentDirectory + @"\systema.mdb";
                 default:
-                    return Environment.CurrentDirectory + @"\" + path_sysdba + @"\system.mdb";
+                    return Environment.CurrentDirectory + @"\system.mdb";
             }
         }
 

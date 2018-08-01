@@ -28,7 +28,7 @@ namespace TreeCadN
         //   public string vh_func_path = "";
         public string vh_func_str = "", str2 = "";
 
-        public string papka_s_foto = Environment.CurrentDirectory + @"\GIULIANOVARS\";
+        public string papka_s_foto;
 
         private List<Person> idselect = new List<Person>();
         public List<Person> seldopotd = new List<Person>();
@@ -49,7 +49,7 @@ namespace TreeCadN
 
 
 
-        public Window1(string path, string str1)
+        public Window1(string path, string str1, string katalog)
         {
             InitializeComponent();
 
@@ -59,7 +59,7 @@ namespace TreeCadN
                 vh_func_str = str1;
                 BD.path = path; //укажем файл бд
 
-
+                papka_s_foto = Environment.CurrentDirectory + @"\"+ katalog + @"\";
 
                 //    TekOtdelka.Add(new TekOtd() { });
 

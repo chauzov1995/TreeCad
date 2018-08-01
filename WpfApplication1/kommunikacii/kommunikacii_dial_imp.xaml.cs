@@ -1,5 +1,4 @@
-﻿using HelixToolkit.Wpf;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
@@ -67,8 +66,8 @@ namespace TreeCadN.kommunikacii
 
                 device3D.Content = dmodel3ds;
 
-                viewPort3d.Children.Add(device3D);
-                viewPort3d.ZoomExtents();
+           //     viewPort3d.Children.Add(device3D);
+        //        viewPort3d.ZoomExtents();
             }
 
 
@@ -104,11 +103,11 @@ namespace TreeCadN.kommunikacii
                 // Add to view port
                 if (lastmodel != null)
                 {
-                    viewPort3d.Children.Remove(lastmodel);
+             //       viewPort3d.Children.Remove(lastmodel);
                 }
 
-                viewPort3d.Children.Add(device3D);
-                viewPort3d.ZoomExtents();
+            //    viewPort3d.Children.Add(device3D);
+           //     viewPort3d.ZoomExtents();
 
                 tx.Text = dmodel3ds.Bounds.SizeX.ToString("0");
                 ty.Text = dmodel3ds.Bounds.SizeZ.ToString("0");
@@ -133,103 +132,122 @@ namespace TreeCadN.kommunikacii
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-
-
-
-
-
-            if (File.Exists(tb1.Text) && tb1.Text != "")
+            try
             {
-                if (File.Exists(tb2.Text) || tb2.Text == "")
-                {
-                    if (File.Exists(tb3.Text) || tb3.Text == "")
-                    {
 
-                        if (tx.Text != "" || ty.Text != "" || tz.Text != "")
+
+
+
+                if (File.Exists(tb1.Text) && tb1.Text != "")
+                {
+                    if (File.Exists(tb2.Text) || tb2.Text == "")
+                    {
+                        if (File.Exists(tb3.Text) || tb3.Text == "")
                         {
 
-                            //  string strini = tb1.Text + ";" + tb2.Text + ";" + tb3.Text + ";" + tx.Text + ";" + ty.Text + ";" + tz.Text;
-                            string nazv = tb4.Text;
-                            if (tb4.Text == "")
+                            if (tx.Text != "" || ty.Text != "" || tz.Text != "")
                             {
-                                string split = tb1.Text.Split('\\').Last();
-                                nazv = split.Remove(split.Length - 4);
 
-                            }
-
-
-                            BD_Connect BD = new BD_Connect();
-                            BD.path = pathBD; //укажем файл бд
-                            if (model == null)
-                            {
-                                DirectoryInfo directory = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
-
-                                string path_copy = directory + @"\3dsObject\User\" + category.name + @"\";
-                                Directory.CreateDirectory(path_copy);
-
-
-                                string time = DateTime.Now.ToFileTimeUtc().ToString();
-
-                                string path3ds = path_copy + nazv + "_" + time + ".3ds";
-                                string pathjpg = path_copy + nazv + "_" + time + ".jpg";
-                                string pathjpgugo = path_copy + nazv + "_" + time + "_ugo.jpg";
-
-
-                                File.Copy(tb1.Text, path3ds, true);
-                                if (File.Exists(tb2.Text))
+                                //  string strini = tb1.Text + ";" + tb2.Text + ";" + tb3.Text + ";" + tx.Text + ";" + ty.Text + ";" + tz.Text;
+                                string nazv = tb4.Text;
+                                if (tb4.Text == "")
                                 {
-                                    File.Copy(tb2.Text, pathjpg, true);
+                                    string split = tb1.Text.Split('\\').Last();
+                                    nazv = split.Remove(split.Length - 4);
+
+                                }
+
+
+                                BD_Connect BD = new BD_Connect();
+                                BD.path = pathBD; //укажем файл бд
+                                if (model == null)
+                                {
+                                    log.Add("пришла модель должна быть нулл" + model);
+                                    DirectoryInfo directory = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
+
+                                    string path_copy = directory + @"\3dsObject\User\" + category.name + @"\";
+                                    Directory.CreateDirectory(path_copy);
+
+                                    log.Add("создаём директорию по пути-" + path_copy);
+                                    string time = DateTime.Now.ToFileTimeUtc().ToString();
+
+                                    string path3ds = path_copy + nazv + "_" + time + ".3ds";
+                                    string pathjpg = path_copy + nazv + "_" + time + ".jpg";
+                                    string pathjpgugo = path_copy + nazv + "_" + time + "_ugo.jpg";
+
+
+                                    File.Copy(tb1.Text, path3ds, true);
+                                    log.Add("скопировали какой то файл");
+                                    if (File.Exists(tb2.Text))
+                                    {
+                                        File.Copy(tb2.Text, pathjpg, true);
+                                        log.Add("если сущ скопировали какой то файл");
+                                    }
+                                    else
+                                    {
+                                        pathjpg = "";
+                                    }
+                                    if (File.Exists(tb3.Text))
+                                    {
+                                        log.Add("скопировали какой то файл2");
+                                        File.Copy(tb3.Text, pathjpgugo, true);
+                                    }
+                                    else
+                                    {
+                                        pathjpgugo = "";
+                                    }
+                                    log.Add("INSERT INTO `import3ds` (`nazv`, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category) VALUES ('" +
+                                        nazv + "','" +
+                                        path3ds + "','" +
+                                        pathjpg + "','" +
+                                        pathjpgugo + "','" +
+                                        tx.Text + "','" +
+                                        ty.Text + "','" +
+                                        tz.Text + "', '" +
+                                        category.id + "')");
+                                    BD.conn("INSERT INTO `import3ds` (`nazv`, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category) VALUES ('" +
+                                        nazv + "','" +
+                                        path3ds + "','" +
+                                        pathjpg + "','" +
+                                        pathjpgugo + "','" +
+                                        tx.Text + "','" +
+                                        ty.Text + "','" +
+                                        tz.Text + "', '" +
+                                        category.id + "')");
+                                    //  MessageBox.Show("Объект успешно добавлен");
                                 }
                                 else
                                 {
-                                    pathjpg = "";
+                                    BD.conn("UPDATE `import3ds` SET `nazv`='" + nazv + "',  `path3ds`='" + tb1.Text + "', `pathjpg`='" + tb2.Text + "', `pathjpgugo`='" + tb3.Text + "', `x`='" + tx.Text + "', `y`='" + ty.Text + "', `z`='" + tz.Text + "'  WHERE id=" + model.id);
+                                    //   MessageBox.Show("Объект успешно изменён");
+
+
                                 }
-                                if (File.Exists(tb3.Text))
-                                {
-                                    File.Copy(tb3.Text, pathjpgugo, true);
-                                }
-                                else
-                                {
-                                    pathjpgugo = "";
-                                }
-                                BD.conn("INSERT INTO `import3ds` (`nazv`, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category) VALUES ('" +
-                                    nazv + "','" +
-                                    path3ds + "','" +
-                                    pathjpg + "','" +
-                                    pathjpgugo + "','" +
-                                    tx.Text + "','" +
-                                    ty.Text + "','" +
-                                    tz.Text + "', '" +
-                                    category.id + "')");
-                              //  MessageBox.Show("Объект успешно добавлен");
+                                Close();
                             }
                             else
                             {
-                                BD.conn("UPDATE `import3ds` SET `nazv`='" + nazv + "',  `path3ds`='" + tb1.Text + "', `pathjpg`='" + tb2.Text + "', `pathjpgugo`='" + tb3.Text + "', `x`='" + tx.Text + "', `y`='" + ty.Text + "', `z`='" + tz.Text + "'  WHERE id=" + model.id);
-                             //   MessageBox.Show("Объект успешно изменён");
-
-
+                                MessageBox.Show("Габариты не могут быть пустыми");
                             }
-                            Close();
                         }
                         else
                         {
-                            MessageBox.Show("Габариты не могут быть пустыми");
+                            MessageBox.Show("Ошибка Картинка УГО не существует");
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Ошибка Картинка УГО не существует");
+                        MessageBox.Show("Ошибка Картинка не существует");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Ошибка Картинка не существует");
+                    MessageBox.Show("Ошибка 3ds файл не существует либо не указан");
                 }
             }
-            else
+            catch
             {
-                MessageBox.Show("Ошибка 3ds файл не существует либо не указан");
+              //  MessageBox.Show("ewewewe");
             }
 
         }
@@ -318,13 +336,15 @@ namespace TreeCadN.kommunikacii
             try
             {
                 //Adding a gesture here
-                viewPort3d.RotateGesture = new MouseGesture(MouseAction.LeftClick);
+        //        viewPort3d.RotateGesture = new MouseGesture(MouseAction.LeftClick);
 
                 //Import 3D model file
-                ModelImporter import = new ModelImporter();
+            //    ModelImporter import = new ModelImporter();
 
+
+                 device =(new HelixToolkit.Wpf.ModelImporter()).Load(model);
                 //Load the 3D model file
-                device = import.Load(model);
+              //  device = import.Load(model);
 
 
 

@@ -350,6 +350,16 @@ namespace вызов
             });
         }
 
-     
+        private void button12_Click_1(object sender, EventArgs e)
+        {
+            Assembly s = Assembly.LoadFile(Environment.CurrentDirectory + @"\TreeCadN.dll");
+            Type ourClass = s.GetType("TreeCadN.neqweqe", true, true);
+            Object instane = Activator.CreateInstance(ourClass);
+            MethodInfo meth = ourClass.GetMethod("Openordini"); //нужен тот Show, который не принимает параметров
+            object result = meth.Invoke(instane, new object[] {
+
+            });
+        }
+
     }
 }

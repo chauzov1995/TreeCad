@@ -13,8 +13,10 @@
         </Grid.RowDefinitions>
         <DataGrid x:Name="lb1" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" MouseDoubleClick="lb1_MouseDoubleClick" Margin="5" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="№ заявки" Binding="{Binding nom_zayav}"  Width="2*" />
+               
+                <DataGridTextColumn Header="№ заявки у клиента" Binding="{Binding nom_zayav}"  Width="1*" />
                 <DataGridTextColumn Header="Заказ" Binding="{Binding zakaz}"  Width="2*"/>
+                <DataGridTextColumn Header="Салон" Binding="{Binding kompany_root}"  Width="2*" />
                 <DataGridTextColumn Header="Текст" Binding="{Binding text}"  Width="10*"/>
                 <DataGridTextColumn Header="Файлы" Binding="{Binding files}"  Width="4*"/>
 

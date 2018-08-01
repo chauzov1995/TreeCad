@@ -283,8 +283,8 @@ namespace TreeCadN.uploadPROGR
         public string time_sozd { get; set; }
         public string zakaz { get; set; }
         public string status_preobr { get; set; }
-
-       
+        public string kompany_root { get; set; }
+        
 
     }
 
