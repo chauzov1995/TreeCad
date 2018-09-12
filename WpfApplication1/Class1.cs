@@ -63,42 +63,13 @@ namespace TreeCadN
                     case "uploadPROGR":
 
 
-                        /*
-                    setParamP(info, "Numero", "1");
-                    getParam(info2, "Add", "_NOMEFILEPARETI", "000340");
-                     getParamI(xamb, "salva");//сохраним
-                 */
 
-
-                        //      getParam(info, "NumeroPut","17");
-                        //   MessageBox.Show(getParamI(info, "NuovoNumeroOrdine").ToString());
-                        //    info = getParamG(xamb, "INFO");
-                        //    object info2 = getParamG(info, "INFO");
-                        //   string FIO = getParam(info2, "Var", "CLI_1").ToString();
-                        //   string nomer = getParam(info, "Numero").ToString();
-
-
-                        this.xamb = getParam(Ambiente, "GetObject", "XAMB");
-                        info = getParamG(xamb, "INFO");
-                        object info2 = getParamG(info, "INFO");
-                        string FIO = getParam(info2, "Var", "CLI_1").ToString();
-                        string nomer = getParam(info, "Numero").ToString();
-                      
 
 
                         var ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
                         var path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-                       
-                        open_ordini.open sss = new open_ordini.open(this, FIO, nomer, GetPathMDB(katalog), Environment.CurrentDirectory + @"\" + path_ecadpro);
-                   
-                        sss.ShowDialog();
-                        /*    */
-                        /*
-                        dasda
-                      var ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-                          var path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-                          uploadPROGR(Environment.CurrentDirectory + @"\" + path_ecadpro);
-                         */
+                        uploadPROGR(Environment.CurrentDirectory + @"\" + path_ecadpro);
+
                         break;
                     case "zenakorpvspom":
                         returnValue = zenakorp(Environment.CurrentDirectory + @"\" + katalog + @"\PROCEDURE\3CadBase.sqlite", s);
@@ -144,6 +115,14 @@ namespace TreeCadN
 
         }
         #region GetParam
+
+
+        //Param
+        //getParamI  visov metods  bez parametrov
+        //getParam  visov metods  s parametrom
+        //getParamG  poluchitb znach svoystva
+        //setParam   
+        //setParamP   ustanovitb znach svoystva
 
         public void Param(object obj, string param, string value)
         {
@@ -306,34 +285,16 @@ namespace TreeCadN
 
         public void copy_to_share()
         {
-            SQLiteConnection m_dbConn = new SQLiteConnection();
-            SQLiteCommand m_sqlCmd = new SQLiteCommand();
+            //  SQLiteConnection m_dbConn = new SQLiteConnection();
+            //   SQLiteCommand m_sqlCmd = new SQLiteCommand();
 
-            var ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-            var path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-            string dbFileName = Environment.CurrentDirectory + @"\" + path_ecadpro + @"\sample.sqlite";
+            //      var ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            //      var path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+            //     string dbFileName = Environment.CurrentDirectory + @"\" + path_ecadpro + @"\sample.sqlite";
 
-
-            if (!File.Exists(dbFileName))
-                SQLiteConnection.CreateFile(dbFileName);
-
-            try
-            {
-                m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
-                m_dbConn.Open();
-                m_sqlCmd.Connection = m_dbConn;
-
-                m_sqlCmd.CommandText = "CREATE TABLE IF NOT EXISTS ordini (id INTEGER PRIMARY KEY AUTOINCREMENT, file_path TEXT, FIO TEXT, nomer_zakaza TEXT UNIQUE, last_upd TEXT, manager TEXT)";
-                m_sqlCmd.ExecuteNonQuery();
-
-            }
-            catch (SQLiteException ex)
-            {
-
-                MessageBox.Show("Error: " + ex.Message);
-            }
-
-
+            //   m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
+            //   m_dbConn.Open();
+            //   m_sqlCmd.Connection = m_dbConn;
 
 
 
@@ -364,18 +325,23 @@ namespace TreeCadN
                     getParamI(xamb, "salva");//сохраним
                     if (File.Exists(percorsoordini + @"\_old\" + nomfile + ".eve")) File.Delete(percorsoordini + @"\_old\" + nomfile + ".eve");
                     File.Move(file, percorsoordini + @"\_old\" + nomfile + ".eve");
-                    
-                    string FIO = getParam(info2, "Var", "CLI_1").ToString();
-                    string Manager = getParam(info2, "Var", "Manager").ToString();
-                    //     id, file_path, FIO, nomer_zakaza,
-                    string pattern = "000000";
-                    string nom_form = pattern.Remove(0, newnum.Length) + newnum;
-                    m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini (file_path, nomer_zakaza, FIO, manager) VALUES ('" + Environment.CurrentDirectory + @"\" + path_ecadpro + @"\" + nom_form + ".eve', '" + nom_form + "', '" + FIO + "','"+ Manager + "')";
-                    m_sqlCmd.ExecuteNonQuery();
+
+                    //      string FIO = getParam(info2, "Var", "CLI_1").ToString();
+                    //      string Manager = getParam(info2, "Var", "Manager").ToString();
+                    //     string orderprice = getParam(info2, "Var", "orderprice").ToString();
+                    //     string _RIFFABRICA = getParam(info2, "Var", "_RIFFABRICA").ToString();
+                    //     string _RIFSALON = getParam(info2, "Var", "_RIFSALON").ToString();
+                    //     string SROK = getParam(info2, "Var", "SROK").ToString();
+
+                    //     string pattern = "000000";
+                    //     string nom_form = pattern.Remove(0, newnum.Length) + newnum;
+                    //      m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK) " +
+                    //        "VALUES ('" + file + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "')";
+                    //     m_sqlCmd.ExecuteNonQuery();
                 }
             }
-            m_dbConn.Close();
-            GC.Collect();
+            //   m_dbConn.Close();
+            //   GC.Collect();
         }
 
         public string GNOTD(string path, string str)//для старых версий тех у кого ещё стоит старый размерный ряд
@@ -419,7 +385,7 @@ namespace TreeCadN
             if (uslovvipol)
             {
                 string katalog = getParamI(Ambiente, "xPercorso").ToString();
-         
+
                 Window1 f1 = new Window1(path1, str1, katalog);
                 f1.ShowDialog(); //блокируется основная форма
                 return f1.str2;
@@ -528,13 +494,15 @@ namespace TreeCadN
                 return "";
             }
         }
-
-        public void Openordini()
+        public void GNspiszakaz(ref object xAmbiente)
         {
+            this.Ambiente = xAmbiente;
 
-            //  open_ordini.open sss = new open_ordini.open(this, "Чаузов", "332", GetPathMDB("GIULIANOVARSA"));
-            //   sss.ShowDialog();
+            open_ordini.open sss = new open_ordini.open(this, GetPathOrdini());
+            sss.ShowDialog();
         }
+
+
         public string GNPrimNAUTO(ref object xAmbiente, int filtr, ref string text)
         {
             this.Ambiente = xAmbiente;
@@ -638,13 +606,24 @@ namespace TreeCadN
 
 
         }
+
+
+        public void open_save(ref object xAmbiente)
+        {
+
+            this.Ambiente = xAmbiente;
+
+            open_ordini.open sss = new open_ordini.open(this, GetPathOrdini());
+            sss.createOpenBD();
+            sss.updateTekZakaz();
+        }
         public void evesync_save(ref object xAmbiente)
         {
-            //MessageBox.Show("asda");
+            // MessageBox.Show("asda");
             YA ps = YA.Default;
             if (ps.isSave)
             {
-                //  MessageBox.Show("asda");
+                //MessageBox.Show("asda");
                 INIManager client_man;
                 string path_sysdba;
                 client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
@@ -894,6 +873,13 @@ namespace TreeCadN
                 default:
                     return Environment.CurrentDirectory + @"\system.mdb";
             }
+        }
+
+        string GetPathOrdini()
+        {
+            INIManager ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            string path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
+            return Environment.CurrentDirectory + @"\" + path_ecadpro;
         }
 
 

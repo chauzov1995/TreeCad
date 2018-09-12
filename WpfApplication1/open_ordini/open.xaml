@@ -5,25 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeCadN.open_ordini"
         mc:Ignorable="d"
-        Title="Заказы" Height="450" Width="800" MinWidth="800" MinHeight="450" Closing="Window_Closing" >
+        Title="Заказы" Height="450" Width="1000" MinWidth="1000" MinHeight="450" KeyUp="Window_KeyUp" Closing="Window_Closing" >
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180*"/>
-            <ColumnDefinition Width="180*"/>
-            <ColumnDefinition Width="180*"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="99*"/>
+            <ColumnDefinition Width="99*"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="180"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="32"/>
-            <RowDefinition Height="329*"/>
-            <RowDefinition Height="32"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Label Content="№ заказа" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom"/>
-        <Label Content="ФИО клиента" Grid.Column="1" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom"/>
-        <Label Content="Менеджер" Grid.Column="2" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom"/>
+        <Label Content="ФИО клиента" Grid.Column="1" Margin="5,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom"/>
+        <Label Content="Менеджер" Grid.Column="2" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom" />
 
 
         <StackPanel Grid.Row="1" Margin="0">
@@ -50,7 +51,7 @@
                 </Grid>
             </Border>
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="2" Margin="0">
+        <StackPanel Grid.Row="1" Grid.Column="2" Margin="0" >
             <Border BorderThickness="1" BorderBrush="#FFBCC4C5" Margin="5">
                 <Grid >
                     <Grid.ColumnDefinitions>
@@ -62,27 +63,58 @@
                 </Grid>
             </Border>
         </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="3" Margin="0" >
+            <Border BorderThickness="1" BorderBrush="#FFBCC4C5" Margin="5">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="23"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="t4"  TextWrapping="Wrap" TextChanged="t1_TextChanged" BorderBrush="{x:Null}" Background="{x:Null}" BorderThickness="0" TabIndex="1"/>
+                    <Button Content="X" IsTabStop="False"  Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Click="Button_Click_12" />
+                </Grid>
+            </Border>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="4" Margin="0" >
+            <Border BorderThickness="1" BorderBrush="#FFBCC4C5" Margin="5">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="23"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="t5"  TextWrapping="Wrap" TextChanged="t1_TextChanged" BorderBrush="{x:Null}" Background="{x:Null}" BorderThickness="0" TabIndex="1"/>
+                    <Button Content="X" IsTabStop="False"  Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Click="Button_Click_13" />
+                </Grid>
+            </Border>
+        </StackPanel>
 
 
-        <DataGrid x:Name="lb1" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False"  Margin="5" Grid.Row="2" Grid.ColumnSpan="4" Loaded="lb1_Loaded" >
+        <DataGrid x:Name="lb1"  AllowDrop="True" GridLinesVisibility="None"  SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False"  Margin="5" Grid.Row="2" Grid.ColumnSpan="6" Loaded="lb1_Loaded" SelectionChanged="lb1_SelectionChanged" IsReadOnly="True" MouseDoubleClick="lb1_MouseDoubleClick" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="№ заказа" Binding="{Binding nomer_zakaza}"  Width="2*" />
-                <DataGridTextColumn Header="ФИО клиента" Binding="{Binding FIO_klienta}"  Width="4*"/>
-                <DataGridTextColumn Header="Сумма" Binding="{Binding id_zakaza}"  Width="2*"/>
-                <DataGridTextColumn Header="Курс" Binding="{Binding id_zakaza}"  Width="2*"/>
-                <DataGridTextColumn Header="Коэф. По мебели" Binding="{Binding id_zakaza}"  Width="2*"/>
-                <DataGridTextColumn Header="Коэф. По акс." Binding="{Binding id_zakaza}"  Width="2*"/>
-                <DataGridTextColumn Header="Дата последнего изменения" Binding="{Binding Date_last}"  Width="3*"/>
-                <DataGridTextColumn Header="Менеджер в салоне" Binding="{Binding manager_salons}"  Width="3*"/>
+                <DataGridTextColumn Header="№ заказа" Binding="{Binding nomer_zakaza}"  MinWidth="20" />
+                <DataGridTextColumn Header="ФИО клиента" Binding="{Binding FIO_klienta}"  MinWidth="20"/>
+                <DataGridTextColumn Header="Сумма" Binding="{Binding orderprice}" MinWidth="20"/>
+                <DataGridTextColumn Header="Дата изготовления" Binding="{Binding SROK}"  MinWidth="20" SortMemberPath="date_sorted"/>
+                <DataGridTextColumn Header="Номер в салоне" Binding="{Binding _RIFSALON}"  MinWidth="20"/>
+                <DataGridTextColumn Header="Номер на фабрике" Binding="{Binding _RIFFABRICA}"  MinWidth="20"/>
+                <DataGridTextColumn Header="Менеджер в салоне" Binding="{Binding manager_salons}"  MinWidth="20"/>
+                <DataGridTextColumn Header="Салон" Binding="{Binding SALON}"  MinWidth="20"/>
             </DataGrid.Columns>
+            
         </DataGrid>
 
-        <Button Content="ОК" Margin="5,0,5,5" Click="Button_Click" Grid.Column="4" Height="30" VerticalAlignment="Bottom" Grid.Row="2" Grid.RowSpan="2"/>
-        <Button Content="Дублировать" Grid.Column="4" Margin="5,0,5,48" VerticalAlignment="Bottom" Height="30" Click="Button_Click_3" Grid.Row="2"/>
-        <Button Content="Удалить" Grid.Column="4" Margin="5,0,5,13" VerticalAlignment="Bottom" Height="30" Grid.Row="2" Click="Button_Click_8"/>
-        <Button x:Name="btn_share" Content="Скопировать заказы на шару" Grid.Column="4" Margin="5,89,5,0" VerticalAlignment="Top" Height="46" Background="#FF5DF1D6" Foreground="#FF1B7665" Click="Button_Click_2" ToolTip="Скопирует заказы из вашей локальной папки в общую папку" Grid.Row="2"/>
-        <Button Content="Очистить" Grid.Column="3" Margin="5" Grid.Row="1" VerticalAlignment="Center" Click="Button_Click_7"/>
-        <CheckBox Content="Показывать только моя заказы" Margin="5" Grid.Row="3" Grid.ColumnSpan="4"/>
+        <Button Content="Открыть" ToolTip="CTRL + ENTER" Margin="0,0,5,5" Click="Button_Click" Grid.Column="6" Grid.Row="2" Height="30" VerticalAlignment="Bottom"/>
+        <Button Content="Дублировать" Grid.Column="6" Margin="0,0,5,75" VerticalAlignment="Bottom" Height="30" Click="Button_Click_3" Grid.Row="2"/>
+        <Button Content="Удалить" Grid.Column="6" Margin="0,0,5,40" VerticalAlignment="Bottom" Height="30" Grid.Row="2" Click="Button_Click_8"/>
+        <Button x:Name="btn_share" Content="Скопировать заказы на шару" Grid.Column="6" Margin="0,142,5,0" VerticalAlignment="Top" Height="30" Background="#FF5DF1D6" Foreground="#FF1B7665" Click="Button_Click_2" ToolTip="Скопирует заказы из вашей локальной папки в общую папку" Grid.Row="2"/>
+        <Button Content="Очистить" Grid.Column="5" Margin="5" Grid.Row="1" VerticalAlignment="Center" Click="Button_Click_7"/>
+        <Image x:Name="img" Grid.Column="6" Height="151" Margin="0,16,5,0" Grid.Row="1" VerticalAlignment="Top" Grid.RowSpan="2" Source="/TreeCadN;component/Foto/nofoto.jpg"/>
+        <Button Content="Button" Grid.Column="6" HorizontalAlignment="Left" Margin="28,140,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" Click="Button_Click_11" Visibility="Hidden"/>
+        <Label Content="№ зак. в салоне" Grid.Column="3" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom" Height="26" />
+        <Label Content="№ зак. в на фабрике" Grid.Column="4" Margin="5,0,0,0" RenderTransformOrigin="3.255,0.538" VerticalAlignment="Bottom" Height="26" />
+        <Button  Grid.Column="6" Margin="0,5,5,0" VerticalAlignment="Top" Click="Button_Click_15" HorizontalAlignment="Right" Height="40" Grid.RowSpan="2" Width="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+            <Image Source="/TreeCadN;component/Foto/settings.png"/>
+        </Button>
 
 
 

@@ -29,7 +29,7 @@ namespace TreeCadN
         {
             InitializeComponent();
             BD.path = path; //укажем файл бд
-            this.text_otvet = text;
+            this.text_otvet = text.Trim();
 
             //PRIM=a2131231232321;AVTO=asdasdasda
             try

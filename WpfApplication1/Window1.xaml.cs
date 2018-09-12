@@ -37,7 +37,7 @@ namespace TreeCadN
         public TekOtd TekOtdelka = new TekOtd();
         public List<TekOtd> TekOtdelka_Histor = new List<TekOtd>();
         public List<TekOtd> TekOtdelka_Zakl = new List<TekOtd>();
-
+        List<NCS> ncs = new List<NCS>();
         public string idgroupload_from, razr_group, razr_odinak;
         public int stor_otd, obe_plasti;
 
@@ -59,9 +59,12 @@ namespace TreeCadN
                 vh_func_str = str1;
                 BD.path = path; //укажем файл бд
 
-                papka_s_foto = Environment.CurrentDirectory + @"\"+ katalog + @"\";
+                papka_s_foto = Environment.CurrentDirectory + @"\" + katalog + @"\";
 
                 //    TekOtdelka.Add(new TekOtd() { });
+
+                zagr_spis_ncs();
+
 
                 strrazobr(vh_func_str, true);//разбираем строку
                 log.Add("разбираем строку");
@@ -72,6 +75,9 @@ namespace TreeCadN
                 loadpage();//загрузка полож окна
                 log.Add("отделка загрузка полож окна");
                 first_def_zagr();//загрузка списка эффект отделки
+
+              
+
                 log.Add("отделка /загрузка списка эффект отделки");
                 proverka_uhoda_za_granicu(); //проверка ухода за границу
                 log.Add("отделка проверка ухода за границу");
@@ -92,6 +98,29 @@ namespace TreeCadN
             }
 
         }
+        void zagr_spis_ncs() //загрузка дополнительных параметров
+        {
+          
+
+            string path = papka_s_foto+@"foto\Thumb\NCS";
+            string[] files = Directory.GetFiles(path, "*.jpg");
+            ncs.Add(new NCS() {path="",nazv="" });
+            foreach (string file in files)
+            {
+                ncs.Add(new NCS()
+                {
+                    path = file,
+                    nazv = file.Split('\\').Last().Split('.').First()
+
+
+                });
+
+
+            }
+
+            cbncs.ItemsSource = ncs;
+        }
+
         void first_def_zagr() //загрузка дополнительных параметров
         {
             OleDbDataReader reader = BD.conn("SELECT Name, id FROM TOtdelka WHERE IDGroup=25 or IDGroup=26 or IDGroup=41 or IDGroup=47 ORDER BY Name ASC");
@@ -418,7 +447,13 @@ namespace TreeCadN
                 TekOtdelka.naprav2 = reader["NAPRAVLENIE"].ToString();
 
             }
+            NCS polucnxs = ncs.Find(x => x.nazv.Equals(TekOtdelka.index9));
+            if (polucnxs != null)
+                cbncs.SelectedItem = polucnxs;
+            else
+                cbncs.SelectedItem = 0;
 
+            
 
         }
         public void strrazobr(string str, bool perv = false)
@@ -444,6 +479,9 @@ namespace TreeCadN
 
             if (perv) pervload();
 
+
+
+            brdncs.ToolTip = TekOtdelka.index8;
 
 
 
@@ -487,8 +525,10 @@ namespace TreeCadN
             else
             {//нет направлений
 
-                image1.Source = norotate(TekOtdelka.textura1);
-                image3.Source = norotate_loc("no_naprav.png");
+               
+      
+                    image1.Source = norotate(TekOtdelka.textura1);
+                         image3.Source = norotate_loc("no_naprav.png");
                 button3.IsEnabled = false;
                 button3.ToolTip = "Не имеет направления волокон шпона";
             }
@@ -514,7 +554,9 @@ namespace TreeCadN
             }
             else
             {
-                image2.Source = norotate(TekOtdelka.textura2);
+
+  image2.Source = norotate(TekOtdelka.textura2);
+                            
                 image4.Source = norotate_loc("no_naprav.png");
                 button4.IsEnabled = false;
                 button4.ToolTip = "Не имеет направления волокон шпона";
@@ -549,22 +591,41 @@ namespace TreeCadN
 
             }
             //загружаем необычный цвет
-            if (TekOtdelka.index8 == "")
+            
+            if (TekOtdelka.index1 == "65" || TekOtdelka.index1 == "66" || TekOtdelka.index2 == "65" || TekOtdelka.index2 == "66")
             {
 
-                checkBox3.IsChecked = false;
-                textBox2.IsEnabled = false;
-                textBox2.Text = "";
+                cbncs.IsEnabled = true;
+                NCS polucnxs = ncs.Find(x => x.nazv.Equals(TekOtdelka.index9));
+                if (polucnxs != null)
+                {
+                    cbncs.SelectedItem = ncs.Find(x => x.nazv.Equals(TekOtdelka.index9));
+                    if (TekOtdelka.index9 != "")
+                    {
+                        if (TekOtdelka.index1 == "65" || TekOtdelka.index1 == "66")
+                            image1.Source = new BitmapImage(new Uri((cbncs.SelectedItem as NCS).path));
+                        if (TekOtdelka.index2 == "65" || TekOtdelka.index2 == "66")
+                            image2.Source = new BitmapImage(new Uri((cbncs.SelectedItem as NCS).path));
+                        imgncs.Source = new BitmapImage(new Uri((cbncs.SelectedItem as NCS).path));
+                    }
+                }
+                else
+                {
+                    cbncs.SelectedIndex = 0;
+                  
+                }
+          
 
             }
             else
             {
 
-                checkBox3.IsChecked = true;
-                textBox2.IsEnabled = true;
-                textBox2.Text = TekOtdelka.index8;
-            }
 
+                cbncs.IsEnabled = false;
+       
+                cbncs.SelectedIndex = 0;
+            }
+            
             TekOtdelka.str = strsobr();
 
         }
@@ -674,26 +735,7 @@ namespace TreeCadN
 
             strrazobr(strsobr());
         }
-        private void checkBox3_Click(object sender, RoutedEventArgs e)
-        {
 
-
-
-
-
-
-            if (checkBox3.IsChecked == true)
-            {
-                textBox2.Text = "";
-                textBox2.IsEnabled = true;
-
-            }
-            else
-            {
-                textBox2.Text = "";
-                textBox2.IsEnabled = false;
-            }
-        }
         void zakrit_OK()
         {
 
@@ -709,7 +751,7 @@ namespace TreeCadN
             }
 
 
-            TekOtdelka.index8 = textBox2.Text;
+            TekOtdelka.index9 = cbncs.Text;
 
 
             vh_func_str = strsobr();
@@ -842,7 +884,7 @@ namespace TreeCadN
                 TekOtdelka.index6 = seldopotd[(comboBox1.SelectedIndex)].ID;
             }
 
-            TekOtdelka.index8 = textBox2.Text;
+            TekOtdelka.index9 = cbncs.Text;
 
 
             vh_func_str = strsobr();
@@ -1400,6 +1442,34 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         {
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void cbncs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbncs.SelectedItem != null)
+            {
+             //   imgncs.Source = new BitmapImage(new Uri((cbncs.SelectedItem as NCS).path));
+                TekOtdelka.index9 = (cbncs.SelectedItem as NCS).nazv;
+                /*
+                if (TekOtdelka.index1 == "65" || TekOtdelka.index1 == "66")
+                {
+
+                    image1.Source = new BitmapImage(new Uri((cbncs.SelectedItem as NCS).path));
+
+                }
+                if (TekOtdelka.index2 == "65" || TekOtdelka.index2 == "66")
+                {
+                    image2.Source = new BitmapImage(new Uri((cbncs.SelectedItem as NCS).path));
+                }
+                */
+                strrazobr(strsobr());
+            }
+     
+    }
+
         private void checkBox3_Checked(object sender, RoutedEventArgs e)
         {
 
@@ -1472,6 +1542,15 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         public string NAME { get; set; }
         public string ID { get; set; }
         public string textura_otris { get; set; }
+
+    }
+
+    public class NCS
+    {
+        public string path { get; set; }
+        public string nazv { get; set; }
+        public BitmapImage bitmap { get; set; }
+
 
     }
 

@@ -155,15 +155,12 @@
                 </StackPanel>
             </TabItem>
         </TabControl>
-        <StackPanel HorizontalAlignment="Left" Height="120" Margin="5,305,0,0" VerticalAlignment="Top" Width="370" Background="#E5FFFFFF" Grid.Column="1">
+        <Grid HorizontalAlignment="Left" Height="120" Margin="5,305,0,0" VerticalAlignment="Top" Width="370" Background="#E5FFFFFF" Grid.Column="1">
 
-            <TextBlock Margin="0" TextWrapping="Wrap" Text="-Дополнительно-" Height="26" Width="156" FontSize="18"  FontWeight="Bold"/>
-            <CheckBox TabIndex="12" x:Name="checkBox3" Content="Нестандартный цвет" Margin="0" Click="checkBox3_Click"  Height="17" Width="360" Checked="checkBox3_Checked"/>
+            <TextBlock Margin="107,8,107,86" TextWrapping="Wrap" Text="-Дополнительно-" Height="26" Width="156" FontSize="18"  FontWeight="Bold"/>
+            <TextBlock Margin="5,75,5,28" TextWrapping="Wrap" Text="Эффект отделки" Height="17" Width="360"/>
 
-            <TextBox TabIndex="13" x:Name="textBox2" Height="20" Margin="0" TextWrapping="Wrap" PreviewTextInput="textBox2_PreviewTextInput" Width="360" />
-            <TextBlock Margin="0" TextWrapping="Wrap" Text="Эффект отделки" Height="17" Width="360"/>
-
-            <ComboBox TabIndex="14" TextSearch.TextPath="NAME" IsTextSearchEnabled="True" x:Name="comboBox1" Margin="0" Width="360"  Height="23" IsEditable="True" FocusableChanged="comboBox1_FocusableChanged" SelectionChanged="comboBox1_SelectionChanged" TextInput="comboBox1_TextInput" MouseUp="comboBox1_MouseUp" IsEnabledChanged="comboBox1_IsEnabledChanged" DataContextChanged="comboBox1_DataContextChanged" >
+            <ComboBox TabIndex="14" TextSearch.TextPath="NAME" IsTextSearchEnabled="True" x:Name="comboBox1" Margin="5,87,5,5" Width="360"  Height="23" IsEditable="True" FocusableChanged="comboBox1_FocusableChanged" SelectionChanged="comboBox1_SelectionChanged" TextInput="comboBox1_TextInput" MouseUp="comboBox1_MouseUp" IsEnabledChanged="comboBox1_IsEnabledChanged" DataContextChanged="comboBox1_DataContextChanged" VerticalAlignment="Bottom" >
 
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -171,8 +168,19 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <ComboBox x:Name="cbncs"  TextSearch.TextPath="nazv" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Right" Margin="0,50,60,0" VerticalAlignment="Top" Width="305" Height="23" SelectionChanged="cbncs_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding nazv}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
 
-        </StackPanel>
+            </ComboBox>
+            <Border x:Name="brdncs" BorderThickness="1"   BorderBrush="#FF707070" Height="50" HorizontalAlignment="Right"  Margin="0,23,4,0" VerticalAlignment="Top" Width="50">
+                <Image x:Name="imgncs" Source="Foto/Net_Tekst.jpg"  />
+            </Border>
+            <TextBlock Text="NCS цвет"  Height="17"  HorizontalAlignment="Left" Margin="5,33,0,0" VerticalAlignment="Top"/>
+        </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="285" Margin="5,10,0,0" VerticalAlignment="Top" Width="370" Grid.Column="1">
 
             <StackPanel x:Name="g1" Orientation="Vertical" HorizontalAlignment="Left" Height="285" VerticalAlignment="Top" Width="160" Background="#E5FFFFFF" >

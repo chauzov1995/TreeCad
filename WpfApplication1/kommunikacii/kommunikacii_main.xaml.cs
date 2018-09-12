@@ -16,6 +16,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 
 namespace TreeCadN.kommunikacii
@@ -40,10 +41,10 @@ namespace TreeCadN.kommunikacii
 
             lb4.Visibility = Visibility.Collapsed;
             lb1.Visibility = Visibility.Collapsed;
-          //  stpan.Visibility = Visibility.Collapsed;
+            //  stpan.Visibility = Visibility.Collapsed;
             btnserv.Visibility = Visibility.Collapsed;
-           
-           
+
+
 
             DirectoryInfo directory = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
 
@@ -53,19 +54,21 @@ namespace TreeCadN.kommunikacii
             this.pathBD = pathBD;
             BD.path = pathBD; //укажем файл бд
 
-     
+
 
             INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             admin = client_man.GetPrivateString("giulianovars", "3dsadmin");//версия клиента
             if (admin == "1")
             {
                 label1.Visibility = Visibility.Visible;
+                btn_vost.Visibility = Visibility.Visible;
 
             }
             else
             {
                 lb4.ContextMenu = null;
                 label1.Visibility = Visibility.Collapsed;
+                btn_vost.Visibility = Visibility.Collapsed;
             }
 
 
@@ -100,19 +103,19 @@ namespace TreeCadN.kommunikacii
 
                 }
 
-                if (admin == "1" ||  reader1["id_server"].ToString()!="1")
-                { 
+                if (admin == "1" || reader1["id_server"].ToString() != "1")
+                {
 
                     server.Add(new treespis()
-                {
-                    id = reader1["id"].ToString(),
-                    path = "S",
-                    name = reader1["nazv"].ToString(),
-                    type = "S",
-                    zvetbg = zvetbg,
-                    id_server = reader1["id_server"].ToString()
+                    {
+                        id = reader1["id"].ToString(),
+                        path = "S",
+                        name = reader1["nazv"].ToString(),
+                        type = "S",
+                        zvetbg = zvetbg,
+                        id_server = reader1["id_server"].ToString()
 
-                });
+                    });
                 }
             }
             lb3.ItemsSource = null;
@@ -144,6 +147,13 @@ namespace TreeCadN.kommunikacii
 
 
 
+            //test
+
+
+
+            //test
+
+
             lb2.ItemsSource = (polzovat);
             peremestitb.ItemsSource = (polzovat);
 
@@ -155,19 +165,17 @@ namespace TreeCadN.kommunikacii
 
         void lb1_napolnenie()//наполнение листбокса
         {
-          
-            treespis Treespis = lb2.SelectedItem as treespis;
-         
-            //    string path = Treespis.path;
 
-           
+            treespis Treespis = lb2.SelectedItem as treespis;
+
+
 
             List<Models3d> modeli = new List<Models3d>();
 
-          
+
 
             var reader = BD.conn("SELECT id, nazv, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category FROM `import3ds` WHERE category='" + Treespis.id + "'");
-                      while (reader.Read())
+            while (reader.Read())
             {
                 string jpg_path = reader["pathjpg"].ToString();
                 if (jpg_path == "")
@@ -194,19 +202,19 @@ namespace TreeCadN.kommunikacii
                 });
 
             }
-          
+            //test
 
 
 
-
+            //test
             lb1.ItemsSource = modeli;
-      
+
 
             try
             {
                 object selitem = lb1.Items[lb1_selitem];
 
-         
+
                 lb1.ScrollIntoView(selitem);
                 lb1.SelectedItem = (selitem);
             }
@@ -214,8 +222,8 @@ namespace TreeCadN.kommunikacii
             {
                 lb1.ScrollIntoView(null);
                 lb1.SelectedItem = (null);
-                     }
-           
+            }
+
 
         }
         void lb4_napolnenie()//наполнение листбокса
@@ -306,16 +314,16 @@ namespace TreeCadN.kommunikacii
 
                 try
                 {
-                 //   MessageBox.Show(lb4_selitem.ToString());
+                    //   MessageBox.Show(lb4_selitem.ToString());
                     object selitem = lb4.Items[lb4_selitem];
 
 
                     lb4.ScrollIntoView(selitem);
                     lb4.SelectedItem = (selitem);
                 }
-                catch(Exception err)
+                catch (Exception err)
                 {
-                  //  MessageBox.Show(err.Message);
+                    //  MessageBox.Show(err.Message);
                     lb4.ScrollIntoView(null);
                     lb4.SelectedItem = (null);
                 }
@@ -340,7 +348,7 @@ namespace TreeCadN.kommunikacii
                 kommunikacii_dial_imp dial = new kommunikacii_dial_imp(pathBD, null, (lb2.SelectedItem as treespis));
                 dial.ShowDialog();
                 MessageBox.Show("Модель успешно создана");
-                              lb1_napolnenie();
+                lb1_napolnenie();
             }
             else
             {
@@ -358,7 +366,7 @@ namespace TreeCadN.kommunikacii
             {
                 //  selectedModel = (lb1.SelectedValue as Models3d).path;
                 var file = lb1.SelectedValue as Models3d;
-             selectedModel = (file.path + @"^" + file.name + "^" + file.jpg_ugo + "^" + file.x + "^" + file.y + "^" + file.z);
+                selectedModel = (file.path + @"^" + file.name + "^" + file.jpg_ugo + "^" + file.x + "^" + file.y + "^" + file.z);
                 // MessageBox.Show(file.path);
                 lb1_selitem = lb1.SelectedIndex;
             }
@@ -381,7 +389,7 @@ namespace TreeCadN.kommunikacii
         {
             //  if (lb4.Visibility == Visibility.Visible)
             //    {
-      
+
             if (item1.IsSelected)
             {
 
@@ -390,22 +398,22 @@ namespace TreeCadN.kommunikacii
                 var model = (lb4.SelectedItem as Models3d);
                 string path_copy = dir3ds + Treespis.name + @"\";
                 Directory.CreateDirectory(path_copy);//создадим папку для weб
-              
+
 
                 string path3ds = "";
                 string pathjpg = "";
                 string pathjpgugo = "";
 
-              
+
                 if (model.path != "")
                 {
-                 
+
                     path3ds = path_copy + model.path;
                 }
                 //  MessageBox.Show("asdasd");
                 if (model.jpg_path != "")
                 {
-                 
+
                     pathjpg = path_copy + model.jpg_path;
                 }
                 if (model.jpg_ugo != "")
@@ -420,27 +428,27 @@ namespace TreeCadN.kommunikacii
                 {
 
                     (new WebClient()).DownloadFile(ecad + model.path, path3ds);//скачиваем картинку
-                 
+
                 }
                 if (!(File.Exists(pathjpg) || pathjpg == ""))
                 {
 
                     (new WebClient()).DownloadFile(ecad + model.jpg_path, pathjpg);//скачиваем картинку
-                  
+
                 }
                 if (!(File.Exists(pathjpgugo) || pathjpgugo == ""))
                 {
 
                     (new WebClient()).DownloadFile(ecad + model.jpg_ugo, pathjpgugo);//скачиваем картинку
-                   
+
                 }
-           
+
             }
 
 
 
 
-  }
+        }
 
 
 
@@ -564,7 +572,7 @@ namespace TreeCadN.kommunikacii
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            
+
             kommunikacii_Set ps = kommunikacii_Set.Default;
             ps.Top = this.Top;
             ps.Left = this.Left;
@@ -588,7 +596,7 @@ namespace TreeCadN.kommunikacii
 
 
             ps.Save();
-                    }
+        }
         void loadpage()
         {
             try
@@ -920,7 +928,7 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 var file = lb4.SelectedValue as Models3d;
                 //    MessageBox.Show(file.loc_3ds);
                 label1.Content = "Группа у пользователя - " + file.polzgroup;
-             selectedModel = (file.loc_3ds + @"^" + file.name + "^" + file.loc_ugojpg + "^" + file.x + "^" + file.y + "^" + file.z);
+                selectedModel = (file.loc_3ds + @"^" + file.name + "^" + file.loc_ugojpg + "^" + file.x + "^" + file.y + "^" + file.z);
                 // MessageBox.Show(file.path);
                 lb4_selitem = lb4.SelectedIndex;
             }
@@ -1059,7 +1067,57 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 
         private void Button_Click_9(object sender, RoutedEventArgs e)
         {
+            int i = 1;
+            string[] dirs = Directory.GetDirectories(dir3ds_user);
+            foreach (string dir in dirs)
+            {
+                BD.conn("INSERT INTO  `import3ds_category` (id, nazv)  VALUES (" + i + ",'" + dir.Split('\\').Last() + "') ");
 
+
+
+
+
+
+
+
+                string[] files = Directory.GetFiles(dir, "*.3ds");
+              
+                foreach (string file in files)
+                {
+                    string name = file.Split('\\').Last().Split('_').First();
+
+                    string x = "0", y = "0", z = "0";
+                    try
+                    {
+                        Model3D dmodel3ds = (new HelixToolkit.Wpf.ModelImporter()).Load(file);
+
+                        x = dmodel3ds.Bounds.SizeX.ToString("0");
+                        y = dmodel3ds.Bounds.SizeZ.ToString("0");
+                        z = dmodel3ds.Bounds.SizeY.ToString("0");
+                    }
+                    catch
+                    {
+
+                    }
+
+
+
+
+                    BD.conn("INSERT INTO `import3ds` (`nazv`, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category) VALUES ('" +
+                                           name + "','" +
+                                           file + "','" +
+                                           (File.Exists(file.Remove(file.Length - 4, 4) + ".jpg")? file.Remove(file.Length - 4, 4) + ".jpg":"") + "','" +
+                                           (File.Exists(file.Remove(file.Length - 4, 4) + "_ugo.jpg") ? file.Remove(file.Length - 4, 4) + "_ugo.jpg" : "") + "','" +
+                                           x + "','" +
+                                           y + "','" +
+                                         z + "', '" +
+                                           i + "')");
+                   
+                }
+                i++;
+            }
+            MessageBox.Show("Готово");
+            lb2napolnene();
         }
 
         private void Button_Click_8(object sender, RoutedEventArgs e)
@@ -1073,16 +1131,16 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 lb4.Visibility = Visibility.Visible;
                 lb1.Visibility = Visibility.Collapsed;
-            //    stpan.Visibility = Visibility.Collapsed;
-              
+                //    stpan.Visibility = Visibility.Collapsed;
+
                 //   label1.Visibility = Visibility.Visible;
             }
             else
             {
                 lb4.Visibility = Visibility.Collapsed;
                 lb1.Visibility = Visibility.Visible;
-              //  stpan.Visibility = Visibility.Visible;
-               
+                //  stpan.Visibility = Visibility.Visible;
+
                 //  label1.Visibility = Visibility.Collapsed;
             }
 
@@ -1129,6 +1187,7 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
     {
 
         public string path { get; set; }
+        public string path_dir { get; set; }
         public string name { get; set; }
         public string id { get; set; }
         public string id_server { get; set; }

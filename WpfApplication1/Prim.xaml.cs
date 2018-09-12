@@ -36,7 +36,7 @@ namespace TreeCadN
 
 
             BD.path = path; //укажем файл бд
-            this.text_otvet = text;
+            this.text_otvet = text.Trim();
 
 
 

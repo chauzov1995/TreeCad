@@ -330,7 +330,7 @@ namespace TreeCadN.kommunikacii
         }
 
 
-        private Model3D Display3d(string model)
+        public Model3D Display3d(string model)
         {
             Model3D device = null;
             try

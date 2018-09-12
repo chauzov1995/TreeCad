@@ -106,5 +106,41 @@ namespace TreeCadN.open_ordini {
                 this["last_vibor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string spisotobrstolb {
+            get {
+                return ((string)(this["spisotobrstolb"]));
+            }
+            set {
+                this["spisotobrstolb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string spisindex {
+            get {
+                return ((string)(this["spisindex"]));
+            }
+            set {
+                this["spisindex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string spiswidth {
+            get {
+                return ((string)(this["spiswidth"]));
+            }
+            set {
+                this["spiswidth"] = value;
+            }
+        }
     }
 }

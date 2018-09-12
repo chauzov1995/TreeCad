@@ -185,7 +185,7 @@
                         </Grid.ColumnDefinitions>
                         <Button Content="Добавить 3ds обьект" Margin="5" Padding="10,1" Click="Button_Click" />
                         <Button Content="Редактировать" Margin="5" Padding="10,1" Click="Button_Click_8" Grid.Column="1"  />
-                        <Button Content="Восстановить утерянные" Grid.Column="2" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="153" Click="Button_Click_9"/>
+                        <Button x:Name="btn_vost" Content="Восстановить утерянные" Grid.Column="2" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="153" Click="Button_Click_9"/>
                     </Grid>
                 </Grid>
             </TabItem>
