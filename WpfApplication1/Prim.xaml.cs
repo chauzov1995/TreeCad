@@ -32,7 +32,7 @@ namespace TreeCadN
         {
             InitializeComponent();
 
-          
+
 
 
             BD.path = path; //укажем файл бд
@@ -57,6 +57,7 @@ namespace TreeCadN
 
 
             loadpage();//загрузка полож окна
+            log.Add("Успешно положение окна");
             proverka_uhoda_za_granicu(); //проверка ухода за границу
             tb2.Focus();
 
@@ -65,6 +66,7 @@ namespace TreeCadN
             tb1.Text = t;
 
             tb1.CaretIndex = tb1.Text.Length;
+            log.Add("Успешно включен диалог");
         }
 
 
@@ -96,6 +98,8 @@ namespace TreeCadN
             viewSource.Source = result;
             viewSource.Filter += viewSource_Filter;
             grid.ItemsSource = viewSource.View;
+
+            log.Add("успешно загружен датагрид"); 
         }
         CollectionViewSource viewSource;
         void viewSource_Filter(object sender, FilterEventArgs e)
@@ -148,7 +152,8 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 this.Top = ps.Top4;
                 this.Left = ps.Left4;
-            } if (ps.SizeToContent4 == 1)
+            }
+            if (ps.SizeToContent4 == 1)
             {
                 this.WindowState = WindowState.Maximized;
             }
@@ -272,9 +277,9 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
         private void grid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-         
-                select_grid();
-            
+
+            select_grid();
+
         }
         void select_grid()
         {
@@ -372,7 +377,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
         }
 
-       
+
 
         private void tb2_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -400,18 +405,24 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         public string path;
         public OleDbDataReader conn(string zapros)
         {
+            try
+            {
+                log.Add("Путь к бд- " + path);
+                log.Add("строка подключ к бд- " + @"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");
+                OleDbConnection conn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");//подключаемся к базе
+                OleDbCommand cmd = new OleDbCommand();//инициализируем запрос
+                cmd.Connection = conn;//подключаемся к бд
+                conn.Open();//открываем соединение
+                cmd.CommandText = (zapros);
+                OleDbDataReader reader = cmd.ExecuteReader();//выполняем запрос
 
-            log.Add("Путь к бд- " + path);
-            log.Add("строка подключ к бд- "+ @"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");
-            OleDbConnection conn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");//подключаемся к базе
-            OleDbCommand cmd = new OleDbCommand();//инициализируем запрос
-            cmd.Connection = conn;//подключаемся к бд
-            conn.Open();//открываем соединение
-            cmd.CommandText = (zapros);
-            OleDbDataReader reader = cmd.ExecuteReader();//выполняем запрос
-
-            return reader;
-
+                return reader;
+            }
+            catch (Exception exx)
+            {
+                log.Add(exx.Message);
+                return null;
+            }
         }
 
 

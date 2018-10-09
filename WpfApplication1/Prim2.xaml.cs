@@ -21,7 +21,7 @@ namespace TreeCadN
     /// </summary>
     public partial class Prim2 : Window
     {
-        public string text_otvet, PRIM, AUTO;
+        public string text_otvet, PRIM, AUTO, EDIT;
         bool zakrit_ok = false;
         static BD_Connect BD = new BD_Connect();
         List<MyTable> result = new List<MyTable>();
@@ -48,8 +48,20 @@ namespace TreeCadN
             {
                 AUTO = "";
             }
-       
+            try
+            {
+                EDIT = (text_otvet.Split(';'))[2].Substring(5);
+            }
+            catch
+            {
+                EDIT = "0";
+            }
 
+
+            if (EDIT.Equals("1"))
+                tb3.IsEnabled = true;
+            else
+                tb3.IsEnabled = false;
 
             OleDbDataReader reader = BD.conn("SELECT STCommentD.Name, STCommentD.ID, STCommentDchasto.Chastota FROM STCommentD LEFT JOIN STCommentDchasto ON STCommentD.ID = STCommentDchasto.IDComment ORDER BY STCommentDchasto.Chastota DESC");
             while (reader.Read())
@@ -70,7 +82,7 @@ namespace TreeCadN
             tb2.Focus();
 
             string t = PRIM.Replace('#', '"').Replace('$', ';').Replace('@', ',').Replace('№', '/').Replace('^', ' ').Replace('|', ';');
-            
+
             tb1.Text = t;
             tb3.Text = AUTO;
             tb1.CaretIndex = tb1.Text.Length;
@@ -99,7 +111,7 @@ namespace TreeCadN
         private void DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             grid.CanUserSortColumns = true;
-         //   grid.ItemsSource = result;
+            //   grid.ItemsSource = result;
 
             viewSource = new CollectionViewSource();
             viewSource.Source = result;
@@ -163,7 +175,8 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 this.Top = ps.Top4;
                 this.Left = ps.Left4;
-            } if (ps.SizeToContent4 == 1)
+            }
+            if (ps.SizeToContent4 == 1)
             {
                 this.WindowState = WindowState.Maximized;
             }
@@ -206,8 +219,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             if (zakrit_ok)
             {
                 string t = tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№');
-                //    MessageBox.Show(t);
-                this.text_otvet = @"PRIM=" + t.Trim() + @";AVTO=" + tb3.Text;
+                this.text_otvet = @"PRIM=" + t.Trim() + @";AVTO=" + tb3.Text + @";EDIT=" + EDIT;
 
             }
             else
@@ -221,8 +233,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
                         string t = tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№');
-                        //    MessageBox.Show(t);
-                        this.text_otvet = @"PRIM=" + t.Trim() + @";AVTO=" + tb3.Text;
+                        this.text_otvet = @"PRIM=" + t.Trim() + @";AVTO=" + tb3.Text+ @";EDIT="+EDIT;
                     }
                 }
 
@@ -261,7 +272,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
         }
 
-      
+
 
         private void tb2_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -279,8 +290,8 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             if (e.Key == Key.Enter)
             {
 
-             //   zakrit_ok = true;
-             //   Close();
+                //   zakrit_ok = true;
+                //   Close();
 
             }
         }
@@ -309,14 +320,34 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
         }
 
+        private void tb3_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void cb1_Checked(object sender, RoutedEventArgs e)
+        {
+
+            tb3.IsEnabled = true;
+            EDIT = "1";
+
+        }
+
+        private void cb1_Unchecked(object sender, RoutedEventArgs e)
+        {
+            tb3.IsEnabled = false;
+            EDIT = "0";
+        }
+
         private void grid_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 select_grid();
             }
-            if (e.Key == Key.Tab){
-               // tb1.Focus();
+            if (e.Key == Key.Tab)
+            {
+                // tb1.Focus();
             }
         }
 

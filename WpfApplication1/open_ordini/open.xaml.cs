@@ -64,6 +64,7 @@ namespace TreeCadN.open_ordini
 
 
             createOpenBD();
+
             updateTekZakaz();
 
             select(true);
@@ -161,7 +162,7 @@ namespace TreeCadN.open_ordini
                             }
                             catch
                             {
-                               
+
                                 oldVersion = 1;
                             }
                             break;
@@ -183,7 +184,7 @@ namespace TreeCadN.open_ordini
                     //при изменении !КОНЕЦ
                     oldVersion++;
                     m_sqlCmd.CommandText = "PRAGMA user_version=" + oldVersion;
-                      m_sqlCmd.ExecuteNonQuery();
+                    m_sqlCmd.ExecuteNonQuery();
 
                 }
 
@@ -206,6 +207,7 @@ namespace TreeCadN.open_ordini
         }
         void select(bool first = false)
         {
+            //   MessageBox.Show(nomer);
             if (!first)
                 save_setting();
 
@@ -273,6 +275,7 @@ namespace TreeCadN.open_ordini
 
 
             visiblecolumns();
+
         }
 
         void visiblecolumns()
@@ -374,7 +377,7 @@ namespace TreeCadN.open_ordini
 
 
             string nomfile = file_path_load1.Split('\\').Last().Split('.').First();
-            neqqqqq.getParam(xamb, "carica", file_path_load1);
+            //neqqqqq.getParam(xamb, "carica", file_path_load1);
 
 
             string FIO = neqqqqq.getParam(info2, "Var", "CLI_1").ToString();
@@ -419,6 +422,7 @@ namespace TreeCadN.open_ordini
 
             m_dbConn.Close();
             GC.Collect();
+
         }
 
 
@@ -486,7 +490,6 @@ namespace TreeCadN.open_ordini
             //     lb1.ItemsSource = spisok;
 
             viewSource1.Filter += viewSource_Filter1;
-            //   viewSource1.SortDescriptions.Add(new SortDescription("sort", ListSortDirection.Ascending));
 
         }
 
@@ -670,7 +673,7 @@ namespace TreeCadN.open_ordini
 
                 string pattern = "000000";
                 string nom_form = pattern.Remove(0, newnum.Length) + newnum;
-                m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini(file_path, nomer_zakaza, FIO, manager) VALUES('" + duplicate.file_path + "', '" + nom_form + "', '" + duplicate.FIO_klienta + "', '" + duplicate.manager_salons + "')";
+                m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini(file_path, nomer_zakaza) VALUES('" + path_ordini + "\\" + nom_form + ".eve', '" + nom_form + "')";
                 m_sqlCmd.ExecuteNonQuery();
 
                 m_dbConn.Close();

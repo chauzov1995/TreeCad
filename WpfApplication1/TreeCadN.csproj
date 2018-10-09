@@ -133,6 +133,9 @@
     <Compile Include="fastbuild\fast build.xaml.cs">
       <DependentUpon>fast build.xaml</DependentUpon>
     </Compile>
+    <Compile Include="filtero.xaml.cs">
+      <DependentUpon>filtero.xaml</DependentUpon>
+    </Compile>
     <Compile Include="findprice\findprice.xaml.cs">
       <DependentUpon>findprice.xaml</DependentUpon>
     </Compile>
@@ -239,6 +242,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="evesync\saveeve.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="filtero.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

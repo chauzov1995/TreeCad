@@ -461,6 +461,7 @@ namespace TreeCadN.findprice
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             zakrit_ok = true;
+            Closinger();
             Close();
         }
 
@@ -490,6 +491,14 @@ namespace TreeCadN.findprice
 
 
 
+     
+
+
+
+        }
+
+        void Closinger()
+        {
             var elemsel = (lb4.SelectedItem as TARTICLES);
 
             //   string t = (lb4.SelectedItem as TARTICLES).TREECAD_DIS;
@@ -500,17 +509,14 @@ namespace TreeCadN.findprice
             // string t = modello + elemsel.TARTCODE_ITOG + ",," + elemsel.NAME + "," + elemsel.TREECAD_DIS + ";L = " + elemsel.V + "; A = " + elemsel.S + "; P = " + elemsel.G + "," + modello + "," + elemsel.TARTCODE_ITOG + ",,";
 
 
-            string str =  modello + elemsel.TARTCODE_ITOG + "," + modello + elemsel.TARTCODE_ITOG + "," + elemsel.NAME.Replace(',','.') + "," + elemsel.TREECAD_DIS + ";L = " + elemsel.S + "; A = " + elemsel.V + "; P = " + elemsel.G + "," + modello + "," + elemsel.TARTCODE_ITOG + "," + elemsel.TARTCODE_ITOG + ",";
-          
+            string str = modello + elemsel.TARTCODE_ITOG + "," + modello + elemsel.TARTCODE_ITOG + "," + elemsel.NAME.Replace(',', '.') + "," + elemsel.TREECAD_DIS + ";L = " + elemsel.S + "; A = " + elemsel.V + "; P = " + elemsel.G + "," + modello + "," + elemsel.TARTCODE_ITOG + "," + elemsel.TARTCODE_ITOG + ",";
+
             if (zakrit_ok)
             {
                 //    MessageBox.Show(t);
                 this.text_otvet = str;
                 //   MessageBox.Show(t);
             }
-
-
-
         }
 
 
@@ -525,12 +531,14 @@ namespace TreeCadN.findprice
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+            Closinger();
             Close();
         }
 
         private void lb4_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             zakrit_ok = true;
+            Closinger();
             Close();
         }
 
@@ -575,11 +583,12 @@ namespace TreeCadN.findprice
             if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.Control)
             {
                 zakrit_ok = true;
+                Closinger();
                 Close();
             }
             if (e.Key == Key.Escape)
             {
-
+                Closinger();
                 Close();
             }
         }

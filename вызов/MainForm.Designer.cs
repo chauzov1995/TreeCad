@@ -305,9 +305,9 @@ namespace вызов
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(75, 23);
             this.button12.TabIndex = 22;
-            this.button12.Text = "openeve";
+            this.button12.Text = "test";
             this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click_1);
+            this.button12.Click += new System.EventHandler(this.button12_Click_2);
             // 
             // MainForm
             // 

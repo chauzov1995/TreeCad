@@ -16,6 +16,7 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.Data.SQLite;
+using TreeCadN.open_ordini;
 
 namespace TreeCadN
 {
@@ -498,7 +499,7 @@ namespace TreeCadN
         {
             this.Ambiente = xAmbiente;
 
-            open_ordini.open sss = new open_ordini.open(this, GetPathOrdini());
+            open sss = new open(this, GetPathOrdini());
             sss.ShowDialog();
         }
 
@@ -611,12 +612,110 @@ namespace TreeCadN
         public void open_save(ref object xAmbiente)
         {
 
-            this.Ambiente = xAmbiente;
+         //   this.Ambiente = xAmbiente;
 
-            open_ordini.open sss = new open_ordini.open(this, GetPathOrdini());
-            sss.createOpenBD();
-            sss.updateTekZakaz();
+
+
+           // updateTekZakaz();
+
+
+
         }
+
+        public void updateTekZakaz()
+        {
+
+            string path_ordini = GetPathOrdini();
+            string dbFileName = path_ordini + @"\sample.sqlite";
+
+            object xamb = getParam(Ambiente, "GetObject", "XAMB");
+            object info = getParamG(xamb, "INFO");
+            object info2 = getParamG(info, "INFO");
+
+
+            string nomer = getParam(info, "Numero").ToString();
+
+            string evefile = "000000".Substring(0, 6 - nomer.Length) + nomer;
+
+
+            SQLiteConnection m_dbConn = new SQLiteConnection();
+            SQLiteCommand m_sqlCmd = new SQLiteCommand();
+
+            m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
+            m_dbConn.Open();
+            m_sqlCmd.Connection = m_dbConn;
+
+
+            // MessageBox.Show(FIO);
+            string file_path_load1 = path_ordini + @"\" + evefile + ".eve";
+            string time = File.GetLastWriteTime(file_path_load1).ToString("dd MMM HH:mm:ss");
+
+
+            m_sqlCmd.CommandText = "SELECT * FROM ordini where nomer_zakaza ='" + evefile + "' limit 1";
+
+
+            var reader = m_sqlCmd.ExecuteReader();
+            int i = 0;
+            while (reader.Read())
+            {
+                i++;
+            }
+            reader.Close();
+
+
+
+
+
+
+            string nomfile = file_path_load1.Split('\\').Last().Split('.').First();
+            //neqqqqq.getParam(xamb, "carica", file_path_load1);
+
+
+            string FIO = getParam(info2, "Var", "CLI_1").ToString();
+            string Manager = getParam(info2, "Var", "Manager").ToString();
+            string orderprice = getParam(info2, "Var", "orderprice").ToString().Trim();
+            string _RIFFABRICA = getParam(info2, "Var", "_RIFFABRICA").ToString();
+            string _RIFSALON = getParam(info2, "Var", "_RIFSALON").ToString();
+            string SROK = getParam(info2, "Var", "SROK").ToString();
+            string SALON = getParam(info2, "Var", "SALON").ToString();
+
+
+            if (i > 0)
+            {
+
+                m_sqlCmd.CommandText = "UPDATE ordini SET " +
+                    "file_path='" + file_path_load1 + "', " +
+                    "nomer_zakaza='" + nomfile + "', " +
+                    "FIO='" + FIO + "', " +
+                    "manager='" + Manager + "', " +
+                    "orderprice='" + orderprice + "', " +
+                    "_RIFFABRICA='" + _RIFFABRICA + "', " +
+                    "_RIFSALON='" + _RIFSALON + "', " +
+                    "SROK='" + SROK + "', " +
+                        "SALON='" + SALON + "' " +
+                    " where nomer_zakaza ='" + evefile + "'";
+                m_sqlCmd.ExecuteNonQuery();
+
+            }
+            else
+            {
+
+                // object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
+                // neqqqqq.getParamI(neqqqqq.xamb, "salva");//сохраним
+                if (File.Exists(file_path_load1))
+                {
+                    m_sqlCmd.CommandText = "INSERT INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK) " +
+                        "VALUES ('" + file_path_load1 + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "')";
+                    m_sqlCmd.ExecuteNonQuery();
+                }
+
+            }
+
+            m_dbConn.Close();
+            GC.Collect();
+        }
+
+
         public void evesync_save(ref object xAmbiente)
         {
             // MessageBox.Show("asda");
@@ -1028,6 +1127,12 @@ namespace TreeCadN
                     }
                 }
             }
+        }
+
+
+        public void test()
+        {
+            (new filtero()).ShowDialog();
         }
     }
 
