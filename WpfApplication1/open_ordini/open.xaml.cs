@@ -22,9 +22,9 @@ namespace TreeCadN.open_ordini
     /// </summary>
     public partial class open : Window
     {
-        private int BD_VARSION = 3;
+        private static int BD_VARSION = 3;
 
-        string dbFileName;
+        static string dbFileName;
         string nomer, path_ordini;
         neqweqe neqqqqq;
         CollectionViewSource viewSource1 = new CollectionViewSource();
@@ -63,9 +63,9 @@ namespace TreeCadN.open_ordini
 
 
 
-            createOpenBD();
+            createOpenBD(path_ordini);
 
-            updateTekZakaz();
+            nomer = updateTekZakaz(neqqqqq, path_ordini);
 
             select(true);
 
@@ -102,23 +102,17 @@ namespace TreeCadN.open_ordini
 
         }
 
-        public void createOpenBD()
+        public static void createOpenBD(string path_ordini)
         {
-
-
-
+            
             SQLiteConnection m_dbConn = new SQLiteConnection();
             SQLiteCommand m_sqlCmd = new SQLiteCommand();
 
             dbFileName = path_ordini + @"\sample.sqlite";
-
-
-
-
+            
             if (!File.Exists(dbFileName))
                 SQLiteConnection.CreateFile(dbFileName);
-
-
+            
             try
             {
                 m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
@@ -199,6 +193,8 @@ namespace TreeCadN.open_ordini
 
                 MessageBox.Show("Error: " + ex.Message);
             }
+
+            m_sqlCmd.Dispose();
             m_dbConn.Close();
             GC.Collect();
 
@@ -257,12 +253,15 @@ namespace TreeCadN.open_ordini
 
 
             //  lb1.ItemsSource = spisok;
+            m_sqlCmd.Dispose();
             m_dbConn.Close();
             GC.Collect();
 
 
             viewSource1.Source = spisok;
+
             lb1.ItemsSource = viewSource1.View;
+
             viewSource1.View.Refresh();
 
 
@@ -275,6 +274,7 @@ namespace TreeCadN.open_ordini
 
 
             visiblecolumns();
+
 
         }
 
@@ -335,14 +335,16 @@ namespace TreeCadN.open_ordini
         }
 
 
-        public void updateTekZakaz()
+        public static string updateTekZakaz(neqweqe neqqqqq, string path_ordini)
         {
+          
             object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
+            object engine = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "ENGINE");
             object info = neqqqqq.getParamG(xamb, "INFO");
             object info2 = neqqqqq.getParamG(info, "INFO");
 
 
-            nomer = neqqqqq.getParam(info, "Numero").ToString();
+            string nomer = neqqqqq.getParam(info, "Numero").ToString();
 
             string evefile = "000000".Substring(0, 6 - nomer.Length) + nomer;
 
@@ -350,6 +352,7 @@ namespace TreeCadN.open_ordini
             SQLiteConnection m_dbConn = new SQLiteConnection();
             SQLiteCommand m_sqlCmd = new SQLiteCommand();
 
+            string dbFileName = path_ordini + @"\sample.sqlite";
             m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
             m_dbConn.Open();
             m_sqlCmd.Connection = m_dbConn;
@@ -420,9 +423,28 @@ namespace TreeCadN.open_ordini
 
             }
 
+     
+
+
+
+            string pathtmp = path_ordini + @"\" + nomfile;
+            string GetFileBitmap = neqqqqq.getParam(xamb, "GetFileBitmap", pathtmp + ".DRG1").ToString();
+
+
+            if (GetFileBitmap.ToUpper() == "TRUE")
+            {
+                object imgget = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "DauImg");
+                object GetPicture = neqqqqq.getParam(engine, "GetPicture", pathtmp + ".DRG1", "0", "0");
+                imgget.GetType().InvokeMember("SetPicture", BindingFlags.InvokeMethod, null, imgget, new object[] { GetPicture, "0" });
+                neqqqqq.getParam(imgget, "SaveImage", pathtmp + ".JPG", "1");
+
+
+            }
+
+            m_sqlCmd.Dispose();
             m_dbConn.Close();
             GC.Collect();
-
+            return nomer;
         }
 
 
@@ -544,6 +566,8 @@ namespace TreeCadN.open_ordini
                 m_sqlCmd.CommandText = "DELETE FROM ordini where nomer_zakaza='" + delete.nomer_zakaza + "'";
                 m_sqlCmd.ExecuteNonQuery();
 
+
+                m_sqlCmd.Dispose();
                 m_dbConn.Close();
                 GC.Collect();
 
@@ -561,29 +585,32 @@ namespace TreeCadN.open_ordini
 
         private void lb1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            string pathtmp = path_ordini + @"\";
+
             if (lb1.SelectedItem != null)
             {
-                string pathtmp = path_ordini + @"\";
-                //  MessageBox.Show(pathtmp);
+
                 ordini selected_item = (lb1.SelectedItem as ordini);
-                object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
-                object engine = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "ENGINE");
-                neqqqqq.getParam(xamb, "carica", selected_item.file_path);
-                string GetFileBitmap = neqqqqq.getParam(xamb, "GetFileBitmap", pathtmp + selected_item.nomer_zakaza + ".DRG1").ToString();
-
-
-                if (GetFileBitmap.ToUpper() == "TRUE")
+                if (File.Exists(pathtmp + selected_item.nomer_zakaza + ".JPG"))
                 {
-                    object imgget = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "DauImg");
-                    object GetPicture = neqqqqq.getParam(engine, "GetPicture", pathtmp + selected_item.nomer_zakaza + ".DRG1", "0", "0");
-                    imgget.GetType().InvokeMember("SetPicture", BindingFlags.InvokeMethod, null, imgget, new object[] { GetPicture, "0" });
-                    neqqqqq.getParam(imgget, "SaveImage", pathtmp + selected_item.nomer_zakaza + ".JPG", "1");
-                    img.Source = new BitmapImage(new Uri(pathtmp + selected_item.nomer_zakaza + ".JPG"));
-
+                    BitmapImage btmap;
+                    btmap = new BitmapImage(new Uri(pathtmp + selected_item.nomer_zakaza + ".JPG"));
+                    img.Source = btmap.Clone();
+                    btmap = null;
+                    GC.Collect();
                 }
                 else
                     img.Source = new BitmapImage(new Uri(@"/TreeCadN;component/Foto/nofoto.jpg", UriKind.RelativeOrAbsolute));
+
+
             }
+            else
+                img.Source = new BitmapImage(new Uri(@"/TreeCadN;component/Foto/nofoto.jpg", UriKind.RelativeOrAbsolute));
+
+
+            // img.Source = btmap;
+
+
         }
 
         private void Button_Click_11(object sender, RoutedEventArgs e)
@@ -676,6 +703,8 @@ namespace TreeCadN.open_ordini
                 m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini(file_path, nomer_zakaza) VALUES('" + path_ordini + "\\" + nom_form + ".eve', '" + nom_form + "')";
                 m_sqlCmd.ExecuteNonQuery();
 
+
+                m_sqlCmd.Dispose();
                 m_dbConn.Close();
                 GC.Collect();
 
@@ -696,6 +725,8 @@ namespace TreeCadN.open_ordini
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+
+
             save_setting();
         }
         void save_setting()
@@ -723,16 +754,25 @@ namespace TreeCadN.open_ordini
             string spisindex = "";
             string spiswidth = "";
 
-            foreach (var sad in lb1.Columns)
+            try
             {
-                spisindex += sad.DisplayIndex + ";";
-                spiswidth += (sad.Width.ToString().Equals("*") ? "1" : sad.Width.ToString().Trim('*')) + ";";
+                foreach (var sad in lb1.Columns)
+                {
+                    spisindex += sad.DisplayIndex + ";";
+                    spiswidth += (sad.Width.ToString().Equals("*") ? "1" : sad.Width.ToString().Trim('*')) + ";";
+                }
             }
+            catch
+            {
+
+            }
+
             spisindex = spisindex.Trim(';');
             spiswidth = spiswidth.Trim(';');
             ps.spiswidth = spiswidth;
             ps.spisindex = spisindex;
             ps.Save();
+
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -752,13 +792,21 @@ namespace TreeCadN.open_ordini
 
             if (lb1.SelectedIndex != -1)
             {
-                object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
+                var selected_ordini = (lb1.SelectedItem as ordini);
 
-                neqqqqq.getParam(xamb, "carica", (lb1.SelectedItem as ordini).file_path);
+
+                object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
+                //object engine = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "ENGINE");
+
+                neqqqqq.getParam(xamb, "carica", selected_ordini.file_path);
                 neqqqqq.getParamI(neqqqqq.Ambiente, "bcarica");
 
-            }
 
+
+
+
+            }
+            GC.Collect();
 
 
             Close();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
@@ -32,37 +33,53 @@ namespace TreeCadN
             this.text_otvet = text.Trim();
 
             //PRIM=a2131231232321;AVTO=asdasdasda
-            try
-            {
-                PRIM = (text_otvet.Split(';'))[0].Substring(5);
-            }
-            catch
-            {
-                PRIM = "";
-            }
-            try
-            {
-                AUTO = (text_otvet.Split(';'))[1].Substring(5);
-            }
-            catch
-            {
-                AUTO = "";
-            }
-            try
-            {
-                EDIT = (text_otvet.Split(';'))[2].Substring(5);
-            }
-            catch
-            {
-                EDIT = "0";
-            }
+
+          
+                if (text_otvet.Contains("PRIM=") && text_otvet.Contains(";AVTO=") && text_otvet.Contains(";EDIT="))
+                {
+
+                    try
+                    {
+                        PRIM = (text_otvet.Split(';'))[0].Substring(5);
+                    }
+                    catch
+                    {
+                        PRIM = "";
+                    }
+                    try
+                    {
+                        AUTO = (text_otvet.Split(';'))[1].Substring(5);
+                    }
+                    catch
+                    {
+                        AUTO = "";
+                    }
+                    try
+                    {
+                        EDIT = (text_otvet.Split(';'))[2].Substring(5);
+                    }
+                    catch
+                    {
+                        EDIT = "0";
+                    }
+                }
+                else
+                {
+                    PRIM = text_otvet;
+                    AUTO = "";
+                    EDIT = "0";
+                }
+            
+            
 
 
-            if (EDIT.Equals("1"))
-                tb3.IsEnabled = true;
-            else
+            if (EDIT.Equals("1")) {
+            tb3.IsEnabled = true;
+            cb1.IsChecked = true;
+        }else{
                 tb3.IsEnabled = false;
-
+                cb1.IsChecked = false;
+            }
             OleDbDataReader reader = BD.conn("SELECT STCommentD.Name, STCommentD.ID, STCommentDchasto.Chastota FROM STCommentD LEFT JOIN STCommentDchasto ON STCommentD.ID = STCommentDchasto.IDComment ORDER BY STCommentDchasto.Chastota DESC");
             while (reader.Read())
             {
@@ -108,15 +125,18 @@ namespace TreeCadN
 
 
 
+
         private void DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            grid.CanUserSortColumns = true;
-            //   grid.ItemsSource = result;
+            // grid.CanUserSortColumns = true;
+
 
             viewSource = new CollectionViewSource();
             viewSource.Source = result;
             viewSource.Filter += viewSource_Filter;
             grid.ItemsSource = viewSource.View;
+
+            log.Add("успешно загружен датагрид");
         }
         CollectionViewSource viewSource;
         void viewSource_Filter(object sender, FilterEventArgs e)
@@ -127,6 +147,46 @@ namespace TreeCadN
         }
 
 
+        private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            string Tag = (sender as GridViewColumnHeader).Tag.ToString();
+
+            if (viewSource.SortDescriptions.Count != 0)
+            {
+                if (viewSource.SortDescriptions.First() == new SortDescription(Tag, ListSortDirection.Descending))
+                {
+                    viewSource.SortDescriptions.Clear();
+                    viewSource.SortDescriptions.Add(new SortDescription(Tag, ListSortDirection.Ascending));
+                }
+                else
+                {
+                    viewSource.SortDescriptions.Clear();
+                    viewSource.SortDescriptions.Add(new SortDescription(Tag, ListSortDirection.Descending));
+                }
+            }
+            else
+            {
+                viewSource.SortDescriptions.Add(new SortDescription(Tag, ListSortDirection.Ascending));
+            }
+
+
+
+
+        }
+
+        private void grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            gr1.Width = e.NewSize.Width - 100;
+        }
+
+        private void grid_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+            if (grid.SelectedIndex == -1)
+            {
+                grid.SelectedIndex = 0;
+            }
+        }
 
 
         private void b1_Click(object sender, RoutedEventArgs e)
@@ -308,14 +368,16 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
                 MyTable path = grid.SelectedItem as MyTable;
                 tb1.SelectedText = path.Name.ToString();
                 tb1.CaretIndex = tb1.SelectionLength + tb1.SelectionStart;
-                tb1.Focus();
+                // tb1.Focus();
 
                 Thread myThread = new Thread(new ParameterizedThreadStart(Count));
                 myThread.Start(path.ID);
+                tb2.Focus();
 
             }
             catch
             {
+                MessageBox.Show("err");
             }
 
         }

@@ -29,7 +29,7 @@ namespace TreeCadN
 
             //   MessageBox.Show(otvet.OTD);
 
-            combo1.ItemsSource = TAccessories.todelka;
+            combo1.ItemsSource = TAccessories.otdelka_array;
             combo2.ItemsSource = TAccessories.izmer;
 
 
@@ -55,7 +55,7 @@ namespace TreeCadN
             rsktb3_Copy.Text = otvet.baseprice.ToString();
             rsktb3_Copy1.Text = otvet.priceredak.ToString();
 
-            combo1.SelectedIndex = (TAccessories.todelka.FindIndex(x => x.ID.Equals(otvet.OTD)));
+            combo1.SelectedIndex = (TAccessories.otdelka_array.FindIndex(x => x.ID.Equals(otvet.OTD)));
             combo2.SelectedIndex = (TAccessories.izmer.FindIndex(x => x.ID.Equals(otvet.UnitsName)));
 
 

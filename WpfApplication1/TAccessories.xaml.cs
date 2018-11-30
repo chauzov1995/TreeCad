@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Data.OleDb;
 using System.Globalization;
 using System.Linq;
@@ -15,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using FirebirdSql.Data.FirebirdClient;
 
 
 namespace TreeCadN
@@ -27,31 +29,27 @@ namespace TreeCadN
 
         static BD_Connect BD = new BD_Connect();
         public string text_otvet;
-
-        int poisk = 0;
-        public static List<todelka> todelka = new List<todelka>();
+        public static List<todelka> otdelka_array = new List<todelka>();
         public static List<todelka> izmer = new List<todelka>();
         bool zakrit_ok = false;
-        // List<Folder> tvv1 = new List<Folder>();
-        //    List<combobox> cb1 = new List<combobox>();
-        //   List<combobox> cb2 = new List<combobox>();
-        List<texnika> gr1 = new List<texnika>();
+        List<texnika> array_spis_tex = new List<texnika>();
         List<texnika> gr2 = new List<texnika>();
         int sort_forg1 = 1;
         CollectionViewSource viewSource1;
         System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
-
-
-        List<texnika> gr3 = new List<texnika>();
-
-
+        String ismanager;
+        List<texnika> array_vibr_tex = new List<texnika>();
         public int redakilidob = 0;
         int nom_PP = 0;
+        bool g1_KeyUp_bool = false;
+        texnika index_for_poisl;
+        neqweqe neqqqqq;
 
-
-        public TAccessories(string path, string text)
+        public TAccessories(string path, string text, neqweqe _neqqqqq)
         {
+
             InitializeComponent();
+            this.neqqqqq = _neqqqqq;
             BD.path = path; //укажем файл бд
             this.text_otvet = text;
             log.Add("Запуск окна");
@@ -60,16 +58,27 @@ namespace TreeCadN
             log.Add("Запуск таймера");
             loadpage();//загрузка полож окна
 
+            INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            ismanager = client_man.GetPrivateString("giulianovars", "ismanager");//версия клиента
+            if (ismanager == "1")
+            {
+                btnimp.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                btnimp.Visibility = Visibility.Collapsed;
+            }
+
             //отделка
             log.Add("Подключимся к бд");
             OleDbDataReader reader_otd = BD.conn("SELECT Id, Name FROM TOtdelka order by Name ASC");
-            todelka.Add(new todelka() { ID = "", nameotd = "" });
+            otdelka_array.Add(new todelka() { ID = "", nameotd = "" });
             while (reader_otd.Read())
             {
                 if (reader_otd["Name"].ToString() != "")
                 {
 
-                    todelka.Add(new todelka()
+                    otdelka_array.Add(new todelka()
                     {
                         ID = reader_otd["Id"].ToString(),
                         nameotd = reader_otd["Name"].ToString(),
@@ -80,7 +89,7 @@ namespace TreeCadN
                 }
             }
             log.Add("установим отделку");
-            otdelka.ItemsSource = todelka;
+            otdelka.ItemsSource = otdelka_array;
             //.ItemsSource = todelka;
             //ед изм
             OleDbDataReader reader_izmer = BD.conn("SELECT UnitsID, UnitsName FROM TUnits order by UnitsName ASC");
@@ -131,7 +140,7 @@ namespace TreeCadN
 
                 }
 
-                gr1.Add(new texnika()
+                array_spis_tex.Add(new texnika()
                 {
                     type = "a",
                     ID = reader_GRACC["PriceID"].ToString(),
@@ -178,8 +187,9 @@ namespace TreeCadN
                     }
 
 
-                    gr1.Add(new texnika()
+                    array_spis_tex.Add(new texnika()
                     {
+
                         type = "t",
                         ID = reader["TPriceID"].ToString(),
                         TName = reader["TName"].ToString(),
@@ -203,15 +213,6 @@ namespace TreeCadN
                 }
                 sort_forg1++;
             }
-
-
-
-
-
-
-
-
-            //  elem.soder.Add(elem2);
 
 
 
@@ -251,14 +252,6 @@ namespace TreeCadN
 
             tv1.Items.Add(root);
 
-
-
-            //treeviewformiriov.getall(path, tv1);
-
-            // groups =u TreeViewFORMiriov.GetAll(path);
-
-            // tv1.ItemsSource = groups;
-
             log.Add("парсим строку");
             pars(text);
 
@@ -266,45 +259,10 @@ namespace TreeCadN
 
         }
 
-        private void trw_Products_Expanded(object sender, RoutedEventArgs e)
-        {
-            /*
-                TreeViewItem item = (TreeViewItem)e.OriginalSource;
-                item.Items.Clear();
-                spisok_treeview dir;
-                if (item.Tag is spisok_treeview)
-                {
-                    spisok_treeview drive = (spisok_treeview)item.Tag;
-                    dir = drive.soder;
-                }
-                else dir = (spisok_treeview)item.Tag;
-                try
-                {
-
-                    spisok_treeview elem2 = new spisok_treeview();
-                    elem2.Name = "frctcc";
-                    // elem.soder = elem2;
-
-
-                    TreeViewItem item1113 = new TreeViewItem();
-                    item1113.Tag = dir;
-                    item1113.Header = dir.Name;
-                    if (dir.soder != null)
-                    {
-                        item1113.Items.Add("*");
-                    }
-                    item.Items.Add(item1113);
-
-                }
-                catch
-                { }
-            */
-        }
-
-
         void pars(string vh_str)
         {
 
+            array_vibr_tex = new List<texnika>();
             string[] elems = vh_str.Split(';');
 
             log.Add("запуск цикла парсим");
@@ -332,7 +290,7 @@ namespace TreeCadN
                         }
                         else
                         {
-                            name = (gr1.Find(x => x.Article.Equals(znach[1].Replace('@', ',').Replace('$', ';')))).TName;
+                            name = (array_spis_tex.Find(x => x.Article.Equals(znach[1].Replace('@', ',').Replace('$', ';')))).TName;
 
                         }
                         //t-техника a-аксесуар
@@ -341,7 +299,7 @@ namespace TreeCadN
 
 
                         texnika poluch1 = new texnika();
-                        poluch1 = (gr1.Find(x => x.Article.Equals(article.Replace('@', ',').Replace('$', ';'))));
+                        poluch1 = (array_spis_tex.Find(x => x.Article.Equals(article.Replace('@', ',').Replace('$', ';'))));
 
 
 
@@ -356,9 +314,9 @@ namespace TreeCadN
                         poluch.nom_pp = poluch1.nom_pp;
                         poluch.OTD = poluch1.OTD;
                         poluch.priceredak = poluch1.priceredak;
-                       // poluch.Prim = poluch1.Prim;
+                        // poluch.Prim = poluch1.Prim;
                         poluch.sort = poluch1.sort;
-                     //   poluch.TName = poluch1.TName;
+                        //   poluch.TName = poluch1.TName;
                         poluch.type = poluch1.type;
                         poluch.UnitsId = poluch1.UnitsId;
                         poluch.UnitsName = poluch1.UnitsName;
@@ -374,27 +332,17 @@ namespace TreeCadN
                         poluch.Article = znach[1].Replace('@', ',').Replace('$', ';');
                         poluch.Prim = "!Артикула нет в базе!".Replace('@', ',').Replace('$', ';');//примечание
                         poluch.colortext = "#FFDE0606";
-
                         poluch.GROUP_dlyaspicif = "";
-                        
                         poluch.UnitsName = "";
                     }
-                   
                     poluch.OTD = znach[3].Replace('@', ',').Replace('$', ';');//отделка
                     poluch.type = znach[0].Replace('@', ',').Replace('$', ';');//типп аксес или техн
                     poluch.kolvo = Convert.ToSingle(znach[2].Replace('@', ',').Replace('.', ',').Replace('$', ';'));//Колво
-
-
                     poluch.priceredak = Convert.ToSingle(znach[9].Replace('@', ',').Replace('.', ',').Replace('$', ';'));//цена ред
 
 
-
-
-
-
-
                     // poluch.GROUP_dlyaspicif = znach[5].Replace('@', ',');//группа специфик
-                    if (gr3.Find(x => x.nom_pp.Equals(Convert.ToInt32(znach[6].Replace('@', ',').Replace('$', ';')))) == null)
+                    if (array_vibr_tex.Find(x => x.nom_pp.Equals(Convert.ToInt32(znach[6].Replace('@', ',').Replace('$', ';')))) == null)
                     {
                         poluch.nom_pp = Convert.ToInt32(znach[6].Replace('@', ',').Replace('$', ';'));//ид позиция
                     }
@@ -405,35 +353,92 @@ namespace TreeCadN
 
                     }
 
-
-
-                    gr3.Add(poluch);
+                    array_vibr_tex.Add(poluch);
 
                 }
             }
             log.Add("закончили парсить установим в гр3");
-            g3.ItemsSource = null;
-            g3.ItemsSource = gr3;
-            
+            lb_vibr_tex.ItemsSource = null;
+            lb_vibr_tex.ItemsSource = array_vibr_tex;
+
 
         }
 
-
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        void Closinger()
         {
 
-            zakrit_ok = true;
+
+
+            this.Hide();
+
+            string t = str_sobr(array_vibr_tex);
+
+
+            if (zakrit_ok)
+            {
+
+                this.text_otvet = t;
+
+            }
+            else
+            {
+                if (this.text_otvet != t)
+                {
+                    if (MessageBox.Show(
+        "Есть изменения, хотели бы Вы их сохранить?",
+        "Предупреждение",
+        MessageBoxButton.YesNo,
+        MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+                        //    MessageBox.Show(t);
+                        this.text_otvet = t;
+                    }
+
+                }
+
+            }
+
+
+
+
+            GC.Collect();
+
+
             Close();
 
-
-
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        string str_sobr(List<texnika> array_vibr_tex)
         {
-            clear_filtr();
+
+            string t = "";
+            for (int i = 0; i < array_vibr_tex.Count; i++)
+            {
+                texnika otvet_massiv = (array_vibr_tex[i]);
+
+                string name = "";
+
+                if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@').Replace(';', '$');
+
+
+
+                t += otvet_massiv.type.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.Article.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.kolvo.ToString().Replace(',', '.').Replace(';', '$') + "~" +
+                otvet_massiv.OTD.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.Prim.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.GROUP_dlyaspicif.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.nom_pp.ToString().Replace(',', '@').Replace(';', '$') + "~" +
+                name + "~" +
+                otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
+                otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + ";";
+                //      MessageBox.Show(text_otvet);
+
+            }
+            return t;
+
         }
+
         void clear_filtr()
         {
             tb1.Text = "";
@@ -442,31 +447,174 @@ namespace TreeCadN
 
         }
 
+        void loadpage()
+        {
+
+            log.Add("установим размеры окна окна");
+            Properties.Settings_AT ps = Properties.Settings_AT.Default;
+            if (ps.Top == -100)
+            {
+                this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+
+            }
+            else
+            {
+                this.Top = ps.Top;
+                this.Left = ps.Left;
+            }
+            if (ps.SizeToContent == 1)
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+            else
+            {
+                this.Width = ps.Width;
+                this.Height = ps.Height;
+            }
+            string[] kolonki = ps.kolonki.Split(';');
 
 
 
 
 
+        }
+
+        private bool FindComputer(texnika bk)
+        {
+
+            if (bk.Article == (Lb_spis_tex.SelectedItem as texnika).Article && bk.OTD == "" && bk.Prim == "")
+            {//если у сущ поз артикул совп с артик и (прим или отделка есть)
+                index_for_poisl = bk;
+
+                return true;
+            }
+            else
+            {
+
+                return false;
+            }
+
+        }
+
+        void Grid_select(texnika poluch1)
+        {
 
 
+            List<texnika> kotor_v_gr3 = array_vibr_tex.FindAll(FindComputer);
+
+
+            texnika poluch = new texnika();
+            poluch.Article = poluch1.Article;
+            poluch.baseprice = poluch1.baseprice;
+            poluch.Group = poluch1.Group;
+            poluch.GroupName = poluch1.GroupName;
+            poluch.GROUP_dlyaspicif = poluch1.GROUP_dlyaspicif;
+            poluch.ID = poluch1.ID;
+            poluch.kolvo = poluch1.kolvo;
+            poluch.nom_pp = poluch1.nom_pp;
+            poluch.OTD = poluch1.OTD;
+            poluch.priceredak = poluch1.priceredak;
+            poluch.Prim = poluch1.Prim;
+            poluch.sort = poluch1.sort;
+            poluch.TName = poluch1.TName;
+            poluch.type = poluch1.type;
+            poluch.UnitsId = poluch1.UnitsId;
+            poluch.UnitsName = poluch1.UnitsName;
+            poluch.vived = poluch1.vived;
+            poluch.colortext = poluch1.colortext;
+
+
+
+            lb_vibr_tex.SelectedItem = index_for_poisl;
+            if (kotor_v_gr3.Count <= 0)
+            {//если такой нет
+                //добавить новую строку
+                nom_PP++;
+                poluch.nom_pp = nom_PP;
+                array_vibr_tex.Add(poluch);
+                lb_vibr_tex.ItemsSource = null;
+                lb_vibr_tex.ItemsSource = array_vibr_tex;
+
+                //   g3.Style = DataGridViewTriState.True;
+
+            }
+            else
+            {//если такая уже есть
+
+                dial_for_acctex_danet dial_for_acctex_danet = new dial_for_acctex_danet(this);
+                dial_for_acctex_danet.ShowDialog();
+                if (redakilidob == 1)
+                {
+                    //добавить новую строку
+                    nom_PP++;
+                    poluch.nom_pp = nom_PP;
+                    array_vibr_tex.Add(poluch);
+                    lb_vibr_tex.ItemsSource = null;
+                    lb_vibr_tex.ItemsSource = array_vibr_tex;
+                }
+                if (redakilidob == 2)
+                {
+
+                    dial_for_acctex dial_for_acctex1 = new dial_for_acctex((lb_vibr_tex.SelectedItem as texnika));
+                    dial_for_acctex1.ShowDialog();
+
+
+
+                    //   kotor_v_gr3.Last().kolvo++;//увеличиваем на 1
+                    lb_vibr_tex.ItemsSource = null;
+                    lb_vibr_tex.ItemsSource = array_vibr_tex;
+                }
+
+
+
+            }
+
+
+        }
+
+        bool isreadonly_forGRID(DataGridBeginningEditEventArgs e, string[] slovarb_Stolbikov)
+        {
+
+            if (Array.IndexOf(slovarb_Stolbikov, e.Column.Header.ToString()) == -1)
+            {//если мы выбираемый столюик есть в списке разреш для редкат столбов то разрешим редактирование
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            zakrit_ok = true;
+            Closinger();
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            clear_filtr();
+        }
 
         private void b3_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            Closinger();
         }
+
         private void g1_Loaded(object sender, RoutedEventArgs e)
         {
 
-            g1.ItemsSource = gr1;
+            Lb_spis_tex.ItemsSource = array_spis_tex;
 
             viewSource1 = new CollectionViewSource();
-            viewSource1.Source = gr1;
+            viewSource1.Source = array_spis_tex;
             viewSource1.Filter += viewSource_Filter1;
             viewSource1.SortDescriptions.Add(new SortDescription("sort", ListSortDirection.Ascending));
-            g1.ItemsSource = viewSource1.View;
+            Lb_spis_tex.ItemsSource = viewSource1.View;
 
         }
-
 
         void viewSource_Filter1(object sender, FilterEventArgs e)
         {
@@ -567,7 +715,6 @@ namespace TreeCadN
             viewSource1.View.Refresh();
         }
 
-
         private void tb1_TextChanged(object sender, TextChangedEventArgs e)
         {
             timer.Stop();
@@ -582,6 +729,7 @@ namespace TreeCadN
             timer.Start();
 
         }
+
         private void timerTick(object sender, EventArgs e)
         {
             viewSource1.View.Refresh();
@@ -593,82 +741,21 @@ namespace TreeCadN
 
             viewSource1.View.Refresh();
         }
+
         private void c2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
             viewSource1.View.Refresh();
         }
 
-
         private void g1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             texnika poluch = new texnika();
-            poluch = g1.SelectedItem as texnika;
+            poluch = Lb_spis_tex.SelectedItem as texnika;
             Grid_select(poluch);
 
         }
 
-
-
-
-
-
-        void loadpage()
-        {
-
-            log.Add("установим размеры окна окна");
-            Properties.Settings_AT ps = Properties.Settings_AT.Default;
-            if (ps.Top == -100)
-            {
-                this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-
-            }
-            else
-            {
-                this.Top = ps.Top;
-                this.Left = ps.Left;
-            }
-            if (ps.SizeToContent == 1)
-            {
-                this.WindowState = WindowState.Maximized;
-            }
-            else
-            {
-                this.Width = ps.Width;
-                this.Height = ps.Height;
-            }
-            string[] kolonki = ps.kolonki.Split(';');
-
-
-            /*
-            //MessageBox.Show(kolonki[1]);
-            try
-            {
-                st1.Width = (DataGridLength)(Convert.ToInt32(kolonki[0]));
-                st2.Width = (DataGridLength)(Convert.ToInt32(kolonki[1]));
-              //  st3.Width = (DataGridLength)(Convert.ToInt32(kolonki[2]));
-                st4.Width = (DataGridLength)(Convert.ToInt32(kolonki[3]));
-                otdelka.Width = (DataGridLength)(Convert.ToInt32(kolonki[4]));
-                edizmer.Width = (DataGridLength)(Convert.ToInt32(kolonki[5]));
-                st7.Width = (DataGridLength)(Convert.ToInt32(kolonki[6]));
-                st8.Width = (DataGridLength)(Convert.ToInt32(kolonki[7]));
-                st9.Width = (DataGridLength)(Convert.ToInt32(kolonki[8]));
-          //      st11.Width = (DataGridLength)(Convert.ToDouble(kolonki[10]));
-            //    st12.Width = (DataGridLength)(Convert.ToDouble(kolonki[11]));
-              //  st13.Width = (DataGridLength)(Convert.ToDouble(kolonki[12]));
-                //st14.Width = (DataGridLength)(Convert.ToDouble(kolonki[13]));
-            }
-            catch(Exception e)
-            {
-              // MessageBox.Show( e.Message+" (Связано с шириной столбиков)");
-            }
-  */
-
-
-
-
-
-        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
@@ -712,74 +799,20 @@ st14.Width.ToString() + ";";
 
             //pfrhsnbt
 
-            string t = "";
-            for (int i = 0; i < gr3.Count; i++)
-            {
-                texnika otvet_massiv = ((texnika)gr3[i]);
 
-                string name = "";
-
-                if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@').Replace(';', '$');
-
-              
-
-                t += otvet_massiv.type.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.Article.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.kolvo.ToString().Replace(',', '.').Replace(';', '$') + "~" +
-                otvet_massiv.OTD.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.Prim.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.GROUP_dlyaspicif.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.nom_pp.ToString().Replace(',', '@').Replace(';', '$') + "~" +
-                name + "~" +
-                otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + ";";
-                //      MessageBox.Show(text_otvet);
-              
-            }
-
-
-            if (zakrit_ok)
-            {
-                //    MessageBox.Show(t);
-                this.text_otvet = t;
-
-            }
-            else
-            {
-                if (this.text_otvet != t)
-                {
-                    if (MessageBox.Show(
-        "Есть изменения, хотели бы Вы их сохранить?",
-        "Предупреждение",
-        MessageBoxButton.YesNo,
-        MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                    {
-                        //    MessageBox.Show(t);
-                        this.text_otvet = t;
-                    }
-
-                }
-
-            }
         }
-
 
         private void tb1_Loaded(object sender, RoutedEventArgs e)
         {
             tb1.Focus();
         }
 
-
-
-
         private void g3_delete_Click(object sender, RoutedEventArgs e)
         {
-            gr3.Remove((texnika)g3.SelectedItem);
-            g3.ItemsSource = null;
-            g3.ItemsSource = gr3;
+            array_vibr_tex.Remove((texnika)lb_vibr_tex.SelectedItem);
+            lb_vibr_tex.ItemsSource = null;
+            lb_vibr_tex.ItemsSource = array_vibr_tex;
         }
-
-
 
         private void g3_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
@@ -791,19 +824,19 @@ st14.Width.ToString() + ";";
             if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.Control)
             {
                 zakrit_ok = true;
-                Close();
+                Closinger();
             }
 
             if (e.Key == Key.F1)
             {
-                if (g3.SelectedIndex != -1)
+                if (lb_vibr_tex.SelectedIndex != -1)
                 {
-                    dial_for_acctex dial_for_acctex1 = new dial_for_acctex((g3.SelectedItem as texnika));
+                    dial_for_acctex dial_for_acctex1 = new dial_for_acctex((lb_vibr_tex.SelectedItem as texnika));
                     dial_for_acctex1.ShowDialog();
 
-                    g3.SelectedItem = dial_for_acctex1.otvet;
-                    g3.ItemsSource = null;
-                    g3.ItemsSource = gr3;
+                    lb_vibr_tex.SelectedItem = dial_for_acctex1.otvet;
+                    lb_vibr_tex.ItemsSource = null;
+                    lb_vibr_tex.ItemsSource = array_vibr_tex;
                 }
                 else
                 {
@@ -824,6 +857,7 @@ st14.Width.ToString() + ";";
             tb2.Text = "";
             tb2.Focus();
         }
+
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             string Tag = (sender as GridViewColumnHeader).Tag.ToString();
@@ -847,7 +881,6 @@ st14.Width.ToString() + ";";
             }
         }
 
-        bool g1_KeyUp_bool = false;
         private void g1_KeyUp(object sender, KeyEventArgs e)
         {
             if (g1_KeyUp_bool)
@@ -855,7 +888,7 @@ st14.Width.ToString() + ";";
                 if (e.Key == Key.Enter)
                 {
                     texnika poluch = new texnika();
-                    poluch = g1.SelectedItem as texnika;
+                    poluch = Lb_spis_tex.SelectedItem as texnika;
                     Grid_select(poluch);
 
 
@@ -864,118 +897,16 @@ st14.Width.ToString() + ";";
             }
 
         }
+
         private void g1_KeyDown(object sender, KeyEventArgs e)
         {
             g1_KeyUp_bool = true;
         }
 
-
-        texnika index_for_poisl;
-        private bool FindComputer(texnika bk)
-        {
-
-            if (bk.Article == (g1.SelectedItem as texnika).Article && bk.OTD == "" && bk.Prim == "")
-            {//если у сущ поз артикул совп с артик и (прим или отделка есть)
-                index_for_poisl = bk;
-
-                return true;
-            }
-            else
-            {
-
-                return false;
-            }
-
-        }
-
-        void Grid_select(texnika poluch1)
-        {
-
-
-            List<texnika> kotor_v_gr3 = gr3.FindAll(FindComputer);
-
-
-            texnika poluch = new texnika();
-            poluch.Article = poluch1.Article;
-            poluch.baseprice = poluch1.baseprice;
-            poluch.Group = poluch1.Group;
-            poluch.GroupName = poluch1.GroupName;
-            poluch.GROUP_dlyaspicif = poluch1.GROUP_dlyaspicif;
-            poluch.ID = poluch1.ID;
-            poluch.kolvo = poluch1.kolvo;
-            poluch.nom_pp = poluch1.nom_pp;
-            poluch.OTD = poluch1.OTD;
-            poluch.priceredak = poluch1.priceredak;
-            poluch.Prim = poluch1.Prim;
-            poluch.sort = poluch1.sort;
-            poluch.TName = poluch1.TName;
-            poluch.type = poluch1.type;
-            poluch.UnitsId = poluch1.UnitsId;
-            poluch.UnitsName = poluch1.UnitsName;
-            poluch.vived = poluch1.vived;
-            poluch.colortext = poluch1.colortext;
-
-
-
-            g3.SelectedItem = index_for_poisl;
-            if (kotor_v_gr3.Count <= 0)
-            {//если такой нет
-                //добавить новую строку
-                nom_PP++;
-                poluch.nom_pp = nom_PP;
-                gr3.Add(poluch);
-                g3.ItemsSource = null;
-                g3.ItemsSource = gr3;
-             
-                //   g3.Style = DataGridViewTriState.True;
-
-            }
-            else
-            {//если такая уже есть
-
-                dial_for_acctex_danet dial_for_acctex_danet = new dial_for_acctex_danet(this);
-                dial_for_acctex_danet.ShowDialog();
-                if (redakilidob == 1)
-                {
-                    //добавить новую строку
-                    nom_PP++;
-                    poluch.nom_pp = nom_PP;
-                    gr3.Add(poluch);
-                    g3.ItemsSource = null;
-                    g3.ItemsSource = gr3;
-                }
-                if (redakilidob == 2)
-                {
-
-                    dial_for_acctex dial_for_acctex1 = new dial_for_acctex((g3.SelectedItem as texnika));
-                    dial_for_acctex1.ShowDialog();
-
-
-
-                    //   kotor_v_gr3.Last().kolvo++;//увеличиваем на 1
-                    g3.ItemsSource = null;
-                    g3.ItemsSource = gr3;
-                }
-
-
-
-            }
-
-
-        }
-
-        private void g3_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
-        {
-            //   MessageBox.Show(e.EditingElement.);
-
-        }
-
-
         private void g3_CellEditEnding_1(object sender, DataGridCellEditEndingEventArgs e)
         {
 
         }
-
 
         private void g3_BeginningEdit_1(object sender, DataGridBeginningEditEventArgs e)
         {
@@ -1015,28 +946,6 @@ st14.Width.ToString() + ";";
 
         }
 
-        bool isreadonly_forGRID(DataGridBeginningEditEventArgs e, string[] slovarb_Stolbikov)
-        {
-
-            if (Array.IndexOf(slovarb_Stolbikov, e.Column.Header.ToString()) == -1)
-            {//если мы выбираемый столюик есть в списке разреш для редкат столбов то разрешим редактирование
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
-
-
-
-
-
-
-
         private void g3_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             bool otvet = true;
@@ -1058,62 +967,16 @@ st14.Width.ToString() + ";";
             e.Handled = otvet;
         }
 
-
-
-
-
-        private void g3_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-
-            //    texnika element = ((sender as DataGrid).SelectedItem as texnika);
-
-            /*
-                        rsktblo1_Copy.Text = element.Article;
-                        rsktb1.Text = element.nom_pp.ToString();
-                        rsktb2.Text = element.TName;
-                        rsktb3.Text = element.kolvo.ToString();
-                        combo1.Text = element.OTD;
-                        rsktb4.Text = element.Prim;
-                        combo2.Text = element.UnitsId;
-                        rsktb3_Copy.Text = element.baseprice.ToString();
-                        rsktb3_Copy1.Text = element.priceredak.ToString();
-
-                        double mous_x = Mouse.GetPosition(null).X;
-                        double mous_y = Mouse.GetPosition(null).Y;
-
-                        if (mous_x + contextmen.Width > ActualWidth)
-                        {
-                            mous_x -= contextmen.Width;
-                        }
-                        if (mous_y + contextmen.Height > ActualHeight)
-                        {
-                            mous_y -= contextmen.Height;
-                        }
-
-
-                        //   (sender as DataGrid).
-
-                        contextmen.Margin = new System.Windows.Thickness { Left = mous_x, Top = mous_y };// Mouse.GetPosition(null).X;
-                        // MessageBox.Show(mous_x + contextmen.Width.ToString());
-
-                        //    raskrspis.Visibility = Visibility;
-            */
-
-            //  g3.ItemsSource = null;
-            //  g3.ItemsSource = gr3;
-
-        }
-
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            if (g3.SelectedIndex != -1)
+            if (lb_vibr_tex.SelectedIndex != -1)
             {
-                dial_for_acctex dial_for_acctex1 = new dial_for_acctex((g3.SelectedItem as texnika));
+                dial_for_acctex dial_for_acctex1 = new dial_for_acctex((lb_vibr_tex.SelectedItem as texnika));
                 dial_for_acctex1.ShowDialog();
 
-                g3.SelectedItem = dial_for_acctex1.otvet;
-                g3.ItemsSource = null;
-                g3.ItemsSource = gr3;
+                lb_vibr_tex.SelectedItem = dial_for_acctex1.otvet;
+                lb_vibr_tex.ItemsSource = null;
+                lb_vibr_tex.ItemsSource = array_vibr_tex;
             }
             else
             {
@@ -1137,9 +1000,9 @@ st14.Width.ToString() + ";";
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             string t = "";
-            for (int i = 0; i < gr3.Count; i++)
+            for (int i = 0; i < array_vibr_tex.Count; i++)
             {
-                texnika otvet_massiv = ((texnika)gr3[i]);
+                texnika otvet_massiv = ((texnika)array_vibr_tex[i]);
 
                 string name = "";
 
@@ -1165,19 +1028,132 @@ st14.Width.ToString() + ";";
 
             Clipboard.SetText(t);
 
-           
+
 
 
 
 
 
             MessageBox.Show("Теперь зайдите в кубик в другом проекте и нажмите кнопку \"2.Вставить\"");
-            Close();
+            Closinger();
         }
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            pars(Clipboard.GetText()) ;
+            try
+            {
+                pars(Clipboard.GetText());
+            }
+            catch
+            {
+                MessageBox.Show("Строка неверного формата");
+            }
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+
+
+            if (MessageBox.Show(
+             "Сейчас будет загружена техника, принадлежащая заказу. Все раннее выбранные аксессуары и техника будут очищены. Продолжить?",
+            "Важно",
+             MessageBoxButton.YesNo,
+             MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+
+
+                object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
+                object info = neqqqqq.getParamG(xamb, "INFO");
+                object info2 = neqqqqq.getParamG(info, "INFO");
+                string _RIFFABRICA = neqqqqq.getParam(info2, "Var", "_RIFFABRICA").ToString();
+                if (_RIFFABRICA == "")
+                {
+                    MessageBox.Show("Заказу не присвоен фабричный номер");
+                }
+                else
+                {
+
+                    log.Add("номер заказа на фабрике = " + _RIFFABRICA);
+                    nom_PP = 0;
+                    List<texnika> importlist = new List<texnika>();
+
+                    FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
+                    fb_con.Charset = "WIN1251"; //используемая кодировка
+                    fb_con.UserID = "sysdba"; //логин
+                    fb_con.Password = "TukTuk"; //пароль
+                    fb_con.Database = "172.16.6.155:/usr/interbase/db/resurs.gdb"; //путь к файлу базы данных
+                    fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
+
+                    //создаем подключение
+                    var fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
+
+                    fb.Open(); //открываем БД
+
+
+
+
+                    if (fb.State == ConnectionState.Closed)
+                        fb.Open();
+
+                    FbTransaction fbt = fb.BeginTransaction(); //стартуем транзакцию; стартовать транзакцию можно только для открытой базы (т.е. мутод Open() уже был вызван ранее, иначе ошибка)
+
+                    FbCommand SelectSQL = new FbCommand("SELECT * FROM CCUSTOMTEXNICS WHERE CUSTOMID=" + _RIFFABRICA+ " order by POZ asc", fb); //задаем запрос на выборку
+
+                    SelectSQL.Transaction = fbt; //необходимо проинициализить транзакцию для объекта SelectSQL
+                    FbDataReader reader = SelectSQL.ExecuteReader(); //для запросов, которые возвращают результат в виде набора данных надо использоваться метод ExecuteReader()
+
+
+                    while (reader.Read()) //пока не прочли все данные выполняем...
+                    {
+
+                        float baseprice = 0;
+                        if (reader["WPRICE"].ToString() != "") baseprice = Convert.ToSingle(reader["WPRICE"].ToString());
+
+                        int nompp = Convert.ToInt32(reader["POZ"].ToString());
+
+                        //MessageBox.Show(reader["SALONNUMBER"].ToString());
+                        importlist.Add(new texnika()
+                        {
+
+                            type = "t",
+                            ID = reader["TPriceID"].ToString(),
+                            TName = reader["NAME"].ToString(),
+                            Article = reader["ARTICLE"].ToString(),
+                            UnitsId = "шт",
+                            baseprice = baseprice,
+                            priceredak = baseprice,
+                            UnitsName = "3",
+                            Prim = "",
+                            kolvo = Convert.ToInt32(reader["CNT"].ToString()),
+                            OTD = "",
+                            nom_pp = nompp,
+
+
+                            //                    GroupName = reader["TexType"].ToString(),
+                            //                  Group = reader["TexID"].ToString(),
+                            // sort = sort,
+                            GROUP_dlyaspicif = "",// reader["TKOEFGROUP_ID"].ToString(),
+
+
+                        });
+                        // MessageBox.Show(reader["CNT"].ToString()+""+ reader["WPRICE"].ToString());
+
+                        if (nom_PP < nompp) nom_PP = nompp;
+
+                        //  Grid_select(texnika);
+                    }
+
+
+
+
+                    SelectSQL.Dispose(); //в документации написано, что ОЧЕНЬ рекомендуется убивать объекты этого типа, если они больше не нужны
+                    fb.Close();
+
+
+                    //  MessageBox.Show(str_sobr(importlist));
+                    pars(str_sobr(importlist));
+                }
+            }
         }
     }
 
@@ -1203,17 +1179,13 @@ st14.Width.ToString() + ";";
         public string GROUP_dlyaspicif { get; set; }
         public string colortext { get; set; }
     }
+
     public class todelka
     {
         public string ID { get; set; }
         public string nameotd { get; set; }
         public string Gender { get; set; }
     }
-
-
-
-
-
 
     public class MenuItem
     {
@@ -1229,23 +1201,19 @@ st14.Width.ToString() + ";";
         public ObservableCollection<MenuItem> Items { get; set; }
     }
 
-
-
-
     class AgeToColorConverter : IValueConverter
-{
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        // Все проверки для краткости выкинул
-        return (string)value == "!Артикула нет в базе!" ? 
-            new SolidColorBrush(Colors.Red)
-            : new SolidColorBrush(Colors.Black);
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // Все проверки для краткости выкинул
+            return (string)value == "!Артикула нет в базе!" ?
+                new SolidColorBrush(Colors.Red)
+                : new SolidColorBrush(Colors.Black);
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
     }
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new Exception("The method or operation is not implemented.");
-    }
-}
-
 
 }

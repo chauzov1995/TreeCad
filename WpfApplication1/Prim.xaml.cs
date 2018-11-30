@@ -396,9 +396,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         public string Name { get; set; }
         public int Chasto { get; set; }
     }
-
-
-
+    
     public class BD_Connect
     {
 
@@ -427,9 +425,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
 
     }
-
-
-
+    
     public class Phone
     {
         public string Title { get; set; }

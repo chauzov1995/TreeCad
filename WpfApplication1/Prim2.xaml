@@ -21,18 +21,37 @@
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" Grid.Row="0" x:Name="tb2" Margin="5" ToolTip="Поиск" TextChanged="tb2_TextChanged" TabIndex="1" VerticalAlignment="Top"/>
-            <Button Grid.Row="0"  x:Name="b4" Content="Очистить фильтр"   Click="b4_Click" HorizontalAlignment="Left" VerticalAlignment="Center" Height="22" Margin="5" Width="110" Grid.Column="1"/>
+            <Button  Grid.Row="0"  x:Name="b4" Content="Очистить фильтр"   Click="b4_Click" HorizontalAlignment="Left" VerticalAlignment="Center" Height="22" Margin="5" Width="110" Grid.Column="1" IsTabStop="False"/>
         </Grid>
-        <DataGrid Grid.Row="1"  KeyboardNavigation.TabNavigation="Once" Grid.Column="0"  GridLinesVisibility="None"  SelectionMode="Single" x:Name="grid" AutoGenerateColumns="False" ItemsSource="{Binding result}"  Loaded="DataGrid_Loaded" IsReadOnly="True" MouseDoubleClick="grid_MouseDoubleClick" TabIndex="2" KeyUp="grid_KeyUp"  >
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Примечание" Binding="{Binding Name}" Width="90*"/>
-                <DataGridTextColumn Header="Частота использования"  Binding="{Binding Chasto}"   Width="10*" SortDirection="Descending"/>
-            </DataGrid.Columns>
+        <ListView Name="grid"  Grid.Row="1" TabIndex="2" Loaded="DataGrid_Loaded" KeyUp="grid_KeyUp" SizeChanged="grid_SizeChanged" GotFocus="grid_GotFocus" Foreground="Black"  >
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="grid_MouseDoubleClick" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
 
+                <GridView >
 
-        </DataGrid>
+                    <GridViewColumn x:Name="gr1"   DisplayMemberBinding="{Binding Name}" >
+
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Name" Click="lvUsersColumnHeader_Click">Примечание</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+
+                    </GridViewColumn>
+                    <GridViewColumn  Width="70" DisplayMemberBinding="{Binding Chasto}" >
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Chasto" Click="lvUsersColumnHeader_Click">Частота использования</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+
+        </ListView>
         <TextBox Grid.Column="0" Grid.Row="2"  x:Name="tb1"  TextWrapping="WrapWithOverflow" Margin="5" KeyUp="tb1_KeyUp" TabIndex="3" />
-        <TextBox Grid.Column="0" Grid.Row="4"  x:Name="tb3"  TextWrapping="WrapWithOverflow" Margin="5" KeyUp="tb1_KeyUp" TabIndex="3" TextChanged="tb3_TextChanged" />
+        <TextBox Grid.Column="0" Grid.Row="4"  x:Name="tb3"  TextWrapping="WrapWithOverflow" Margin="5" KeyUp="tb1_KeyUp" TabIndex="3" TextChanged="tb3_TextChanged" IsTabStop="False" />
 
         <Grid  Grid.Row="5">
             <Grid.ColumnDefinitions>
@@ -40,12 +59,12 @@
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
-            <Button   Content="Отмена" Margin="5" Click="Button_Click_1" IsCancel="True"  Grid.Column="2" Height="30" />
+            <Button   Content="Отмена" Margin="5" Click="Button_Click_1" IsCancel="True"  Grid.Column="2" Height="30" IsTabStop="False" />
             <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" FontSize="14" Text="Запрещено использовать символы #$@№^|" Margin="5"/>
-            <Button  x:Name="b1" Content="Ок" Margin="5" Click="b1_Click" TabIndex="4" Grid.Column="1" Height="30" />
+            <Button  x:Name="b1" Content="Ок" Margin="5" Click="b1_Click" TabIndex="4" Grid.Column="1" Height="30" IsTabStop="False" />
         </Grid>
         <Label Margin="5,0,471,0" Grid.Row="3" Padding="0" Height="17" Content="Автопримечание"/>
-        <CheckBox x:Name="cb1" Content="Разрешить редактирование" HorizontalAlignment="Left" Margin="140,0,0,0" Grid.Row="3" VerticalAlignment="Top" Height="17" Checked="cb1_Checked" Unchecked="cb1_Unchecked"/>
+        <CheckBox x:Name="cb1" Content="Разрешить редактирование" HorizontalAlignment="Left" Margin="140,0,0,0" Grid.Row="3" VerticalAlignment="Top" Height="17" Checked="cb1_Checked" Unchecked="cb1_Unchecked" IsTabStop="False"/>
     </Grid>
 
 </Window>

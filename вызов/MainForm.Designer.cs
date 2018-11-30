@@ -67,6 +67,7 @@ namespace вызов
             this.button14 = new System.Windows.Forms.Button();
             this.button15 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -309,11 +310,22 @@ namespace вызов
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.button12_Click_2);
             // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(527, 275);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(75, 23);
+            this.button16.TabIndex = 23;
+            this.button16.Text = "creaPDF";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 355);
+            this.Controls.Add(this.button16);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.button15);
             this.Controls.Add(this.button14);
@@ -368,5 +380,6 @@ namespace вызов
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button16;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -70,6 +71,7 @@ namespace TreeCadN.open_ordini
                 //   Array.Sort(files);
 
                 object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
+                object engine = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "ENGINE");
                 object info = neqqqqq.getParamG(xamb, "INFO");
                 object info2 = neqqqqq.getParamG(info, "INFO");
 
@@ -98,13 +100,36 @@ namespace TreeCadN.open_ordini
                     m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK, SALON) " +
                         "VALUES ('" + file + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "', '"+ SALON + "')";
                     m_sqlCmd.ExecuteNonQuery();
-                }
-                MessageBox.Show("Готово");
 
+
+
+
+
+                    string pathtmp = path_ordini + @"\" + nomfile;
+                    string GetFileBitmap = neqqqqq.getParam(xamb, "GetFileBitmap", pathtmp + ".DRG1").ToString();
+
+
+                    if (GetFileBitmap.ToUpper() == "TRUE")
+                    {
+                        object imgget = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "DauImg");
+                        object GetPicture = neqqqqq.getParam(engine, "GetPicture", pathtmp + ".DRG1", "0", "0");
+                        imgget.GetType().InvokeMember("SetPicture", BindingFlags.InvokeMethod, null, imgget, new object[] { GetPicture, "0" });
+                        neqqqqq.getParam(imgget, "SaveImage", pathtmp + ".JPG", "1");
+
+
+                    }
+
+
+
+                }
+         
+
+                m_sqlCmd.Dispose();
                 m_dbConn.Close();
                 GC.Collect();
 
 
+                MessageBox.Show("Готово");
 
             }
         }
