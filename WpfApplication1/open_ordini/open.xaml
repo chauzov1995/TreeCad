@@ -108,6 +108,7 @@
                 <DataGridTextColumn Header="Номер на фабрике" Binding="{Binding _RIFFABRICA}"  MinWidth="20"/>
                 <DataGridTextColumn Header="Менеджер в салоне" Binding="{Binding manager_salons}"  MinWidth="20"/>
                 <DataGridTextColumn Header="Салон" Binding="{Binding SALON}"  MinWidth="20"/>
+                <DataGridTextColumn Header="Дата последнего изменения" Binding="{Binding date_last_update}"  MinWidth="20" SortMemberPath="date_last_update_sort"/>
             </DataGrid.Columns>
             
         </DataGrid>
@@ -115,7 +116,7 @@
         <Button Content="Открыть" ToolTip="CTRL + ENTER" Margin="0,0,5,5" Click="Button_Click" Grid.Column="6" Grid.Row="2" Height="30" VerticalAlignment="Bottom"/>
         <Button Content="Дублировать" Grid.Column="6" Margin="0,0,5,75" VerticalAlignment="Bottom" Height="30" Click="Button_Click_3" Grid.Row="2"/>
         <Button Content="Удалить" Grid.Column="6" Margin="0,0,5,40" VerticalAlignment="Bottom" Height="30" Grid.Row="2" Click="Button_Click_8"/>
-        <Button x:Name="btn_share" Content="Скопировать заказы на шару" Grid.Column="6" Margin="0,142,5,0" VerticalAlignment="Top" Height="30" Background="#FF5DF1D6" Foreground="#FF1B7665" Click="Button_Click_2" ToolTip="Скопирует заказы из вашей локальной папки в общую папку" Grid.Row="2"/>
+        <Button  Content="Обновить список заказов" Grid.Column="6" Margin="0,142,5,0" VerticalAlignment="Top" Height="30"  Grid.Row="2" Click="Button_Click_1"/>
         <Button Content="Очистить" Grid.Column="5" Margin="5" Grid.Row="1" VerticalAlignment="Center" Click="Button_Click_7"/>
         <Border Grid.Column="6" Height="151" Margin="0,16,5,0" Grid.Row="1" VerticalAlignment="Top" Grid.RowSpan="2" BorderBrush="#FF898989" BorderThickness="1">
             <Image x:Name="img"  Source="/TreeCadN;component/Foto/nofoto.jpg"/>
@@ -126,6 +127,7 @@
         <Button  Grid.Column="6" Margin="0,5,5,0" VerticalAlignment="Top" Click="Button_Click_15" HorizontalAlignment="Right" Height="40" Grid.RowSpan="2" Width="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
             <Image Source="/TreeCadN;component/Foto/settings.png"/>
         </Button>
+        <Button x:Name="btn_share" Content="Скопировать заказы на шару" Grid.Column="6" Margin="0,177,5,0" VerticalAlignment="Top" Height="30" Background="#FF5DF1D6" Foreground="#FF1B7665" Click="Button_Click_2" ToolTip="Скопирует заказы из вашей локальной папки в общую папку" Grid.Row="2"/>
 
 
 

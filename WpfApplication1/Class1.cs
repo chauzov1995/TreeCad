@@ -360,7 +360,7 @@ namespace TreeCadN
             {
                 if (str1 == "")
                 {
-                    str1 = "0;0;0;0;0;0;0;;;1^2^3^4^5^6^7^22^33^37^40^46^50^51";
+                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^46^50^51";
                     uslovvipol = true;
                 }
                 else
@@ -371,7 +371,7 @@ namespace TreeCadN
               MessageBoxButton.YesNo,
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
-                        str1 = "0;0;0;0;0;0;0;;;1^2^3^4^5^6^7^22^33^37^40^46^50^51";
+                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^46^50^51";
                         uslovvipol = true;
                     }
                     else
@@ -813,7 +813,7 @@ namespace TreeCadN
                 client.Proxy = myProxy;
 
                 //Создание объекта, для работы с файлом
-                INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
+                INIManager manager = new INIManager(GetEcadProIni());
                 authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
 
 
@@ -862,17 +862,16 @@ namespace TreeCadN
 
             //     var client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             //   var path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-
-
-
-            MessageBox.Show(Environment.CurrentDirectory + @"\systema.mdb");
+            //
+            
+        //    MessageBox.Show(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\systema.mdb");
             switch (catalog.ToUpper())
             {
 
                 case "GIULIANOVARSA":
-                    return Environment.CurrentDirectory + @"\systema.mdb";
+                    return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\systema.mdb";
                 default:
-                    return Environment.CurrentDirectory + @"\system.mdb";
+                    return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\system.mdb";
             }
         }
 
@@ -880,10 +879,13 @@ namespace TreeCadN
         {
             INIManager ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             string path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-            return Environment.CurrentDirectory + @"\" + path_ecadpro;
+            return  Environment.CurrentDirectory + @"\" + path_ecadpro;
         }
 
-
+        string GetEcadProIni()
+        {
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ecadpro.ini";
+        }
 
 
 

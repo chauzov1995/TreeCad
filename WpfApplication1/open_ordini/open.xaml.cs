@@ -22,13 +22,13 @@ namespace TreeCadN.open_ordini
     /// </summary>
     public partial class open : Window
     {
-        private static int BD_VARSION = 3;
+        private static int BD_VARSION = 4;
 
         static string dbFileName;
         string nomer, path_ordini;
         neqweqe neqqqqq;
         CollectionViewSource viewSource1 = new CollectionViewSource();
-        int kolvo_stolb = 8;
+        int kolvo_stolb = 9;
 
 
         System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
@@ -45,7 +45,6 @@ namespace TreeCadN.open_ordini
 
             string percorsoordini = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\_ecadpro\ordini";
             log.Add("percorsoordini= " + percorsoordini);
-            log.Add("percorsoordiniif= " + Environment.CurrentDirectory + @"\_ecadpro\ordini");
             string[] files = Directory.GetFiles(percorsoordini, "*.eve", SearchOption.TopDirectoryOnly);
             if (files.Length == 0 || percorsoordini.ToUpper() == (Environment.CurrentDirectory + @"\_ecadpro\ordini").ToUpper())
             {
@@ -109,7 +108,7 @@ namespace TreeCadN.open_ordini
             SQLiteCommand m_sqlCmd = new SQLiteCommand();
 
             dbFileName = path_ordini + @"\sample.sqlite";
-            
+            log.Add("Путь к бд - "+dbFileName);
             if (!File.Exists(dbFileName))
                 SQLiteConnection.CreateFile(dbFileName);
             
@@ -119,7 +118,7 @@ namespace TreeCadN.open_ordini
                 m_dbConn.Open();
                 m_sqlCmd.Connection = m_dbConn;
                 //при создании
-                m_sqlCmd.CommandText = "CREATE TABLE IF NOT EXISTS ordini (id INTEGER PRIMARY KEY AUTOINCREMENT, file_path TEXT, FIO TEXT, nomer_zakaza TEXT UNIQUE, last_upd TEXT, manager TEXT, orderprice TEXT, _RIFSALON TEXT, _RIFFABRICA TEXT, SROK TEXT, SALON TEXT)";
+                m_sqlCmd.CommandText = "CREATE TABLE IF NOT EXISTS ordini (id INTEGER PRIMARY KEY AUTOINCREMENT, file_path TEXT, FIO TEXT, nomer_zakaza TEXT UNIQUE, last_upd TEXT, manager TEXT, orderprice TEXT, _RIFSALON TEXT, _RIFFABRICA TEXT, SROK TEXT, SALON TEXT, date_last_update TEXT)";
                 m_sqlCmd.ExecuteNonQuery();
                 //при создании !конец
                 m_sqlCmd.CommandText = "PRAGMA user_version";
@@ -173,6 +172,13 @@ namespace TreeCadN.open_ordini
                                 oldVersion = 2; //это чтобы убрать ошибки старые , для новых записей не надо
                             }
                             break;
+                        case 3:
+
+                            m_sqlCmd.CommandText = "ALTER TABLE ordini ADD COLUMN `date_last_update` TEXT ";
+                            m_sqlCmd.ExecuteNonQuery();
+
+
+                            break;
                     }
 
                     //при изменении !КОНЕЦ
@@ -201,6 +207,14 @@ namespace TreeCadN.open_ordini
 
 
         }
+
+        public static DateTime UnixTimeToDateTime(double unixtime)
+        {
+            DateTime sTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return sTime.AddSeconds(unixtime);
+        }
+
+
         void select(bool first = false)
         {
             //   MessageBox.Show(nomer);
@@ -243,8 +257,12 @@ namespace TreeCadN.open_ordini
                     _RIFSALON = reader["_RIFSALON"].ToString(),
                     SROK = reader["SROK"].ToString(),
                     SALON = salon_pre.Length >= 3 ? salon_pre[1] + " " + salon_pre[2] : "",
-                    date_sorted = date_sorted//,
-                                             // papka_zakaza = PapkaZakaz(reader["nomer_zakaza"].ToString(), reader["FIO"].ToString())
+                    date_sorted = date_sorted,
+                    date_last_update = reader["date_last_update"].ToString().Equals("")?"": UnixTimeToDateTime(Convert.ToDouble( reader["date_last_update"].ToString())).ToString("g"),
+                    date_last_update_sort= reader["date_last_update"].ToString()
+
+                    //,
+                    // papka_zakaza = PapkaZakaz(reader["nomer_zakaza"].ToString(), reader["FIO"].ToString())
                 });
             }
             reader.Close();
@@ -260,6 +278,7 @@ namespace TreeCadN.open_ordini
 
             viewSource1.Source = spisok;
 
+           
             lb1.ItemsSource = viewSource1.View;
 
             viewSource1.View.Refresh();
@@ -283,22 +302,29 @@ namespace TreeCadN.open_ordini
             Settings1 ps = Settings1.Default;
             for (int i = 0; i < kolvo_stolb; i++)
             {
-
+                log.Add(ps.spisotobrstolb+" "+ ps.spisindex+" " + ps.spiswidth);
                 if (i >= ps.spisotobrstolb.Length)
                 {
                     ps.spisotobrstolb += "1";
+                }
+                if (i >= ps.spisindex.Split(';').Length)
+                {
                     ps.spisindex += ";" + (i);
+                }
+                if (i >= ps.spiswidth.Split(';').Length)
+                {
                     ps.spiswidth += ";1";
-                    ps.Save();
                 }
 
+
+              
                 lb1.Columns[i].Visibility = ps.spisotobrstolb[i] == '1' ? Visibility.Visible : Visibility.Collapsed;
                 lb1.Columns[i].DisplayIndex = Convert.ToInt32(ps.spisindex.Split(';')[i]);
                 lb1.Columns[i].Width = new DataGridLength(double.Parse(ps.spiswidth.Split(';')[i], CultureInfo.InvariantCulture), DataGridLengthUnitType.Star);
 
             }
 
-
+            ps.Save();
 
         }
 
@@ -335,6 +361,14 @@ namespace TreeCadN.open_ordini
         }
 
 
+        public static double ConvertToUnixTime(DateTime datetime)
+        {
+            DateTime sTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            return (datetime - sTime).TotalSeconds;
+        }
+
+
         public static string updateTekZakaz(neqweqe neqqqqq, string path_ordini)
         {
           
@@ -360,8 +394,8 @@ namespace TreeCadN.open_ordini
 
             // MessageBox.Show(FIO);
             string file_path_load1 = path_ordini + @"\" + evefile + ".eve";
-            string time = File.GetLastWriteTime(file_path_load1).ToString("dd MMM HH:mm:ss");
-
+            double date_last_update = ConvertToUnixTime(File.GetLastWriteTime(file_path_load1));
+           
 
             m_sqlCmd.CommandText = "SELECT * FROM ordini where nomer_zakaza ='" + evefile + "' limit 1";
 
@@ -375,7 +409,7 @@ namespace TreeCadN.open_ordini
             reader.Close();
 
 
-
+          //  string date_last_update = "";
 
 
 
@@ -404,7 +438,8 @@ namespace TreeCadN.open_ordini
                     "_RIFFABRICA='" + _RIFFABRICA + "', " +
                     "_RIFSALON='" + _RIFSALON + "', " +
                     "SROK='" + SROK + "', " +
-                        "SALON='" + SALON + "' " +
+                        "SALON='" + SALON + "', " +
+                               "date_last_update='" + date_last_update + "' " +
                     " where nomer_zakaza ='" + evefile + "'";
                 m_sqlCmd.ExecuteNonQuery();
 
@@ -416,8 +451,8 @@ namespace TreeCadN.open_ordini
                 // neqqqqq.getParamI(neqqqqq.xamb, "salva");//сохраним
                 if (File.Exists(file_path_load1))
                 {
-                    m_sqlCmd.CommandText = "INSERT INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK) " +
-                        "VALUES ('" + file_path_load1 + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "')";
+                    m_sqlCmd.CommandText = "INSERT INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK, date_last_update) " +
+                        "VALUES ('" + file_path_load1 + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "', '"+ date_last_update + "')";
                     m_sqlCmd.ExecuteNonQuery();
                 }
 
@@ -586,7 +621,7 @@ namespace TreeCadN.open_ordini
         private void lb1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             string pathtmp = path_ordini + @"\";
-
+          
             if (lb1.SelectedItem != null)
             {
 
@@ -595,6 +630,7 @@ namespace TreeCadN.open_ordini
                 {
                     BitmapImage btmap;
                     btmap = new BitmapImage(new Uri(pathtmp + selected_item.nomer_zakaza + ".JPG"));
+                    log.Add("pathtmp=" + pathtmp + selected_item.nomer_zakaza + ".JPG");
                     img.Source = btmap.Clone();
                     btmap = null;
                     GC.Collect();
@@ -777,7 +813,95 @@ namespace TreeCadN.open_ordini
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            //asdasd
+        }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show(
+        "Нажмите \"ОК\", чтобы обновить список заказов", 
+       "Внимание",
+        MessageBoxButton.OKCancel,
+        MessageBoxImage.Warning) == MessageBoxResult.OK)
+            {
+                SQLiteConnection m_dbConn = new SQLiteConnection();
+                SQLiteCommand m_sqlCmd = new SQLiteCommand();
+
+                string dbFileName = path_ordini + @"\sample.sqlite";
+
+                m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
+                m_dbConn.Open();
+                m_sqlCmd.Connection = m_dbConn;
+
+
+                string[] files = Directory.GetFiles(path_ordini, "*.eve", SearchOption.TopDirectoryOnly);
+
+                //   Array.Sort(files);
+
+                object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
+                object engine = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "ENGINE");
+                object info = neqqqqq.getParamG(xamb, "INFO");
+                object info2 = neqqqqq.getParamG(info, "INFO");
+
+
+                m_sqlCmd.CommandText = "DELETE FROM ordini";
+                m_sqlCmd.ExecuteNonQuery();
+
+                foreach (string file in files)
+                {
+                    string nomfile = file.Split('\\').Last().Split('.').First();
+                    neqqqqq.getParam(xamb, "carica", file);
+                    //    string newnum = neqqqqq.getParamI(info, "NuovoNumeroOrdine").ToString();
+                    //    neqqqqq.setParamP(info, "Numero", newnum);
+                    //    neqqqqq.getParam(info2, "Add", "_NOMEFILEPARETI", nomfile);
+                    //    neqqqqq.getParamI(xamb, "salva");//сохраним
+
+                    string FIO = neqqqqq.getParam(info2, "Var", "CLI_1").ToString();
+                    string Manager = neqqqqq.getParam(info2, "Var", "Manager").ToString();
+                    string orderprice = neqqqqq.getParam(info2, "Var", "orderprice").ToString().Trim();
+                    string _RIFFABRICA = neqqqqq.getParam(info2, "Var", "_RIFFABRICA").ToString();
+                    string _RIFSALON = neqqqqq.getParam(info2, "Var", "_RIFSALON").ToString();
+                    string SROK = neqqqqq.getParam(info2, "Var", "SROK").ToString();
+                    string SALON = neqqqqq.getParam(info2, "Var", "SALON").ToString();
+
+
+                    m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK, SALON) " +
+                        "VALUES ('" + file + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "', '" + SALON + "')";
+                    m_sqlCmd.ExecuteNonQuery();
+
+
+
+
+
+                    string pathtmp = path_ordini + @"\" + nomfile;
+                    string GetFileBitmap = neqqqqq.getParam(xamb, "GetFileBitmap", pathtmp + ".DRG1").ToString();
+
+
+                    if (GetFileBitmap.ToUpper() == "TRUE")
+                    {
+                        object imgget = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "DauImg");
+                        object GetPicture = neqqqqq.getParam(engine, "GetPicture", pathtmp + ".DRG1", "0", "0");
+                        imgget.GetType().InvokeMember("SetPicture", BindingFlags.InvokeMethod, null, imgget, new object[] { GetPicture, "0" });
+                        neqqqqq.getParam(imgget, "SaveImage", pathtmp + ".JPG", "1");
+
+
+                    }
+
+
+
+                }
+
+
+                m_sqlCmd.Dispose();
+                m_dbConn.Close();
+                GC.Collect();
+
+
+                MessageBox.Show("Готово");
+
+                select();
+
+            }
         }
 
         void Closinger()
@@ -841,7 +965,8 @@ namespace TreeCadN.open_ordini
         public string date_sorted { get; set; }
         public string SALON { get; set; }
         public string papka_zakaza { get; set; }
-
+        public string date_last_update { get; set; }
+        public string date_last_update_sort        { get; set; }
     }
 
 
