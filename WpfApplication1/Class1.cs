@@ -94,6 +94,7 @@ namespace TreeCadN
                                                                   // getParamI(Ambiente, "gDisSetFocus");//заменить артикул или создать новый
                         returnValue = b;
                         break;
+                  
                 }
             }
             catch (Exception e)
@@ -614,6 +615,19 @@ namespace TreeCadN
 
 
 
+        public void art_to_buf(ref object xAmbiente)
+        {
+
+            this.Ambiente = xAmbiente;
+            this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+            string currbox = getParam(xamb, "curbox").ToString();
+            object box = getParamG(xamb, "box", currbox);
+            string cod = getParamG(getParamG(box, "gg"), "cod").ToString();
+
+            cod = cod.Remove(3);
+
+            Clipboard.SetText(cod);
+        }
 
 
 

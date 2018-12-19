@@ -628,12 +628,16 @@ namespace TreeCadN.open_ordini
                 ordini selected_item = (lb1.SelectedItem as ordini);
                 if (File.Exists(pathtmp + selected_item.nomer_zakaza + ".JPG"))
                 {
-                    BitmapImage btmap;
-                    btmap = new BitmapImage(new Uri(pathtmp + selected_item.nomer_zakaza + ".JPG"));
-                    log.Add("pathtmp=" + pathtmp + selected_item.nomer_zakaza + ".JPG");
-                    img.Source = btmap.Clone();
-                    btmap = null;
-                    GC.Collect();
+                    BitmapImage btmap = new BitmapImage();
+
+
+
+                    btmap.BeginInit();
+                    btmap.UriSource = new Uri(pathtmp + selected_item.nomer_zakaza + ".JPG");
+                    btmap.CacheOption = BitmapCacheOption.OnLoad;
+                    btmap.EndInit();
+                    img.Source = btmap;
+                    //GC.Collect();
                 }
                 else
                     img.Source = new BitmapImage(new Uri(@"/TreeCadN;component/Foto/nofoto.jpg", UriKind.RelativeOrAbsolute));
