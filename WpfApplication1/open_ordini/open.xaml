@@ -109,6 +109,7 @@
                 <DataGridTextColumn Header="Менеджер в салоне" Binding="{Binding manager_salons}"  MinWidth="20"/>
                 <DataGridTextColumn Header="Салон" Binding="{Binding SALON}"  MinWidth="20"/>
                 <DataGridTextColumn Header="Дата последнего изменения" Binding="{Binding date_last_update}"  MinWidth="20" SortMemberPath="date_last_update_sort"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding status}"  MinWidth="20"/>
             </DataGrid.Columns>
             
         </DataGrid>

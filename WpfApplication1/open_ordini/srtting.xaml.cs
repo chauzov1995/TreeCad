@@ -45,6 +45,7 @@ namespace TreeCadN.open_ordini
             spiscolumn.Add(new spissettings() { Value = "Менеджер в салоне", IsSelected = ps.spisotobrstolb[6] == '1' });
             spiscolumn.Add(new spissettings() { Value = "Салон", IsSelected = ps.spisotobrstolb[7] == '1' });
             spiscolumn.Add(new spissettings() { Value = "Дата последнего изменения", IsSelected = ps.spisotobrstolb[8] == '1' });
+            spiscolumn.Add(new spissettings() { Value = "Статус", IsSelected = ps.spisotobrstolb[9] == '1' });
 
             lb1.ItemsSource = spiscolumn;
         }

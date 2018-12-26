@@ -224,6 +224,9 @@
     <Compile Include="open_ordini\srtting.xaml.cs">
       <DependentUpon>srtting.xaml</DependentUpon>
     </Compile>
+    <Compile Include="open_ordini\status.xaml.cs">
+      <DependentUpon>status.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Prim.xaml.cs">
       <DependentUpon>Prim.xaml</DependentUpon>
     </Compile>
@@ -313,6 +316,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="open_ordini\srtting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="open_ordini\status.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

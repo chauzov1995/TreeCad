@@ -94,7 +94,13 @@ namespace TreeCadN
                                                                   // getParamI(Ambiente, "gDisSetFocus");//заменить артикул или создать новый
                         returnValue = b;
                         break;
-                  
+
+                    case "status_zakaza":
+                      
+
+                        returnValue = status_zakaza(s);
+
+                        break;
                 }
             }
             catch (Exception e)
@@ -810,7 +816,12 @@ namespace TreeCadN
         }
 
 
-
+        public string status_zakaza(string umol)
+        {
+            status status = new status(GetServ_path() + @"\spis_stat.txt", umol);
+            status.ShowDialog();
+            return status.otvet;
+        }
 
 
 
@@ -877,8 +888,8 @@ namespace TreeCadN
             //     var client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             //   var path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
             //
-            
-        //    MessageBox.Show(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\systema.mdb");
+
+            //    MessageBox.Show(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\systema.mdb");
             switch (catalog.ToUpper())
             {
 
@@ -893,13 +904,19 @@ namespace TreeCadN
         {
             INIManager ini = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             string path_ecadpro = ini.GetPrivateString("Infogen", "percorsoordini");//версия клиента
-            return  Environment.CurrentDirectory + @"\" + path_ecadpro;
+            return Environment.CurrentDirectory + @"\" + path_ecadpro;
         }
 
         string GetEcadProIni()
         {
             return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ecadpro.ini";
         }
+
+        public static string GetServ_path()
+        {
+            return Environment.CurrentDirectory;
+        }
+
 
 
 

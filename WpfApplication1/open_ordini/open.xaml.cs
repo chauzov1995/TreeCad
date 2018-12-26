@@ -22,13 +22,13 @@ namespace TreeCadN.open_ordini
     /// </summary>
     public partial class open : Window
     {
-        private static int BD_VARSION = 4;
+        private static int BD_VARSION = 5;
 
         static string dbFileName;
         string nomer, path_ordini;
         neqweqe neqqqqq;
         CollectionViewSource viewSource1 = new CollectionViewSource();
-        int kolvo_stolb = 9;
+        int kolvo_stolb = 10;
 
 
         System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
@@ -103,22 +103,22 @@ namespace TreeCadN.open_ordini
 
         public static void createOpenBD(string path_ordini)
         {
-            
+
             SQLiteConnection m_dbConn = new SQLiteConnection();
             SQLiteCommand m_sqlCmd = new SQLiteCommand();
 
             dbFileName = path_ordini + @"\sample.sqlite";
-            log.Add("Путь к бд - "+dbFileName);
+            log.Add("Путь к бд - " + dbFileName);
             if (!File.Exists(dbFileName))
                 SQLiteConnection.CreateFile(dbFileName);
-            
+
             try
             {
                 m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
                 m_dbConn.Open();
                 m_sqlCmd.Connection = m_dbConn;
                 //при создании
-                m_sqlCmd.CommandText = "CREATE TABLE IF NOT EXISTS ordini (id INTEGER PRIMARY KEY AUTOINCREMENT, file_path TEXT, FIO TEXT, nomer_zakaza TEXT UNIQUE, last_upd TEXT, manager TEXT, orderprice TEXT, _RIFSALON TEXT, _RIFFABRICA TEXT, SROK TEXT, SALON TEXT, date_last_update TEXT)";
+                m_sqlCmd.CommandText = "CREATE TABLE IF NOT EXISTS ordini (id INTEGER PRIMARY KEY AUTOINCREMENT, file_path TEXT, FIO TEXT, nomer_zakaza TEXT UNIQUE, last_upd TEXT, manager TEXT, orderprice TEXT, _RIFSALON TEXT, _RIFFABRICA TEXT, SROK TEXT, SALON TEXT, date_last_update TEXT, status TEXT)";
                 m_sqlCmd.ExecuteNonQuery();
                 //при создании !конец
                 m_sqlCmd.CommandText = "PRAGMA user_version";
@@ -152,6 +152,7 @@ namespace TreeCadN.open_ordini
                                 m_sqlCmd.ExecuteNonQuery();
                                 m_sqlCmd.CommandText = "ALTER TABLE ordini ADD COLUMN `SROK` TEXT ";
                                 m_sqlCmd.ExecuteNonQuery();
+
                             }
                             catch
                             {
@@ -175,6 +176,10 @@ namespace TreeCadN.open_ordini
                         case 3:
 
                             m_sqlCmd.CommandText = "ALTER TABLE ordini ADD COLUMN `date_last_update` TEXT ";
+                            m_sqlCmd.ExecuteNonQuery();
+                            break;
+                        case 4:
+                            m_sqlCmd.CommandText = "ALTER TABLE ordini ADD COLUMN `status` TEXT ";
                             m_sqlCmd.ExecuteNonQuery();
 
 
@@ -258,8 +263,9 @@ namespace TreeCadN.open_ordini
                     SROK = reader["SROK"].ToString(),
                     SALON = salon_pre.Length >= 3 ? salon_pre[1] + " " + salon_pre[2] : "",
                     date_sorted = date_sorted,
-                    date_last_update = reader["date_last_update"].ToString().Equals("")?"": UnixTimeToDateTime(Convert.ToDouble( reader["date_last_update"].ToString())).ToString("g"),
-                    date_last_update_sort= reader["date_last_update"].ToString()
+                    date_last_update = reader["date_last_update"].ToString().Equals("") ? "" : UnixTimeToDateTime(Convert.ToDouble(reader["date_last_update"].ToString())).ToString("g"),
+                    date_last_update_sort = reader["date_last_update"].ToString(),
+                    status = reader["status"].ToString(),
 
                     //,
                     // papka_zakaza = PapkaZakaz(reader["nomer_zakaza"].ToString(), reader["FIO"].ToString())
@@ -278,7 +284,7 @@ namespace TreeCadN.open_ordini
 
             viewSource1.Source = spisok;
 
-           
+
             lb1.ItemsSource = viewSource1.View;
 
             viewSource1.View.Refresh();
@@ -302,7 +308,7 @@ namespace TreeCadN.open_ordini
             Settings1 ps = Settings1.Default;
             for (int i = 0; i < kolvo_stolb; i++)
             {
-                log.Add(ps.spisotobrstolb+" "+ ps.spisindex+" " + ps.spiswidth);
+                log.Add(ps.spisotobrstolb + " " + ps.spisindex + " " + ps.spiswidth);
                 if (i >= ps.spisotobrstolb.Length)
                 {
                     ps.spisotobrstolb += "1";
@@ -317,7 +323,7 @@ namespace TreeCadN.open_ordini
                 }
 
 
-              
+
                 lb1.Columns[i].Visibility = ps.spisotobrstolb[i] == '1' ? Visibility.Visible : Visibility.Collapsed;
                 lb1.Columns[i].DisplayIndex = Convert.ToInt32(ps.spisindex.Split(';')[i]);
                 lb1.Columns[i].Width = new DataGridLength(double.Parse(ps.spiswidth.Split(';')[i], CultureInfo.InvariantCulture), DataGridLengthUnitType.Star);
@@ -371,7 +377,7 @@ namespace TreeCadN.open_ordini
 
         public static string updateTekZakaz(neqweqe neqqqqq, string path_ordini)
         {
-          
+
             object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
             object engine = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "ENGINE");
             object info = neqqqqq.getParamG(xamb, "INFO");
@@ -395,7 +401,7 @@ namespace TreeCadN.open_ordini
             // MessageBox.Show(FIO);
             string file_path_load1 = path_ordini + @"\" + evefile + ".eve";
             double date_last_update = ConvertToUnixTime(File.GetLastWriteTime(file_path_load1));
-           
+
 
             m_sqlCmd.CommandText = "SELECT * FROM ordini where nomer_zakaza ='" + evefile + "' limit 1";
 
@@ -408,8 +414,6 @@ namespace TreeCadN.open_ordini
             }
             reader.Close();
 
-
-          //  string date_last_update = "";
 
 
 
@@ -424,6 +428,7 @@ namespace TreeCadN.open_ordini
             string _RIFSALON = neqqqqq.getParam(info2, "Var", "_RIFSALON").ToString();
             string SROK = neqqqqq.getParam(info2, "Var", "SROK").ToString();
             string SALON = neqqqqq.getParam(info2, "Var", "SALON").ToString();
+            string status = neqqqqq.getParam(info2, "Var", "status_zakaza").ToString();
 
 
             if (i > 0)
@@ -439,7 +444,8 @@ namespace TreeCadN.open_ordini
                     "_RIFSALON='" + _RIFSALON + "', " +
                     "SROK='" + SROK + "', " +
                         "SALON='" + SALON + "', " +
-                               "date_last_update='" + date_last_update + "' " +
+                               "date_last_update='" + date_last_update + "', " +
+                                                  "status='" + status + "' " +
                     " where nomer_zakaza ='" + evefile + "'";
                 m_sqlCmd.ExecuteNonQuery();
 
@@ -451,14 +457,14 @@ namespace TreeCadN.open_ordini
                 // neqqqqq.getParamI(neqqqqq.xamb, "salva");//сохраним
                 if (File.Exists(file_path_load1))
                 {
-                    m_sqlCmd.CommandText = "INSERT INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK, date_last_update) " +
-                        "VALUES ('" + file_path_load1 + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "', '"+ date_last_update + "')";
+                    m_sqlCmd.CommandText = "INSERT INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK, date_last_update, status) " +
+                        "VALUES ('" + file_path_load1 + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "', '" + date_last_update + "', '"+ status + "')";
                     m_sqlCmd.ExecuteNonQuery();
                 }
 
             }
 
-     
+
 
 
 
@@ -621,7 +627,7 @@ namespace TreeCadN.open_ordini
         private void lb1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             string pathtmp = path_ordini + @"\";
-          
+
             if (lb1.SelectedItem != null)
             {
 
@@ -823,7 +829,7 @@ namespace TreeCadN.open_ordini
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show(
-        "Нажмите \"ОК\", чтобы обновить список заказов", 
+        "Нажмите \"ОК\", чтобы обновить список заказов",
        "Внимание",
         MessageBoxButton.OKCancel,
         MessageBoxImage.Warning) == MessageBoxResult.OK)
@@ -970,7 +976,9 @@ namespace TreeCadN.open_ordini
         public string SALON { get; set; }
         public string papka_zakaza { get; set; }
         public string date_last_update { get; set; }
-        public string date_last_update_sort        { get; set; }
+        public string date_last_update_sort { get; set; }
+        public string status { get; set; }
+
     }
 
 
