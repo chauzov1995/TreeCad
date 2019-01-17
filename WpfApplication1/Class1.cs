@@ -48,7 +48,14 @@ namespace TreeCadN
                         break;
                     case "Kommunikacii":
 
-                        returnValue = Kommunikacii(GetPathMDB(katalog));
+                      /*
+                        MessageBox.Show("test");
+                        this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+                        this.aamain = getParam(Ambiente, "GetObject", "aaMain");
+                       this.engine = getParam(Ambiente, "GetObject", "ENGINE");
+                        getParam(engine, "wrCompress3D", @"C:\33\29680550RU__CVA6805_CLST.3DS", @"C:\1.DR3D", "0");
+                 */
+                                               returnValue = Kommunikacii(GetPathMDB(katalog));
 
 
                         break;

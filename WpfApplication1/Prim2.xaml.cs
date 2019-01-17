@@ -34,49 +34,49 @@ namespace TreeCadN
 
             //PRIM=a2131231232321;AVTO=asdasdasda
 
-          
-                if (text_otvet.Contains("PRIM=") && text_otvet.Contains(";AVTO=") && text_otvet.Contains(";EDIT="))
-                {
 
-                    try
-                    {
-                        PRIM = (text_otvet.Split(';'))[0].Substring(5);
-                    }
-                    catch
-                    {
-                        PRIM = "";
-                    }
-                    try
-                    {
-                        AUTO = (text_otvet.Split(';'))[1].Substring(5);
-                    }
-                    catch
-                    {
-                        AUTO = "";
-                    }
-                    try
-                    {
-                        EDIT = (text_otvet.Split(';'))[2].Substring(5);
-                    }
-                    catch
-                    {
-                        EDIT = "0";
-                    }
-                }
-                else
+            if (text_otvet.Contains("PRIM=") && text_otvet.Contains(";AVTO=") && text_otvet.Contains(";EDIT="))
+            {
+
+                try
                 {
-                    PRIM = text_otvet;
+                    PRIM = (text_otvet.Split(';'))[0].Substring(5);
+                }
+                catch
+                {
+                    PRIM = "";
+                }
+                try
+                {
+                    AUTO = (text_otvet.Split(';'))[1].Substring(5);
+                }
+                catch
+                {
                     AUTO = "";
+                }
+                try
+                {
+                    EDIT = (text_otvet.Split(';'))[2].Substring(5);
+                }
+                catch
+                {
                     EDIT = "0";
                 }
-            
-            
+            }
+            else
+            {
+                PRIM = text_otvet;
+                AUTO = "";
+                EDIT = "0";
+            }
+
+
 
 
             if (EDIT.Equals("1")) {
-            tb3.IsEnabled = true;
-            cb1.IsChecked = true;
-        }else{
+                tb3.IsEnabled = true;
+                cb1.IsChecked = true;
+            }else{
                 tb3.IsEnabled = false;
                 cb1.IsChecked = false;
             }
@@ -273,18 +273,18 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
 
 
-
+            string t = @"PRIM=" + tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№').Trim() + @";AVTO=" + tb3.Text + @";EDIT=" + EDIT;
 
             //pfrhsnbt
             if (zakrit_ok)
             {
-                string t = tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№');
-                this.text_otvet = @"PRIM=" + t.Trim() + @";AVTO=" + tb3.Text + @";EDIT=" + EDIT;
+              
+                this.text_otvet = t;
 
             }
             else
             {
-                if (this.text_otvet != tb1.Text)
+                if (this.text_otvet != t)
                 {
                     if (MessageBox.Show(
         "Вы изменили примечания, хотели бы Вы их сохранить?",
@@ -292,8 +292,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         MessageBoxButton.YesNo,
         MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
-                        string t = tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№');
-                        this.text_otvet = @"PRIM=" + t.Trim() + @";AVTO=" + tb3.Text+ @";EDIT="+EDIT;
+                        this.text_otvet = t;
                     }
                 }
 
