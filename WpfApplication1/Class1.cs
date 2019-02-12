@@ -35,6 +35,7 @@ namespace TreeCadN
 
         public string attiva(String s, String Valori, String DES, String PX, String PY, String param)
         {
+         //   MessageBox.Show("");
             string returnValue = "";
             object info;
             try
@@ -106,6 +107,13 @@ namespace TreeCadN
                       
 
                         returnValue = status_zakaza(s);
+
+                        break;
+
+                    case "GNOTD_list_det":
+
+
+                        returnValue = GNOTD_list_det(s);
 
                         break;
                 }
@@ -356,7 +364,7 @@ namespace TreeCadN
             //   GC.Collect();
         }
 
-        public string GNOTD(string path, string str)//для старых версий тех у кого ещё стоит старый размерный ряд
+        public string GNOTD(string path, string str, bool listdet=false)//для старых версий тех у кого ещё стоит старый размерный ряд
         {
 
 
@@ -374,7 +382,7 @@ namespace TreeCadN
             {
                 if (str1 == "")
                 {
-                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^46^50^51";
+                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^50^51";
                     uslovvipol = true;
                 }
                 else
@@ -385,7 +393,7 @@ namespace TreeCadN
               MessageBoxButton.YesNo,
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
-                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^46^50^51";
+                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^50^51";
                         uslovvipol = true;
                     }
                     else
@@ -398,7 +406,7 @@ namespace TreeCadN
             {
                 string katalog = getParamI(Ambiente, "xPercorso").ToString();
 
-                Window1 f1 = new Window1(path1, str1, katalog);
+                Window1 f1 = new Window1(path1, str1, katalog, listdet);
                 f1.ShowDialog(); //блокируется основная форма
                 return f1.str2;
             }
@@ -412,12 +420,20 @@ namespace TreeCadN
 
 
 
-        public string GNOTD1(ref object xAmbiente, string str)//для новых версий
+        public string GNOTD1(ref object xAmbiente, string str)//для новых версий  
         {
             this.Ambiente = xAmbiente;
             string katalog = getParamI(Ambiente, "xPercorso").ToString();
             string path = GetPathMDB(katalog);
             return GNOTD(path, str);
+        }
+
+        public string GNOTD_list_det( string str)//для листовых  
+        {
+            
+            string katalog = getParamI(Ambiente, "xPercorso").ToString();
+            string path = GetPathMDB(katalog);
+            return GNOTD(path, str, true);
         }
 
 
@@ -637,7 +653,7 @@ namespace TreeCadN
             object box = getParamG(xamb, "box", currbox);
             string cod = getParamG(getParamG(box, "gg"), "cod").ToString();
 
-            cod = cod.Remove(3);
+          //  cod = cod.Remove(3);
 
             Clipboard.SetText(cod);
         }

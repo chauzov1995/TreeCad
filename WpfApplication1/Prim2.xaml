@@ -51,7 +51,7 @@
 
         </ListView>
         <TextBox Grid.Column="0" Grid.Row="2"  x:Name="tb1"  TextWrapping="WrapWithOverflow" Margin="5" KeyUp="tb1_KeyUp" TabIndex="3" />
-        <TextBox Grid.Column="0" Grid.Row="4"  x:Name="tb3"  TextWrapping="WrapWithOverflow" Margin="5" KeyUp="tb1_KeyUp" TabIndex="3" TextChanged="tb3_TextChanged" IsTabStop="False" />
+        <TextBox Grid.Column="0" Grid.Row="4"  x:Name="tb3"  TextWrapping="WrapWithOverflow" Margin="5,5,514,5" KeyUp="tb1_KeyUp" TabIndex="3" TextChanged="tb3_TextChanged" IsTabStop="False" Visibility="Collapsed" />
 
         <Grid  Grid.Row="5">
             <Grid.ColumnDefinitions>
@@ -61,10 +61,36 @@
             </Grid.ColumnDefinitions>
             <Button   Content="Отмена" Margin="5" Click="Button_Click_1" IsCancel="True"  Grid.Column="2" Height="30" IsTabStop="False" />
             <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" FontSize="14" Text="Запрещено использовать символы #$@№^|" Margin="5"/>
-            <Button  x:Name="b1" Content="Ок" Margin="5" Click="b1_Click" TabIndex="4" Grid.Column="1" Height="30" IsTabStop="False" />
+            <Button  x:Name="b1" Content="Ок" Margin="5" Click="b1_Click" TabIndex="4" Grid.Column="1" Height="30" IsTabStop="False" >
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                        <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                        <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                        <GradientStop Color="#FFCDCDCD" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
         </Grid>
         <Label Margin="5,0,471,0" Grid.Row="3" Padding="0" Height="17" Content="Автопримечание"/>
         <CheckBox x:Name="cb1" Content="Разрешить редактирование" HorizontalAlignment="Left" Margin="140,0,0,0" Grid.Row="3" VerticalAlignment="Top" Height="17" Checked="cb1_Checked" Unchecked="cb1_Unchecked" IsTabStop="False"/>
+        <ListBox  Name="lbbutton" Margin="5" Grid.Row="4" SelectionChanged="Lbbutton_SelectionChanged">
+            <ListBox.ItemTemplate >
+                <DataTemplate>
+                    <Border CornerRadius="5"  BorderBrush="#FFAEAEAE" BorderThickness="1" >
+                        <TextBlock Padding="5,2" Text="{Binding name}"  ToolTip="При нажатии, автопримечание переместится в место где находится курсор" Background="{x:Null}" />
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+        </ListBox>
+        <Rectangle x:Name="rectang" Margin="5"  Grid.Row="4" Fill="#4CCDCDCD" />
+
     </Grid>
 
 </Window>

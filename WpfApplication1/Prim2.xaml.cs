@@ -22,6 +22,8 @@ namespace TreeCadN
     /// </summary>
     public partial class Prim2 : Window
     {
+
+        List<btn_spis> spisbtn = new List<btn_spis>();
         public string text_otvet, PRIM, AUTO, EDIT;
         bool zakrit_ok = false;
         static BD_Connect BD = new BD_Connect();
@@ -76,7 +78,7 @@ namespace TreeCadN
             if (EDIT.Equals("1")) {
                 tb3.IsEnabled = true;
                 cb1.IsChecked = true;
-            }else{
+            } else {
                 tb3.IsEnabled = false;
                 cb1.IsChecked = false;
             }
@@ -102,6 +104,22 @@ namespace TreeCadN
 
             tb1.Text = t;
             tb3.Text = AUTO;
+
+            if (!AUTO.Equals("")) { 
+            string[] split_AUTO = AUTO.Split('^');
+         
+            foreach (string elem in split_AUTO)
+            {
+                var elemnew = new btn_spis() { name = elem };
+                spisbtn.Add(elemnew);
+                lbbutton.Items.Add(elemnew);
+             
+            }
+        }
+
+          //  lbbutton.ItemsSource = spisbtn;
+
+
             tb1.CaretIndex = tb1.Text.Length;
         }
 
@@ -272,9 +290,17 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             ps.Save();
 
 
+            string autoptim_otvet = "";
+            foreach(btn_spis elem in lbbutton.Items)
+            {
+                autoptim_otvet+=(elem as btn_spis).name+"^";
 
-            string t = @"PRIM=" + tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№').Trim() + @";AVTO=" + tb3.Text + @";EDIT=" + EDIT;
+            }
+            autoptim_otvet = autoptim_otvet.Trim('^');
+          //  EDIT = "1";
 
+            string t = @"PRIM=" + tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№').Trim() + @";AVTO=" + autoptim_otvet + @";EDIT=" + EDIT;
+            //MessageBox.Show(autoptim_otvet);
             //pfrhsnbt
             if (zakrit_ok)
             {
@@ -389,14 +415,51 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         private void cb1_Checked(object sender, RoutedEventArgs e)
         {
 
-            tb3.IsEnabled = true;
+        //    lbbutton.IsEnabled = true;
+            rectang.Visibility = Visibility.Collapsed;
             EDIT = "1";
+
+        }
+
+     
+
+        private void Lbbutton_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+
+            try
+            {
+                if (lbbutton.SelectedItem != null)
+                {
+
+
+                    string text = (lbbutton.SelectedItem as btn_spis).name;
+                    //    lbbutton.Items.Remove(lbbutton.SelectedItem);
+
+                    //   lbbutton.ItemsSource = null;
+                    //  lbbutton.ItemsSource = spisbtn;
+                    tb1.SelectedText = text;
+                    tb1.CaretIndex = tb1.SelectionLength + tb1.SelectionStart;
+                    // tb1.Focus();
+
+                  
+                    lbbutton.Items.Remove(lbbutton.SelectedItem);
+                    tb1.Focus();
+                    // lbbutton.UnselectAll();
+                }
+            }
+            catch (Exception exx)
+            {
+                MessageBox.Show(exx.Message);
+            }
+
 
         }
 
         private void cb1_Unchecked(object sender, RoutedEventArgs e)
         {
-            tb3.IsEnabled = false;
+            //    lbbutton.IsEnabled = false;
+            rectang.Visibility = Visibility.Visible;
             EDIT = "0";
         }
 
@@ -425,10 +488,12 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
     }
 
 
+    class btn_spis
+    {
 
+        public string name { get; set; }
 
-
-
+    }
 
 
 

@@ -46,15 +46,16 @@ namespace TreeCadN
 
         bool reload_text = false;
         object item_forind1, item_forind2;
+        bool listdet;
 
 
-
-        public Window1(string path, string str1, string katalog)
+        public Window1(string path, string str1, string katalog, bool listdet)
         {
             InitializeComponent();
 
             try
             {
+                this.listdet = listdet;
                 str2 = str1;
                 vh_func_str = str1;
                 BD.path = path; //укажем файл бд
@@ -474,7 +475,7 @@ namespace TreeCadN
             TekOtdelka.index9 = words[8];//не исп
             TekOtdelka.index10 = words[9];// спис разреш групп для отделки
 
-
+         
 
 
             if (perv) pervload();
@@ -506,7 +507,7 @@ namespace TreeCadN
 
 
             //загруж направл текстуры для 1 //загруж карт для 1 кнопки
-            if (TekOtdelka.naprav1 == "1")//если обладает направлением
+            if (TekOtdelka.naprav1 == "1" && !listdet)//если обладает направлением
             {
                 button3.IsEnabled = true;
                 if (TekOtdelka.index3 == "1")//если вертикально
@@ -535,7 +536,7 @@ namespace TreeCadN
 
 
             //загруж направл текстуры для 2 //загруж карт для 2 кнопки
-            if (TekOtdelka.naprav2 == "1")//если обладает направлением
+            if (TekOtdelka.naprav2 == "1" && !listdet)//если обладает направлением
             {
                 button4.IsEnabled = true;
                 if (TekOtdelka.index4 == "1")//если вертикально
@@ -1264,14 +1265,14 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         }
         private void button17_Click(object sender, RoutedEventArgs e)
         {
-            if (stor_otd == 2)
+            if (stor_otd == 2 || TekOtdelka.index5.Equals("1"))
             {
                 TekOtdelka.Name2 = "Нет отделки";
                 TekOtdelka.index2 = "0";
                 TekOtdelka.textura2 = "Net_Tekst.jpg";
                 TekOtdelka.naprav2 = "0";
             }
-            if (stor_otd == 1)
+            if (stor_otd == 1 || TekOtdelka.index5.Equals("1"))
             {
                 TekOtdelka.Name1 = "Нет отделки";
                 TekOtdelka.index1 = "0";
