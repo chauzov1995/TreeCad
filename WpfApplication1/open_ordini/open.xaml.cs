@@ -689,6 +689,8 @@ namespace TreeCadN.open_ordini
 
         private void lb1_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+           // MessageBox.Show(e.ChangedButton.ToString());
+          //  if(e.ChangedButton==MouseButton.Left)ss
             Closinger();
         }
 

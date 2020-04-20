@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,6 +19,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
+using System.IO.Compression;
+using System.Threading.Tasks;
 
 namespace TreeCadN.kommunikacii
 {
@@ -30,7 +34,7 @@ namespace TreeCadN.kommunikacii
         public string selectedModel = "";
         BD_Connect BD = new BD_Connect();
         int lb1_selitem, lb4_selitem;
-        List<treespis> server = new List<treespis>();
+
 
         List<Models3d> server_obj = new List<Models3d>();
         string dir3ds, dir3ds_user;
@@ -38,39 +42,42 @@ namespace TreeCadN.kommunikacii
         public kommunikacii_main(string pathBD)
         {
             InitializeComponent();
-
+            log.Add("старт диалог моделей");
             lb4.Visibility = Visibility.Collapsed;
             lb1.Visibility = Visibility.Collapsed;
             //  stpan.Visibility = Visibility.Collapsed;
-            btnserv.Visibility = Visibility.Collapsed;
+            //btnserv.Visibility = Visibility.Collapsed;
 
 
 
-            DirectoryInfo directory = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
+            dir3ds = Environment.CurrentDirectory + @"\3dsObject\Web";
+            dir3ds_user = Environment.CurrentDirectory + @"\3dsObject\User";
 
-            dir3ds = directory + @"\3dsObject\Web\";
-            dir3ds_user = directory + @"\3dsObject\User\";
+            Directory.CreateDirectory(dir3ds);
+            Directory.CreateDirectory(dir3ds_user);
 
             this.pathBD = pathBD;
             BD.path = pathBD; //укажем файл бд
 
 
 
-            INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-            admin = client_man.GetPrivateString("giulianovars", "3dsadmin");//версия клиента
+            INIManager client_man = new INIManager(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ecadpro.ini");
+            admin = client_man.GetPrivateString("Infogen", "3dsadmin");//версия клиента
             if (admin == "1")
             {
                 label1.Visibility = Visibility.Visible;
-                btn_vost.Visibility = Visibility.Visible;
+                allnaserver.Visibility = Visibility.Visible;
 
             }
             else
             {
                 lb4.ContextMenu = null;
                 label1.Visibility = Visibility.Collapsed;
-                btn_vost.Visibility = Visibility.Collapsed;
+                allnaserver.Visibility = Visibility.Collapsed;
             }
 
+
+            move_to_new_41();
 
             loadpage();
             lb3napolnene();
@@ -81,274 +88,337 @@ namespace TreeCadN.kommunikacii
         }
 
 
-        void lb3napolnene()
+        void lb3napolneneeeee()
         {
-            //загрузка дынных для сервера
-
-
-            server.Clear();
-            //List<treespis> server = new List<treespis>();
-
-
-
-            var reader1 = BD.conn("SELECT id, nazv, new, id_server FROM `import3ds_category_server` order by nazv ASC");
-            while (reader1.Read())
-            {
-                string zvetbg = null;
-                //string name = reader1["nazv"].ToString();
-                if (reader1["new"].ToString() == "1")
-                {
-                    zvetbg = "#7FEBFF5F";
-                    //     name += " !NEW!";
-
-                }
-
-                if (admin == "1" || reader1["id_server"].ToString() != "1")
-                {
-
-                    server.Add(new treespis()
-                    {
-                        id = reader1["id"].ToString(),
-                        path = "S",
-                        name = reader1["nazv"].ToString(),
-                        type = "S",
-                        zvetbg = zvetbg,
-                        id_server = reader1["id_server"].ToString()
-
-                    });
-                }
-            }
-            lb3.ItemsSource = null;
-            lb3.ItemsSource = (server);
-            peremestitb_serv.ItemsSource = null;
-            peremestitb_serv.ItemsSource = (server);
 
         }
         void lb2napolnene()
         {
 
-            ///////////////////////////
 
-            List<treespis> polzovat = new List<treespis>();
-            var reader = BD.conn("SELECT id, nazv FROM `import3ds_category` order by nazv ASC");
-            while (reader.Read())
+
+            List<treespis> spisvategor = new List<treespis>();
+
+            foreach (string elem in Directory.GetDirectories(dir3ds_user, "*", SearchOption.TopDirectoryOnly))
             {
-
-
-                polzovat.Add(new treespis()
-                {
-                    id = reader["id"].ToString(),
-                    path = "P",
-                    name = reader["nazv"].ToString(),
-                    type = "P"
-                });
-
+                spisvategor.Add(new treespis() { name = elem.Split('\\').Last() });
             }
 
-
-
-            //test
-
-
-
-            //test
-
-
-            lb2.ItemsSource = (polzovat);
-            peremestitb.ItemsSource = (polzovat);
-
-
-
+            lb2.ItemsSource = spisvategor;
+            //  peremestitb.ItemsSource = spisvategor;
         }
 
 
 
-        void lb1_napolnenie()//наполнение листбокса
+        public void lb1_napolnenie()//наполнение листбокса
         {
-
-            treespis Treespis = lb2.SelectedItem as treespis;
-
-
-
-            List<Models3d> modeli = new List<Models3d>();
-
-
-
-            var reader = BD.conn("SELECT id, nazv, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category FROM `import3ds` WHERE category='" + Treespis.id + "'");
-            while (reader.Read())
-            {
-                string jpg_path = reader["pathjpg"].ToString();
-                if (jpg_path == "")
-                {
-
-                    jpg_path = "/TreeCadN;component/Foto/nofoto.jpg";
-                }
-
-
-
-                modeli.Add(new Models3d
-                {
-                    id = reader["id"].ToString(),
-                    path = reader["path3ds"].ToString(),
-                    name = reader["nazv"].ToString(),
-                    jpg_path = jpg_path,
-                    jpg_ugo = reader["pathjpgugo"].ToString(),
-                    x = reader["x"].ToString(),
-                    y = reader["y"].ToString(),
-                    z = reader["z"].ToString(),
-                    category = reader["category"].ToString(),
-
-
-                });
-
-            }
-            //test
-
-
-
-            //test
-            lb1.ItemsSource = modeli;
-
-
-            try
-            {
-                object selitem = lb1.Items[lb1_selitem];
-
-
-                lb1.ScrollIntoView(selitem);
-                lb1.SelectedItem = (selitem);
-            }
-            catch
-            {
-                lb1.ScrollIntoView(null);
-                lb1.SelectedItem = (null);
-            }
-
-
-        }
-        void lb4_napolnenie()//наполнение листбокса
-        {
-
-
             try
             {
 
-                treespis Treespis = lb3.SelectedItem as treespis;
-
-
-
-                //  string path = Treespis.path;
-
-
-                server_obj.Clear();
-
-
-                //   var json = (new web_zapros()).load("load_object", "category=" + Treespis.id);
-
-                //  modeli = JsonConvert.DeserializeObject<List<Models3d>>(json);
-
-
-                var reader = BD.conn("SELECT id, id_server, nazv, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category, new,  loc_3ds, loc_jpg, loc_ugojpg, polzgroup FROM `import3ds_server` WHERE category='" + Treespis.id_server + "' order by new DESC, nazv ASC");
-                while (reader.Read())
+                log.Add("lb1_napolnenie старт");
+                treespis Treespis = lb2.SelectedItem as treespis;
+                List<Models3d> modeli = new List<Models3d>();
+                log.Add("Преобразовали в класс");
+                foreach (string elem in Directory.GetDirectories(dir3ds_user + "\\" + Treespis.name, "*", SearchOption.TopDirectoryOnly))
                 {
-                    string loc_jpg = reader["loc_jpg"].ToString();
-
-                    if (loc_jpg == "" || !File.Exists(loc_jpg))
+                    try
                     {
+                        string name = elem.Split('\\').Last();
+                        log.Add("парсим элемент " + name);
+                        var asdasd = Directory.GetFiles(elem, "*.3ds", SearchOption.TopDirectoryOnly);
+                        if (!(asdasd.Length > 0)) return;
+                        string path = asdasd.First();
+                        string jpg_path = elem + "\\teh\\prev.jpg";
+                        string jpg_ugo = elem + "\\teh\\ugo.jpg";
+                        string pathcategory = elem;
+                        string confjson = elem + "\\teh\\conf.json";
 
-                        loc_jpg = "/TreeCadN;component/Foto/nofoto.jpg";
+
+
+                        Models3dJSON zyx;
+
+
+                        if (File.Exists(confjson))
+                        {
+                            using (StreamReader fstream = new StreamReader(confjson, System.Text.Encoding.Default))
+                            {
+                                zyx = JsonConvert.DeserializeObject<Models3dJSON>(fstream.ReadToEnd());
+                            }
+                        }
+                        else
+                        {
+
+
+
+                            try
+                            {
+
+                                Model3D dmodel3ds = (new HelixToolkit.Wpf.ModelImporter()).Load(path);
+
+                                zyx = new Models3dJSON()
+                                {
+                                    x = dmodel3ds.Bounds.SizeX.ToString("0"),
+                                    z = dmodel3ds.Bounds.SizeY.ToString("0"),
+                                    y = dmodel3ds.Bounds.SizeZ.ToString("0")
+                                };
+
+                            }
+                            catch
+                            {
+                                zyx = new Models3dJSON() { x = "100", y = "100", z = "100" };
+                            }
+
+
+
+
+
+                            //генерируем JSON файл
+                            string output = JsonConvert.SerializeObject(zyx);
+                            using (FileStream fs = new FileStream(confjson, FileMode.OpenOrCreate))
+                            {
+                                // преобразуем строку в байты
+                                byte[] array = System.Text.Encoding.Default.GetBytes(output);
+                                // запись массива байтов в файл
+
+                                fs.Write(array, 0, array.Length);
+                            }
+                        }
+
+
+
+
+
+                        BitmapImage btmap;
+
+
+
+
+
+
+
+                        if (!File.Exists(jpg_path))
+                        {
+                            jpg_path = "/TreeCadN;component/Foto/nofoto.jpg";
+
+                            btmap = new BitmapImage(new Uri(jpg_path, UriKind.RelativeOrAbsolute));
+                        }
+                        else
+                        {
+                            btmap = new BitmapImage();
+                            btmap.BeginInit();
+                            btmap.UriSource = new Uri(jpg_path);
+                            btmap.CacheOption = BitmapCacheOption.OnLoad;
+                            btmap.EndInit();
+                        }
+
+
+
+                        // img.Source = btmap;
+
+
+
+                        modeli.Add(new Models3d
+                        {
+                            name = name,
+                            path = path,
+                            jpg_path = jpg_path,
+                            jpg_ugo = jpg_ugo,
+                            pathcategory = pathcategory,
+                            x = zyx.x,
+                            y = zyx.y,
+                            z = zyx.z,
+                            bitmap_prev = btmap
+
+                        });
                     }
-
-                    string zvetbg = null;
-                    if (reader["new"].ToString() == "1")
+                    catch (Exception ex)
                     {
-                        zvetbg = "#7FEBFF5F";
+                        log.Add("фатал ошибка: " + ex.Message);
                     }
-                    string download = "Collapsed";
-
-                    if (File.Exists(reader["loc_3ds"].ToString()))
-                    {
-                        download = "Visibility";
-                    }
-
-
-                    server_obj.Add(new Models3d
-                    {
-                        id = reader["id"].ToString(),
-                        path = reader["path3ds"].ToString(),
-                        name = reader["nazv"].ToString(),
-                        jpg_path = reader["pathjpg"].ToString(),
-                        jpg_ugo = reader["pathjpgugo"].ToString(),
-                        x = reader["x"].ToString(),
-                        y = reader["y"].ToString(),
-                        z = reader["z"].ToString(),
-                        category = reader["category"].ToString(),
-                        id_server = reader["id_server"].ToString(),
-                        zvetbg = zvetbg,
-                        loc_3ds = reader["loc_3ds"].ToString(),
-                        loc_jpg = loc_jpg,
-                        loc_ugojpg = reader["loc_ugojpg"].ToString(),
-                        download = download,
-                        polzgroup = reader["polzgroup"].ToString(),
-                    });
-
                 }
+                log.Add("Закончили цикл");
 
-
-                lb4.ItemsSource = null;
-                lb4.ItemsSource = server_obj;
-
-                string row_cnt = (new web_zapros()).load("obnov_obj_prov", "category=" + Treespis.id_server);
-                if (server_obj.Count.ToString() == row_cnt)
-                {
-
-                    btnserv.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-
-                    btnserv.Content = "Обновить " + server_obj.Count.ToString() + @"/" + row_cnt;
-                    btnserv.Visibility = Visibility.Visible;
-                }
-
+                //test
+                lb1.ItemsSource = modeli;
+                lb1.Items.Refresh();
 
                 try
                 {
-                    //   MessageBox.Show(lb4_selitem.ToString());
-                    object selitem = lb4.Items[lb4_selitem];
+                    object selitem = lb1.Items[lb1_selitem];
 
 
-                    lb4.ScrollIntoView(selitem);
-                    lb4.SelectedItem = (selitem);
+                    lb1.ScrollIntoView(selitem);
+                    lb1.SelectedItem = (selitem);
                 }
-                catch (Exception err)
+                catch
                 {
-                    //  MessageBox.Show(err.Message);
-                    lb4.ScrollIntoView(null);
-                    lb4.SelectedItem = (null);
+                    lb1.ScrollIntoView(null);
+                    lb1.SelectedItem = (null);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                log.Add("фатал ошибка: " + ex.Message);
+            }
+        }
+
+        List<treespis> server;
+
+        async void lb3napolnene()
+        {
+
+            var json = await Task.Run(() => loadsinch("load_categor"));                            // выполняется асинхронно
+
+            server = JsonConvert.DeserializeObject<List<treespis>>(json);
+
+
+
+
+
+            foreach (treespis drive in server)
+            {
+                TreeViewItem item = new TreeViewItem();
+                item.Tag = drive;
+                item.Header = drive.name;
+
+                if (server.FindAll(x => x.owner.Equals(drive.id)).Count > 0 && drive.owner.Equals("0"))
+                {
+                    item.Items.Add("*");
+                }
+                lb3.Items.Add(item);
+            }
+
+
+
+
+
+
+
+
+        }
+
+        private void trw_Products_Expanded(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem item = (TreeViewItem)e.OriginalSource;
+            item.Items.Clear();
+
+            //MessageBox.Show((item.Tag as treespis).name.ToString());
+
+
+            List<treespis> asdjasdaa = server.FindAll(x => x.owner.Equals((item.Tag as treespis).id));
+
+
+
+            try
+            {
+                foreach (treespis subDir in asdjasdaa)
+                {
+                    TreeViewItem newItem = new TreeViewItem();
+                    newItem.Tag = subDir;
+                    newItem.Header = subDir.name;
+                    if (server.FindAll(x => x.owner.Equals(subDir.id)).Count > 0)
+                    {
+                        newItem.Items.Add("*");
+                    }
+                    item.Items.Add(newItem);
                 }
             }
             catch
-            {
-                //какая то неопознаянная ошибка 
-            }
+            { }
         }
+
+
+
+        async void lb4_napolnenie()//наполнение листбокса
+        {
+            log.Add("наполнение старт");
+            treespis Treespis = (lb3.SelectedItem as TreeViewItem).Tag as treespis;
+            var json = await Task.Run(() => loadsinch("load_object", "category=" + Treespis.id_server));                            // выполняется асинхронно
+            log.Add("получили джсон ");
+            List<Models3d> server = JsonConvert.DeserializeObject<List<Models3d>>(json);
+
+
+            log.Add("преобразовани жсон в класс ");
+            foreach (var elam in server)
+            {
+
+                if (Uri.IsWellFormedUriString(elam.jpg_path, UriKind.Absolute))
+                {
+
+                    BitmapImage bi3 = new BitmapImage();
+                    bi3.BeginInit();
+                    bi3.UriSource = new Uri(elam.jpg_path);
+                    bi3.EndInit();
+
+                    elam.jpgsource = bi3;
+                    //   img_inp.Source =
+                }
+                else
+                {
+                    elam.jpgsource = null;
+                }
+
+            }
+
+            log.Add("закончили цикл");
+
+
+            lb4.ItemsSource = null;
+            lb4.ItemsSource = (server);
+
+        }
+
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            lb1_redak();
+        }
+
+        void lb1_redak()
+        {
+            if (lb2.SelectedIndex > -1)
+            {
+                if (lb1.SelectedIndex > -1)
+                {
+                    var file = lb1.SelectedItem as Models3d;
+
+                    kommunikacii_dial_imp dial = new kommunikacii_dial_imp(this, pathBD, file, (lb2.SelectedItem as treespis));
+                    dial.ShowDialog();
+
+                    //  lb1_napolnenie();
+                }
+                else
+                {
+                    MessageBox.Show("Сначала выберите объект для редактирования");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Сначала выберите категорию");
+            }
+
+        }
+
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 
             dob_new3ds();
+
+
+   
         }
         void dob_new3ds()
         {
             if (lb2.SelectedIndex > -1)
             {
                 //  var model = (lb2.SelectedItem as treespis).id;
-                kommunikacii_dial_imp dial = new kommunikacii_dial_imp(pathBD, null, (lb2.SelectedItem as treespis));
+                kommunikacii_dial_imp dial = new kommunikacii_dial_imp(this, pathBD, null, (lb2.SelectedItem as treespis));
                 dial.ShowDialog();
-                MessageBox.Show("Модель успешно создана");
-                lb1_napolnenie();
+                //     MessageBox.Show("Модель успешно создана");
+                //lb1_napolnenie();
             }
             else
             {
@@ -385,101 +455,43 @@ namespace TreeCadN.kommunikacii
         }
 
 
+
+
         void close_server()
         {
-            //  if (lb4.Visibility == Visibility.Visible)
-            //    {
+
+
+
 
             if (item1.IsSelected)
             {
 
-
-                treespis Treespis = lb3.SelectedItem as treespis;
                 var model = (lb4.SelectedItem as Models3d);
-                string path_copy = dir3ds + Treespis.name + @"\";
-                Directory.CreateDirectory(path_copy);//создадим папку для weб
 
 
-                string path3ds = "";
-                string pathjpg = "";
-                string pathjpgugo = "";
+                //    var json = await Task.Run(() => loadsinch("load_categor"));                            // выполняется асинхронно
 
-
-                if (model.path != "")
+                string remoteUri = "https://ecad.giulianovars.ru/php/3dsobject/3ds.php?command=getZip&id=" + model.id;
+                WebClient myWebClient = new WebClient();
+                string url_zip = myWebClient.DownloadString(remoteUri);
+                File.Delete(Path.GetTempPath() + "3ds_load_TreeCadN.zip");
+                myWebClient.DownloadFile(url_zip, Path.GetTempPath() + "3ds_load_TreeCadN.zip");
+                string zelev_path = dir3ds + "\\" + model.category + "\\" + model.name;
+                Directory.CreateDirectory(zelev_path);
+                string[] file3dssservera_arr = Directory.GetFiles(zelev_path, "*.3ds", SearchOption.TopDirectoryOnly);
+                if (file3dssservera_arr.Length == 0)
                 {
-
-                    path3ds = path_copy + model.path;
+                    ZipFile.ExtractToDirectory(Path.GetTempPath() + "3ds_load_TreeCadN.zip", zelev_path);
+                    file3dssservera_arr = Directory.GetFiles(zelev_path, "*.3ds", SearchOption.TopDirectoryOnly);
                 }
-                //  MessageBox.Show("asdasd");
-                if (model.jpg_path != "")
-                {
-
-                    pathjpg = path_copy + model.jpg_path;
-                }
-                if (model.jpg_ugo != "")
-                {
-                    pathjpgugo = path_copy + model.jpg_ugo;
-                }
-
-                string ecad = "http://ecad.giulianovars.ru/3dmodels/NEW/";
-
-
-                if (!(File.Exists(path3ds) || path3ds == ""))
-                {
-
-                    (new WebClient()).DownloadFile(ecad + model.path, path3ds);//скачиваем картинку
-
-                }
-                if (!(File.Exists(pathjpg) || pathjpg == ""))
-                {
-
-                    (new WebClient()).DownloadFile(ecad + model.jpg_path, pathjpg);//скачиваем картинку
-
-                }
-                if (!(File.Exists(pathjpgugo) || pathjpgugo == ""))
-                {
-
-                    (new WebClient()).DownloadFile(ecad + model.jpg_ugo, pathjpgugo);//скачиваем картинку
-
-                }
-
+                string file3dssservera = file3dssservera_arr.First();
+                selectedModel = (file3dssservera + @"^" + model.name + "^" + model.loc_ugojpg + "^" + model.x + "^" + model.y + "^" + model.z);
             }
-
-
-
-
         }
 
 
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            lb1_redak();
-        }
 
-        void lb1_redak()
-        {
-            if (lb2.SelectedIndex > -1)
-            {
-                if (lb1.SelectedIndex > -1)
-                {
-                    var file = lb1.SelectedValue as Models3d;
-
-                    kommunikacii_dial_imp dial = new kommunikacii_dial_imp(pathBD, file, null);
-                    dial.ShowDialog();
-                    lb1_napolnenie();
-                }
-                else
-                {
-                    MessageBox.Show("Сначала выберите объект для редактирования");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Сначала выберите категорию");
-            }
-
-        }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
@@ -489,39 +501,36 @@ namespace TreeCadN.kommunikacii
         void lb1_del()
         {
 
-            if (lb2.SelectedIndex > -1)
-            {
-                if (lb1.SelectedIndex > -1)
-                {
-                    var file = lb1.SelectedValue as Models3d;
-                    if (MessageBox.Show(
-                 "Вы действительно хотите удалить \"" + file.name + "\"?", "",
-                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-                        BD.conn("DELETE FROM `import3ds` WHERE id=" + file.id);
-                        MessageBox.Show("Объект успешно удалён");
-                        lb1_napolnenie();
+            if (!(lb2.SelectedIndex > -1)) { MessageBox.Show("Сначала выберите категорию"); return; }
+            if (!(lb1.SelectedIndex > -1)) { MessageBox.Show("Сначала выберите объект для редактирования"); return; }
 
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Сначала выберите объект для редактирования");
-                }
-            }
-            else
+            var file = lb1.SelectedValue as Models3d;
+            if (MessageBox.Show(
+         "Вы действительно хотите удалить \"" + file.name + "\"?", "",
+         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                MessageBox.Show("Сначала выберите категорию");
+                //  BD.conn("DELETE FROM `import3ds` WHERE id=" + file.id);
+                //   MessageBox.Show("Объект успешно удалён");
+
+                Directory.Delete(file.pathcategory, true);
+                lb1_napolnenie();
+
             }
+
+
 
         }
 
-        private void lb3_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Lb3_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (lb3.SelectedIndex > -1)
-            {
-                lb4_napolnenie();
-            }
+
+
+
+            log.Add("чандж");
+
+            lb4_napolnenie();
+
+
         }
 
         private void lb2_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -537,8 +546,10 @@ namespace TreeCadN.kommunikacii
             string otv = new dialuni().Show("Отмена", null, "Создать", "Добавление новой категории", "Укажите название новой категории", 3, 170);
             if (otv != "CANCEL")
             {
-                BD.conn("INSERT INTO  `import3ds_category` (nazv)  VALUES ('" + otv + "')");
-                MessageBox.Show("Категория успешно создана");
+                //    BD.conn("INSERT INTO  `import3ds_category` (nazv)  VALUES ('" + otv + "')");
+                //   MessageBox.Show("Категория успешно создана");
+                Directory.CreateDirectory(dir3ds_user + "\\" + otv);
+
                 lb2napolnene();
             }
 
@@ -546,28 +557,19 @@ namespace TreeCadN.kommunikacii
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            if (!(lb2.SelectedIndex > -1)) { MessageBox.Show("Выберите категорию для удаления"); return; }
 
-
-            var model = (lb2.SelectedItem as treespis);
-
-            var reader = BD.conn("SELECT id FROM `import3ds` WHERE category = '" + model.id + "'");
-
-            if (!reader.HasRows)
+            var Treespis = (lb2.SelectedItem as treespis);
+            if (Directory.GetDirectories(dir3ds_user + "\\" + Treespis.name, "*", SearchOption.TopDirectoryOnly).Length > 0)
+            { MessageBox.Show("Сначала удалите все модели, удалить категорию нельзя, пока в ней существуют модели"); return; }
+            if (MessageBox.Show(
+   "Вы действительно хотите удалить категорию \"" + Treespis.name + "\"?", "Удаление категории",
+   MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
+                Directory.Delete(dir3ds_user + "\\" + Treespis.name);
+                lb2napolnene();
+            }
 
-                if (MessageBox.Show(
-       "Вы действительно хотите удалить \"" + model.name + "\"?", "",
-       MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    BD.conn("DELETE FROM `import3ds_category` WHERE id=" + model.id);
-                    MessageBox.Show("Категория успешно удалена");
-                    lb2napolnene();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Сначала удалите все модели, удалить категорию нельзя, пока в ней существуют модели");
-            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -590,7 +592,6 @@ namespace TreeCadN.kommunikacii
             }
             ps.lb1sel = lb1.SelectedIndex;
             ps.lb2sel = lb2.SelectedIndex;
-            ps.lb3sel = lb3.SelectedIndex;
             ps.lb4sel = lb4.SelectedIndex;
             ps.tab1sel = tab1.SelectedIndex;
 
@@ -626,7 +627,7 @@ namespace TreeCadN.kommunikacii
                 tab1.SelectedIndex = ps.tab1sel;
                 if (ps.tab1sel == 0)
                 {
-                    lb3.SelectedIndex = ps.lb3sel;
+                    // lb3.SelectedIndex = ps.lb3sel;
                     //    lb4.Visibility = Visibility.Visible;
                     //    stpan.Visibility = Visibility.Visible;
                 }
@@ -675,18 +676,16 @@ namespace TreeCadN.kommunikacii
         private void PolygonShapesMenu_OnClick(object sender, RoutedEventArgs e)
         {
 
-            try
-            {
-                string idcategor = ((sender as System.Windows.Controls.MenuItem).Header as treespis).id;
-                string idmodel_peremech = (lb1.SelectedItem as Models3d).id;
-                BD.conn("UPDATE `import3ds` SET  `category`='" + idcategor + "' WHERE id=" + idmodel_peremech);
-                MessageBox.Show("Объект успешно перемещён");
-                lb1_napolnenie();
-            }
-            catch (Exception err)
-            {
-                //  MessageBox.Show(err.Message.ToString());
-            }
+
+
+            string idmodel_peremech = (lb1.SelectedItem as Models3d).pathcategory;//из
+            string idcategor = dir3ds_user + "\\" + ((sender as System.Windows.Controls.MenuItem).Header as treespis).name + "\\" + (lb1.SelectedItem as Models3d).name;//куда
+            if (idcategor.Equals(idmodel_peremech)) return;
+            Directory.Move(idmodel_peremech, idcategor);
+            lb1.UnselectAll();
+            //    MessageBox.Show("asd");
+            lb1_napolnenie();
+
         }
 
         private void peremestitb_serv_event(object sender, RoutedEventArgs e)
@@ -787,7 +786,7 @@ namespace TreeCadN.kommunikacii
                     pathjpgugo = path_copy + server_load_obj[i].jpg_ugo;
                 }
 
-                string ecad = "http://ecad.giulianovars.ru/3dmodels/NEW/";
+                string ecad = "https://ecad.giulianovars.ru/3dmodels/NEW/";
 
 
                 if (!(File.Exists(pathjpg) || pathjpg == ""))
@@ -887,38 +886,40 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 
         private void MenuItem_Click_5(object sender, RoutedEventArgs e)//удалить объект
         {
+            /*
+                        if (lb3.SelectedIndex > -1)
+                        {
+                            if (lb4.SelectedIndex > -1)
+                            {
+                                var file = lb4.SelectedValue as Models3d;
+                                if (MessageBox.Show(
+                             "Вы действительно хотите удалить \"" + file.name + "\"?", "",
+                             MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                                {
 
-            if (lb3.SelectedIndex > -1)
-            {
-                if (lb4.SelectedIndex > -1)
-                {
-                    var file = lb4.SelectedValue as Models3d;
-                    if (MessageBox.Show(
-                 "Вы действительно хотите удалить \"" + file.name + "\"?", "",
-                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-
-                        (new web_zapros()).load("delete_obj", "id=" + file.id_server);
-                        BD.conn("DELETE FROM `import3ds_server` WHERE id_server='" + file.id_server + "'");
-
-
-                        MessageBox.Show("Объект успешно удалён");
-                        lb4_napolnenie();
+                                    (new web_zapros()).load("delete_obj", "id=" + file.id_server);
+                                    BD.conn("DELETE FROM `import3ds_server` WHERE id_server='" + file.id_server + "'");
 
 
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Сначала выберите объект для редактирования");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Сначала выберите категорию");
-            }
+                                    MessageBox.Show("Объект успешно удалён");
+                                    lb4_napolnenie();
+
+
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Сначала выберите объект для редактирования");
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Сначала выберите категорию");
+                        }
+                        */
         }
 
+        //
         private void lb4_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lb4.SelectedItem != null)
@@ -928,7 +929,7 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 var file = lb4.SelectedValue as Models3d;
                 //    MessageBox.Show(file.loc_3ds);
                 label1.Content = "Группа у пользователя - " + file.polzgroup;
-                selectedModel = (file.loc_3ds + @"^" + file.name + "^" + file.loc_ugojpg + "^" + file.x + "^" + file.y + "^" + file.z);
+
                 // MessageBox.Show(file.path);
                 lb4_selitem = lb4.SelectedIndex;
             }
@@ -937,68 +938,65 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 
         private void MenuItem_Click_7(object sender, RoutedEventArgs e)
         {
-            if (lb2.SelectedIndex > -1)
+            if (!(lb2.SelectedIndex > -1)) { MessageBox.Show("Сначала выберите категорию"); return; }
+            if (!(lb1.SelectedIndex > -1)) { MessageBox.Show("Сначала выберите объект"); return; }
+            var file = lb1.SelectedValue as Models3d;
+            if (!(MessageBox.Show(
+         "Вы действительно хотите отправить \"" + file.name + "\" на сервер?", "",
+         MessageBoxButton.YesNo) == MessageBoxResult.Yes)) return;
+
+            if (!(File.Exists(file.path))) { MessageBox.Show("3ds файл на Вашем компьютере не обнаружен"); return; }
+                      
+            string startPath = file.pathcategory;
+            string zipPath = Path.GetTempPath() + "3ds_to_server_TreeCadN.zip";
+          
+            if (File.Exists(zipPath)) File.Delete(zipPath);
+            log.Add("zipPath - " + zipPath);
+            ZipFile.CreateFromDirectory(startPath, zipPath);
+
+            string time = DateTime.Now.ToFileTimeUtc().ToString();
+            string path3ds = Tr2(file.name).Replace(' ', '_') + "_" + time + ".zip";
+            string pathjpg = Tr2(file.name).Replace(' ', '_') + "_" + time + ".jpg";
+
+
+            log.Add("Отправляем заказ на фабрику: " + path3ds + "  " + pathjpg);
+
+
+            (new FTP()).otprav(zipPath, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + path3ds);
+            if (File.Exists(file.jpg_path))
             {
-                if (lb1.SelectedIndex > -1)
-                {
-                    var file = lb1.SelectedValue as Models3d;
-                    if (MessageBox.Show(
-                 "Вы действительно хотите отправить \"" + file.name + "\" на сервер?", "",
-                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-                        if (File.Exists(file.path))
-                        {
-                            //    MessageBox.Show(file.path);
-
-
-                            string time = DateTime.Now.ToFileTimeUtc().ToString();
-
-                            string path3ds = file.name + "_" + time + ".3ds";
-                            string pathjpg = "";
-                            string pathjpgugo = "";
-
-
-                            (new FTP()).otprav(file.path, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + path3ds);
-                            if (File.Exists(file.jpg_path))
-                            {
-                                pathjpg = file.name + "_" + time + ".jpg";
-                                (new FTP()).otprav(file.jpg_path, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + pathjpg);
-                            }
-                            if (File.Exists(file.jpg_ugo))
-                            {
-                                pathjpgugo = file.name + "_" + time + "_ugo.jpg";
-                                (new FTP()).otprav(file.jpg_ugo, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + pathjpgugo);
-                            }
-
-                            string categoryuser = (lb2.SelectedItem as treespis).name;
-
-
-
-                            (new web_zapros()).load("new3ds", "filename=" +
-                              file.name + "&filename3ds=" +
-                               path3ds + "&filenamejpg=" +
-                              pathjpg + "&filenameugojpg=" +
-                               pathjpgugo + "&x=" + file.x + "&y=" + file.y + "&z=" + file.z + "&categoryuser=" + categoryuser);
-                            MessageBox.Show("Объект успешно отправлен");
-
-
-
-                        }
-                        else
-                        {
-                            MessageBox.Show("3ds файл на Вашем компьютере не обнаружен");
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Сначала выберите объект");
-                }
+                (new FTP()).otprav(file.jpg_path, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + pathjpg);
             }
-            else
-            {
-                MessageBox.Show("Сначала выберите категорию");
-            }
+
+
+            string categoryuser = (lb2.SelectedItem as treespis).name;
+
+
+            //Создание объекта, для работы с файлом
+            INIManager manager = new INIManager(GetEcadProIni());
+            string authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
+
+
+
+            (new web_zapros()).load("new3ds",
+                "filename=" + file.name +
+                "&filename3ds=" + path3ds +
+                "&filenamejpg=" + pathjpg +
+                "&idclienta=" + authotiz_root +
+                "&x=" + file.x +
+                "&y=" + file.y +
+                "&z=" + file.z +
+                "&categoryuser=" + categoryuser);
+            MessageBox.Show("Объект успешно отправлен");
+
+
+
+
+        }
+
+        string GetEcadProIni()
+        {
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ecadpro.ini";
         }
 
         private void MenuItem_Click_6(object sender, RoutedEventArgs e)
@@ -1006,51 +1004,40 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             dob_new3ds();
         }
 
-        private void Button_Click_7(object sender, RoutedEventArgs e)
+
+
+
+
+
+
+
+        public static string loadsinch(string comand, string param = "")
         {
-            //подгрузить
-            //////подгружаем если есть интернет
-            var json = (new web_zapros()).load("load_categor");
-
-
-            List<treespis> server_load = JsonConvert.DeserializeObject<List<treespis>>(json);
-
-
-            //  List<treespis> Result = server_load.Where(a => server.Contains(a.name)).ToList();
-
-            List<treespis> result = new List<treespis>();
-            for (int i = 0; i < server_load.Count(); i++)
+            string otvet = "";
+            try
             {
-                bool estb = true;
-                for (int y = 0; y < server.Count(); y++)
+                if (param != "")
                 {
-                    if (server_load[i].id_server == server[y].id_server)
-                    {
-                        estb = false;
-                    }
+                    param = "&" + param;
                 }
-                if (estb)
-                {
-                    if (admin == "1" || server_load[i].id_server != "1")
-                    {
-                        result.Add(new treespis { name = server_load[i].name, id_server = server_load[i].id_server });
-                    }
-                }
-            }
-
-
-            //    MessageBox.Show(result.Count().ToString());
-
-
-            BD.conn("UPDATE `import3ds_category_server` SET  `new`='0' ");
-            foreach (treespis elem in result)
-            {
-                BD.conn("INSERT INTO  `import3ds_category_server` (nazv, new, id_server)  VALUES ('" + elem.name + "', 1, '" + elem.id_server + "') ");
+                //загрузка дынных для сервера
+                WebClient client = new WebClient();
+                string url = "https://ecad.giulianovars.ru/php/3dsobject/3ds.php?command=" + comand + param;
+                byte[] response = client.DownloadData(url);
+                otvet = Encoding.UTF8.GetString(response);
 
             }
-            MessageBox.Show("Данные успешно обновлены");
-            lb3napolnene();
+            catch (Exception err)
+            {
+                //  MessageBox.Show(err.Message); 
+            }
+            return otvet;
         }
+
+
+
+
+
 
         private void MenuItem_Click_8(object sender, RoutedEventArgs e)
         {
@@ -1065,65 +1052,142 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             }
         }
 
-        private void Button_Click_9(object sender, RoutedEventArgs e)
+        private void move_to_new_41()
         {
-            int i = 1;
-            string[] dirs = Directory.GetDirectories(dir3ds_user);
+
+            string pathcategory = Environment.CurrentDirectory + @"\3dsObject\User";
+            string[] dirs = Directory.GetDirectories(pathcategory);
+
+            bool msgpokaz = true;
+
             foreach (string dir in dirs)
             {
-                BD.conn("INSERT INTO  `import3ds_category` (id, nazv)  VALUES (" + i + ",'" + dir.Split('\\').Last() + "') ");
 
-
-
-
-
-
-
-
-                string[] files = Directory.GetFiles(dir, "*.3ds");
-              
-                foreach (string file in files)
+                foreach (string file3ds in Directory.GetFiles(dir, "*.3ds", SearchOption.TopDirectoryOnly))
                 {
-                    string name = file.Split('\\').Last().Split('_').First();
-
-                    string x = "0", y = "0", z = "0";
-                    try
+                    if (msgpokaz)
                     {
-                        Model3D dmodel3ds = (new HelixToolkit.Wpf.ModelImporter()).Load(file);
-
-                        x = dmodel3ds.Bounds.SizeX.ToString("0");
-                        y = dmodel3ds.Bounds.SizeZ.ToString("0");
-                        z = dmodel3ds.Bounds.SizeY.ToString("0");
+                        MessageBox.Show("Восстановление старых объектов, нажмите ОК и подождите до завершения");
+                        msgpokaz = false;
                     }
-                    catch
+                    string namefile = file3ds.Split('\\').Last().Split('_').First();
+                    string path3ds_new = dir + @"\" + namefile + @"\" + namefile + ".3ds";
+                    string pathjpg_new = dir + @"\" + namefile + @"\teh\prev.jpg";
+
+                    Directory.CreateDirectory(dir + @"\" + namefile + @"\teh");
+
+                    if (File.Exists(path3ds_new)) File.Delete(path3ds_new);
+                    File.Move(file3ds, path3ds_new);
+                    string pathjpg = file3ds.Replace(".3ds", ".jpg");
+                    if (File.Exists(pathjpg))
                     {
 
+                        if (File.Exists(pathjpg_new)) File.Delete(pathjpg_new);
+                        File.Move(pathjpg, pathjpg_new);
                     }
-
-
-
-
-                    BD.conn("INSERT INTO `import3ds` (`nazv`, `path3ds`, `pathjpg`, `pathjpgugo`, `x`, `y`, `z`, category) VALUES ('" +
-                                           name + "','" +
-                                           file + "','" +
-                                           (File.Exists(file.Remove(file.Length - 4, 4) + ".jpg")? file.Remove(file.Length - 4, 4) + ".jpg":"") + "','" +
-                                           (File.Exists(file.Remove(file.Length - 4, 4) + "_ugo.jpg") ? file.Remove(file.Length - 4, 4) + "_ugo.jpg" : "") + "','" +
-                                           x + "','" +
-                                           y + "','" +
-                                         z + "', '" +
-                                           i + "')");
-                   
                 }
-                i++;
             }
-            MessageBox.Show("Готово");
-            lb2napolnene();
+
+            if (msgpokaz == false) MessageBox.Show("Готово");
+
+
+
+            //   MessageBox.Show("Готово");
+            //   lb2napolnene();
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            //отправить все на фабрику
+
+
+
+
+
+            if (!(lb2.SelectedIndex > -1)) { MessageBox.Show("Сначала выберите категорию"); return; }
+            //       if (!(lb1.SelectedIndex > -1)) { MessageBox.Show("Сначала выберите объект"); return; }
+
+
+            if (!(MessageBox.Show(
+"Вы действительно хотите отправить всю категорию на сервер?", "",
+MessageBoxButton.YesNo) == MessageBoxResult.Yes)) return;
+
+            foreach (Models3d file in lb1.Items)
+            {
+
+
+
+
+
+                if (!(File.Exists(file.path))) { MessageBox.Show("3ds файл на Вашем компьютере не обнаружен"); return; }
+
+                string startPath = file.pathcategory;
+                string zipPath = Path.GetTempPath() + "3ds_to_server_TreeCadN.zip";
+
+                if (File.Exists(zipPath)) File.Delete(zipPath);
+                log.Add("zipPath - " + zipPath);
+                ZipFile.CreateFromDirectory(startPath, zipPath);
+
+                string time = DateTime.Now.ToFileTimeUtc().ToString();
+                string path3ds = Tr2(file.name).Replace(' ', '_') + "_" + time + ".zip";
+                string pathjpg = Tr2(file.name).Replace(' ', '_') + "_" + time + ".jpg";
+
+
+                log.Add("Отправляем заказ на фабрику: " + path3ds + "  " + pathjpg);
+
+
+                (new FTP()).otprav(zipPath, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + path3ds);
+                if (File.Exists(file.jpg_path))
+                {
+                    (new FTP()).otprav(file.jpg_path, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + pathjpg);
+                }
+
+
+                string categoryuser = (lb2.SelectedItem as treespis).name;
+
+
+                //Создание объекта, для работы с файлом
+                INIManager manager = new INIManager(GetEcadProIni());
+                string authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
+
+
+
+                (new web_zapros()).load("new3ds",
+                    "filename=" + file.name +
+                    "&filename3ds=" + path3ds +
+                    "&filenamejpg=" + pathjpg +
+                    "&idclienta=" + authotiz_root +
+                    "&x=" + file.x +
+                    "&y=" + file.y +
+                    "&z=" + file.z +
+                    "&categoryuser=" + categoryuser);
+             //   MessageBox.Show("Объект успешно отправлен");
+
+
+
+
+
+
+            }
+            MessageBox.Show("Объект успешно отправлен");
+
+
+
+
+
+
+
+
+
+
         }
 
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
             lb1_redak();
         }
+
+
 
         private void tab1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1145,6 +1209,22 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             }
 
         }
+        private static string Tr2(string s)
+        {
+            StringBuilder ret = new StringBuilder();
+            string[] rus = { "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й",
+          "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц",
+          "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я" };
+            string[] eng = { "A", "B", "V", "G", "D", "E", "E", "ZH", "Z", "I", "Y",
+          "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "KH", "TS",
+          "CH", "SH", "SHCH", null, "Y", null, "E", "YU", "YA" };
+
+            for (int j = 0; j < s.Length; j++)
+                for (int i = 0; i < rus.Length; i++)
+                    if (s.Substring(j, 1) == rus[i]) ret.Append(eng[i]);
+            return ret.ToString();
+        }
+
     }
 
     public class dialuni
@@ -1180,20 +1260,47 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         public string download { get; set; }
         public string polzgroup { get; set; }
         public string new_ { get; set; }
+        public string pathcategory { get; set; }
+        public BitmapImage bitmap_prev { get; set; }
+        public BitmapImage jpgsource { get; set; }
+
+    }
+
+
+    public class Models3dJSON
+    {
+
+        public string x { get; set; }
+        public string y { get; set; }
+        public string z { get; set; }
+
+        public Models3dJSON()
+        {
+        }
+        public Models3dJSON(string x, string y, string z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+
+        }
+
 
     }
 
     public class treespis
     {
 
-        public string path { get; set; }
+        //     public string path { get; set; }
         public string path_dir { get; set; }
         public string name { get; set; }
         public string id { get; set; }
         public string id_server { get; set; }
-        public string type { get; set; }
+        //   public string type { get; set; }
         public string zvetbg { get; set; }
 
+        public string owner { get; set; }
+        public ObservableCollection<treespis> Nodes { get; set; }
     }
     public class FTP
     {
@@ -1235,7 +1342,7 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 }
                 //загрузка дынных для сервера
                 WebClient client = new WebClient();
-                string url = "http://ecad.giulianovars.ru/php/3dsobject/3ds.php?command=" + comand + param;
+                string url = "https://ecad.giulianovars.ru/php/3dsobject/3ds.php?command=" + comand + param;
                 byte[] response = client.DownloadData(url);
                 otvet = System.Text.Encoding.UTF8.GetString(response);
 
@@ -1248,6 +1355,11 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         }
 
 
+
+
+
     }
+
+
 
 }

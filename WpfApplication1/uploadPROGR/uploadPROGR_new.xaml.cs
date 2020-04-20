@@ -57,12 +57,13 @@ namespace TreeCadN.uploadPROGR
 
             // отправляем файл на сервер
             FileInfo toUpload = new FileInfo(path);
-            Uri ulr = new Uri("ftp://ecad.giulianovars.ru/public/zakaz/for_spis/" + name);
+            Uri ulr = new Uri("ftp://213.159.210.45/zakaz/for_spis/" + name);
          
              FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ulr);
             request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential("ecad_ftp", "bFqeNo4Xp2");
+            request.Credentials = new NetworkCredential("ecad", "UWnlLh3PLy");
             
+
             Stream ftpStream = request.GetRequestStream();
             
             FileStream fileStream = File.OpenRead(path);

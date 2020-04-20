@@ -35,7 +35,7 @@ namespace TreeCadN
 
         public string attiva(String s, String Valori, String DES, String PX, String PY, String param)
         {
-         //   MessageBox.Show("");
+            //   MessageBox.Show("");
             string returnValue = "";
             object info;
             try
@@ -49,14 +49,14 @@ namespace TreeCadN
                         break;
                     case "Kommunikacii":
 
-                      /*
-                        MessageBox.Show("test");
-                        this.xamb = getParam(Ambiente, "GetObject", "XAMB");
-                        this.aamain = getParam(Ambiente, "GetObject", "aaMain");
-                       this.engine = getParam(Ambiente, "GetObject", "ENGINE");
-                        getParam(engine, "wrCompress3D", @"C:\33\29680550RU__CVA6805_CLST.3DS", @"C:\1.DR3D", "0");
-                 */
-                                               returnValue = Kommunikacii(GetPathMDB(katalog));
+                        /*
+                          MessageBox.Show("test");
+                          this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+                          this.aamain = getParam(Ambiente, "GetObject", "aaMain");
+                         this.engine = getParam(Ambiente, "GetObject", "ENGINE");
+                          getParam(engine, "wrCompress3D", @"C:\33\29680550RU__CVA6805_CLST.3DS", @"C:\1.DR3D", "0");
+                   */
+                        returnValue = Kommunikacii(GetPathMDB(katalog));
 
 
                         break;
@@ -104,7 +104,7 @@ namespace TreeCadN
                         break;
 
                     case "status_zakaza":
-                      
+
 
                         returnValue = status_zakaza(s);
 
@@ -364,7 +364,7 @@ namespace TreeCadN
             //   GC.Collect();
         }
 
-        public string GNOTD(string path, string str, bool listdet=false)//для старых версий тех у кого ещё стоит старый размерный ряд
+        public string GNOTD(string path, string str, bool listdet = false)//для старых версий тех у кого ещё стоит старый размерный ряд
         {
 
 
@@ -382,7 +382,7 @@ namespace TreeCadN
             {
                 if (str1 == "")
                 {
-                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^50^51";
+                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^51";
                     uslovvipol = true;
                 }
                 else
@@ -393,7 +393,7 @@ namespace TreeCadN
               MessageBoxButton.YesNo,
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
-                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^50^51";
+                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^51";
                         uslovvipol = true;
                     }
                     else
@@ -428,9 +428,9 @@ namespace TreeCadN
             return GNOTD(path, str);
         }
 
-        public string GNOTD_list_det( string str)//для листовых  
+        public string GNOTD_list_det(string str)//для листовых  
         {
-            
+
             string katalog = getParamI(Ambiente, "xPercorso").ToString();
             string path = GetPathMDB(katalog);
             return GNOTD(path, str, true);
@@ -653,15 +653,20 @@ namespace TreeCadN
             object box = getParamG(xamb, "box", currbox);
             string cod = getParamG(getParamG(box, "gg"), "cod").ToString();
 
-          //  cod = cod.Remove(3);
+            //  cod = cod.Remove(3);
 
             Clipboard.SetText(cod);
         }
 
 
+        public void OutPrima(ref object xAmbiente)
+        {
+            var saveeve = new Window2();
+            saveeve.Show();
 
+        }
 
-        public void evesync_save(ref object xAmbiente)
+            public void evesync_save(ref object xAmbiente)
         {
             // MessageBox.Show("asda");
             YA ps = YA.Default;
@@ -715,12 +720,12 @@ namespace TreeCadN
             evename += nomzakaza + ".eve";
             string evepath = path + @"\" + evename;
 
-
+            log.Add(path + @"\" + evename);
             // uploadPROGR.uploadPROGR sss = new uploadPROGR.uploadPROGR(evepath, this);
             uploadPROGR.dialprogr_new sss = new uploadPROGR.dialprogr_new(evepath, this);
             sss.ShowDialog();
 
-
+            log.Add("ShowDialog");
 
         }
 
@@ -800,6 +805,7 @@ namespace TreeCadN
 
 
                         url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root + "&yadisk=" + ps.OAuth;
+                      
                         response = client.DownloadData(url);
                         last_upd = System.Text.Encoding.UTF8.GetString(response);
                         ////   MessageBox.Show(last_upd);
@@ -829,6 +835,13 @@ namespace TreeCadN
                     }
                 }
 
+
+                string file1 = Environment.CurrentDirectory + @"\Giulianovarsa\PROCEDURE\TreeCadS.dll";
+                string file2 = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TreeCadS.dll";
+                if (File.GetCreationTime(file1) > File.GetCreationTime(file2))
+                {
+                    File.Copy(file1, file2);
+                }
 
             }
             catch (Exception e)
@@ -874,13 +887,13 @@ namespace TreeCadN
                     INIManager client_man = new INIManager(path);
                     client_ver = client_man.GetPrivateString("GN_UPD", "last_upd");//версия клиента
                 }
-
+             //   authotiz_root = "091993E2AED611F8052E";
 
                 string url = "http://ecad.giulianovars.ru/php/license/load_page_for_dll.php?authotiz_root=" + authotiz_root + "&upd_time=" + client_ver;
                 var response = client.DownloadData(url);
                 string str = System.Text.Encoding.UTF8.GetString(response);
                 string[] parse = str.Split('=');
-
+             //   MessageBox.Show(str);
                 id_clienta_root = parse[0];
                 email_root = parse[1];
                 abilitato_root = parse[2];

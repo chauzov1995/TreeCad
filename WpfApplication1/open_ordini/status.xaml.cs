@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,11 +22,23 @@ namespace TreeCadN.open_ordini
     /// </summary>
     public partial class status : Window
     {
-        public string otvet ;
+        public string otvet;
+        public string path_ini;
+        List<string> spis;
         public status(string path_ini, string umol)
         {
             InitializeComponent();
             otvet = umol;
+            this.path_ini = path_ini;
+
+
+            naolnenie();
+
+
+        }
+
+       void naolnenie()
+        {
 
             if (File.Exists(path_ini))
             {
@@ -33,7 +46,7 @@ namespace TreeCadN.open_ordini
 
                 // Read the file and display it line by line.  
                 System.IO.StreamReader file = new System.IO.StreamReader(path_ini, Encoding.Default);
-                List<string> spis = new List<string>();
+                spis = new List<string>();
 
                 while (!file.EndOfStream)
                 {
@@ -43,13 +56,10 @@ namespace TreeCadN.open_ordini
 
                 lb1.ItemsSource = spis;
 
-                 lb1.SelectedIndex=spis.IndexOf(otvet);
-                
+                lb1.SelectedIndex = spis.IndexOf(otvet);
+
 
             }
-
-
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -67,7 +77,7 @@ namespace TreeCadN.open_ordini
 
         private void Lb1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-    
+
         }
 
         private void Lb1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -82,6 +92,65 @@ namespace TreeCadN.open_ordini
             }
             Close();
         }
+
+
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            //  DialogHost.Show(DialogHost1);
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            // DialogHost.Show(viewOrModel);
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+
+            using (StreamWriter sw = new StreamWriter(path_ini, true, System.Text.Encoding.Default))
+            {
+                sw.WriteLine(AnimalTextBox.Text);
+                //sw.Write(4.5);
+            }
+            naolnenie();
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (lb1.SelectedItem == null) return;
+
+
+
+
+
+
+            using (StreamWriter sw = new StreamWriter(path_ini, false, System.Text.Encoding.Default))
+            {
+                int i = 0;
+                foreach (var elem in spis)
+                {
+                    if (i== lb1.SelectedIndex)
+                        {
+
+                        }
+                        else
+                        {
+                            sw.WriteLine(elem);
+                        }
+                    i++;
+                }
+
+            }
+
+            naolnenie();
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            AnimalTextBox.Text = "";
+        }
         /*
 private void Lb1_SelectionChanged(object sender, SelectionChangedEventArgs e)
 {
@@ -90,10 +159,10 @@ foreach (string zapis in lb1.Items)
 {
 if (lb1.SelectedItem.Equals(zapis))
 {
-  return;
+return;
 }
 else {
-  lb1.SelectedItem
+lb1.SelectedItem
 }
 
 

@@ -29,7 +29,7 @@ namespace TreeCadN
 
         static BD_Connect BD = new BD_Connect();
         public string text_otvet;
-        public static List<todelka> otdelka_array = new List<todelka>();
+        public static List<todelka> otdelka_array;
         public static List<todelka> izmer = new List<todelka>();
         bool zakrit_ok = false;
         List<texnika> array_spis_tex = new List<texnika>();
@@ -72,6 +72,8 @@ namespace TreeCadN
             //отделка
             log.Add("Подключимся к бд");
             OleDbDataReader reader_otd = BD.conn("SELECT Id, Name FROM TOtdelka order by Name ASC");
+
+            otdelka_array = new List<todelka>();
             otdelka_array.Add(new todelka() { ID = "", nameotd = "" });
             while (reader_otd.Read())
             {
@@ -115,7 +117,7 @@ namespace TreeCadN
 
             log.Add("загрузим аксссуары");
             //аксессуары
-            OleDbDataReader reader_GRACC = BD.conn("SELECT TPrice1.Articul, TUnits.UnitsID, TPrice1.TKOEFGROUP_ID, TUnits.UnitsName, TPrice1.MName, TPrice1.MatID,  TPrice1.PriceID,  TPrice1.Price, TMAT.MATNAME,  TPrice1.Visibl FROM (TPrice1  LEFT OUTER JOIN  TMAT ON TPrice1.MatID = TMAT.MATID) LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID  ");
+            OleDbDataReader reader_GRACC = BD.conn("SELECT TPrice1.GRAFIKA, TPrice1.Articul, TUnits.UnitsID, TPrice1.TKOEFGROUP_ID, TUnits.UnitsName, TPrice1.MName, TPrice1.MatID,  TPrice1.PriceID,  TPrice1.Price, TMAT.MATNAME,  TPrice1.Visibl FROM (TPrice1  LEFT OUTER JOIN  TMAT ON TPrice1.MatID = TMAT.MATID) LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID  ");//WHERE TPrice1.GRAFIKA=0
             //LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID
             while (reader_GRACC.Read())
             {
@@ -144,7 +146,7 @@ namespace TreeCadN
                 {
                     type = "a",
                     ID = reader_GRACC["PriceID"].ToString(),
-                    TName = reader_GRACC["MName"].ToString(),
+                    TName = reader_GRACC["GRAFIKA"].ToString()=="0" ? reader_GRACC["MName"].ToString():reader_GRACC["MName"].ToString()+" (только в графическом исполнении, искать в дереве объектов)" ,
                     Group = reader_GRACC["MatID"].ToString(),
                     baseprice = baseprice,
                     priceredak = baseprice,
@@ -158,7 +160,7 @@ namespace TreeCadN
                     OTD = "",
                     sort = sort,
                     GROUP_dlyaspicif = reader_GRACC["TKOEFGROUP_ID"].ToString(),
-
+                    GRAFIKA= reader_GRACC["GRAFIKA"].ToString()
 
                 });
 
@@ -205,6 +207,7 @@ namespace TreeCadN
                         OTD = "",
                         sort = sort,
                         GROUP_dlyaspicif = reader["TKOEFGROUP_ID"].ToString(),
+                        GRAFIKA = "0"
                     });
                 }
                 catch
@@ -322,7 +325,7 @@ namespace TreeCadN
                         poluch.UnitsName = poluch1.UnitsName;
                         poluch.vived = poluch1.vived;
                         poluch.TName = name;
-                        poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
+                       // poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
                         poluch.colortext = "x:Null";
 
                     }
@@ -330,10 +333,19 @@ namespace TreeCadN
                     {
                         poluch.TName = znach[7].Replace('@', ',').Replace('$', ';');
                         poluch.Article = znach[1].Replace('@', ',').Replace('$', ';');
-                        poluch.Prim = "!Артикула нет в базе!".Replace('@', ',').Replace('$', ';');//примечание
+                       // poluch.Prim = "!Артикула нет в базе!".Replace('@', ',').Replace('$', ';');//примечание
+                     //  poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
                         poluch.colortext = "#FFDE0606";
                         poluch.GROUP_dlyaspicif = "";
                         poluch.UnitsName = "";
+                    }
+                    if (znach.Length > 4)
+                    {
+                        poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
+                    }
+                    else
+                    {
+                        poluch.Prim = "";
                     }
                     poluch.OTD = znach[3].Replace('@', ',').Replace('$', ';');//отделка
                     poluch.type = znach[0].Replace('@', ',').Replace('$', ';');//типп аксес или техн
@@ -498,8 +510,11 @@ namespace TreeCadN
 
         void Grid_select(texnika poluch1)
         {
+            if (poluch1.GRAFIKA != "0") { MessageBox.Show(poluch1.Article+" "+poluch1.TName+" только в графическом исполнении, искать в дереве объектов");
 
-
+                return;
+            }
+           
             List<texnika> kotor_v_gr3 = array_vibr_tex.FindAll(FindComputer);
 
 
@@ -1155,6 +1170,11 @@ st14.Width.ToString() + ";";
                 }
             }
         }
+
+        private void Lb_vibr_tex_CurrentCellChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class texnika
@@ -1178,6 +1198,7 @@ st14.Width.ToString() + ";";
         public int sort { get; set; }
         public string GROUP_dlyaspicif { get; set; }
         public string colortext { get; set; }
+        public string GRAFIKA { get; set; }
     }
 
     public class todelka
@@ -1206,7 +1227,7 @@ st14.Width.ToString() + ";";
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             // Все проверки для краткости выкинул
-            return (string)value == "!Артикула нет в базе!" ?
+            return (string)value == "#FFDE0606" ?
                 new SolidColorBrush(Colors.Red)
                 : new SolidColorBrush(Colors.Black);
         }

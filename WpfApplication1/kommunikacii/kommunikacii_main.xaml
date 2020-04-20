@@ -52,24 +52,24 @@
                         <RowDefinition Height="43"/>
                         <RowDefinition Height="367*"/>
                     </Grid.RowDefinitions>
-                    <Button Content="Обновить" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_7" />
-
-                    <ListBox  x:Name="lb3" SelectionChanged="lb3_SelectionChanged" Margin="0,0,5,0" Grid.Row="1" VerticalContentAlignment="Stretch" >
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Path=name}" Background="{Binding Path=zvetbg}"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <!--SelectionChanged="lb3_SelectionChanged"!-->
+                    <TreeView   x:Name="lb3"  Margin="0,0,5,0" Grid.Row="1" VerticalContentAlignment="Stretch" TreeViewItem.Expanded="trw_Products_Expanded" SelectedItemChanged="Lb3_SelectedItemChanged">
+                        <!-- <TreeView.ItemTemplate>
+               
+                                <HierarchicalDataTemplate ItemsSource="{Binding Path=Nodes}">
+                                    <TextBlock Text="{Binding Name}" />
+                                </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>!-->
+                    </TreeView>
                     <ListBox  Style="{StaticResource myListboxStyle}" x:Name="lb4" Margin="0" SelectionChanged="lb4_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" RenderTransformOrigin="0.066,0.51" VerticalContentAlignment="Stretch" Background="White" MouseDoubleClick="lb1_MouseDoubleClick" Grid.Column="1" Grid.Row="1">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical" Width="160" Background="{Binding zvetbg}">
                                     <Grid   Width="150" Margin="5">
 
-                                        <Image Width="150" Height="150" Source="{Binding loc_jpg}"  />
-                                        <Image Width="26" Height="26" Source="/TreeCadN;component/Foto/download.png" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,2,0" ToolTip="Файл скачан"
-                                   Visibility="{Binding download}"  />
+                                        <Image Width="150" Height="150" Source="{Binding jpgsource}"  />
+                                        <!--<Image Width="26" Height="26" Source="/TreeCadN;component/Foto/download.png" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,2,0" ToolTip="Файл скачан"
+                                   Visibility="{Binding download}"  />!-->
 
                                     </Grid>
 
@@ -105,12 +105,8 @@
                         </ListBox.ContextMenu>
                     </ListBox>
                     <Grid Grid.Column="1" Margin="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="481*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="btnserv" Margin="5" Content="Обновить" Click="Button_Click_6" Padding="10,1" HorizontalAlignment="Left"/>
-                        <Label x:Name="label1" Content="У пользователя" Padding="20,5,5,5" Margin="5" Grid.Column="1"/>
+                        <Label x:Name="label1" HorizontalAlignment="Left"  />
+                        
                     </Grid>
                 </Grid>
             </TabItem>
@@ -141,7 +137,7 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical" Width="160">
-                                    <Image Width="150" Height="150" Source="{Binding jpg_path}"  Margin="5"/>
+                                    <Image Width="150" Height="150" Source="{Binding bitmap_prev}"  Margin="5"/>
                                     <TextBlock Text="{Binding name}" Margin="2"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -157,7 +153,7 @@
                                 <MenuItem   Header="Отправить на фабрику" Click="MenuItem_Click_7" />
                                 <Separator/>
                                 <MenuItem   Header="Редактировать" Click="MenuItem_Click_1" />
-                                <MenuItem x:Name="peremestitb"   Header="Переместить" >
+                                <!--    <MenuItem x:Name="peremestitb"   Header="Переместить" >
                                     <MenuItem.Resources>
                                         <Style TargetType="{x:Type MenuItem}">
                                             <EventSetter Event="MenuItem.Click" Handler="PolygonShapesMenu_OnClick" />
@@ -170,7 +166,7 @@
                                     </MenuItem.ItemTemplate>
                                 </MenuItem>
 
-
+!-->
 
                                 <Separator/>
                                 <MenuItem   Header="Удалить" Click="MenuItem_Click_2" />
@@ -185,7 +181,7 @@
                         </Grid.ColumnDefinitions>
                         <Button Content="Добавить 3ds обьект" Margin="5" Padding="10,1" Click="Button_Click" />
                         <Button Content="Редактировать" Margin="5" Padding="10,1" Click="Button_Click_8" Grid.Column="1"  />
-                        <Button x:Name="btn_vost" Content="Восстановить утерянные" Grid.Column="2" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="153" Click="Button_Click_9"/>
+                        <Button x:Name="allnaserver" Content="Отправить всё на сервер" HorizontalAlignment="Right" VerticalAlignment="Center" Click="Button_Click_7" Grid.Column="2" />
                     </Grid>
                 </Grid>
             </TabItem>

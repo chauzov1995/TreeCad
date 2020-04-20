@@ -16,6 +16,9 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Management;
 
 namespace вызов
 {
@@ -49,7 +52,8 @@ namespace вызов
             MethodInfo meth = ourClass.GetMethod("GNOTD"); //нужен тот Show, который не принимает параметров
             object result = meth.Invoke(instane, new object[] {
                 textBox1.Text,
-                textBox2.Text
+                textBox2.Text,
+                false
 
             });
             textBox2.Text = result.ToString();
@@ -137,7 +141,7 @@ namespace вызов
             MessageBox.Show("Готово");
             File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"C:\evolution\eCadPro\TreeCadN.dll", true);
             
-            Process.Start(@"C:\evolution\eCadPro\eCadPro.exe");
+            Process.Start(@"C:\evolution\eCadPro\eCadPro.exe", " /O 13218 /TAB2 ");
 
         }
 
@@ -373,5 +377,27 @@ namespace вызов
               "AC_TP12"
             });
         }
+
+      //  string[] detealirovkakomps = { "Markova-ov", "CHAUZOVA-KA", "CHERKASOVA-M", "KALININA-NS", "JEREBCOV-AV", "TERENTIEVA-YV" };
+        string[] detealirovkakomps = { "Markova-ov" };
+        private void button17_Click(object sender, EventArgs e)
+        {
+
+
+            foreach (var elem in detealirovkakomps) { 
+
+            string pathmdb = @"W:\eCadPro\Giulianovarsa\PROCEDURE\systemA.mdb";
+            string pathdll = @"W:\eCadPro\Giulianovarsa\PROCEDURE\TreeCadN.dll";
+
+            string copypath = @"\\" + elem + @"\c$\evolution\eCadPro\";
+            //    File.Delete(copypath + "TreeCadN1.dll");
+            //    File.Move(copypath+ "TreeCadN.dll", copypath + "TreeCadN1.dll");
+                File.Copy(pathdll, copypath + "TreeCadN.dll", true);
+            File.Copy(pathmdb, copypath + "systemA.mdb", true);
+        }
+            MessageBox.Show("Готово");
+
+        }
     }
+
 }

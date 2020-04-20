@@ -26,7 +26,7 @@ namespace TreeCadN
         string id_clienta_root, email_root, authotiz_root, moduli_root, abilitato_root;
         WebClient client = new WebClient();
         string ps = "0000000";
-        string[] moduli_pars;
+        //string[] moduli_pars;
 
 
 
@@ -41,7 +41,7 @@ namespace TreeCadN
             this.moduli_root = moduli_root;
             this.abilitato_root = abilitato_root;
 
-         
+
             tv_tek.Text = tekver;
             tv_ak.Text = actual_ver;
 
@@ -55,24 +55,18 @@ namespace TreeCadN
         void otrisovka()
         {
 
-            moduli_pars = new string[moduli_root.Count()];
-            int a = 0;
-            while (moduli_root.Count() > a)
-            {
-                moduli_pars[a] = moduli_root[a].ToString();
-                a++;
-            }
+
 
 
             items.Add(new Licenz { id = "0", lic = "Основной модуль 3CAD", price = "12", modul_Act = abilitato_root });
-            items.Add(new Licenz { id = "1", lic = "Продвинутый рендеринг", price = "3", modul_Act = moduli_pars[3] });
-            items.Add(new Licenz { id = "2", lic = "Экспорт в 3ds (3D Max)", price = "3", modul_Act = moduli_pars[0] });
-            items.Add(new Licenz { id = "3", lic = "Экспорт в dwg (AutoCAD)", price = "4", modul_Act = moduli_pars[1] });
-            items.Add(new Licenz { id = "4", lic = "Sketch Up", price = "2", modul_Act = moduli_pars[8] });
-            items.Add(new Licenz { id = "5", lic = "Предметы для обстановки помещений", price = "3", modul_Act = moduli_pars[11] });
-            items.Add(new Licenz { id = "6", lic = "Спецэффекты (плавное открывание дверей и пр.)", price = "3", modul_Act = moduli_pars[2] });
+            items.Add(new Licenz { id = "1", lic = "Продвинутый рендеринг", price = "3", modul_Act = moduli_root[3].ToString() });
+            items.Add(new Licenz { id = "2", lic = "Экспорт в 3ds (3D Max)", price = "3", modul_Act = moduli_root[0].ToString() });
+            items.Add(new Licenz { id = "3", lic = "Экспорт в dwg (AutoCAD)", price = "4", modul_Act = moduli_root[1].ToString() });
+            items.Add(new Licenz { id = "4", lic = "Sketch Up", price = "2", modul_Act = moduli_root[8].ToString() });
+            items.Add(new Licenz { id = "5", lic = "Предметы для обстановки помещений", price = "3", modul_Act = moduli_root[11].ToString() });
+            items.Add(new Licenz { id = "6", lic = "Спецэффекты (плавное открывание дверей и пр.)", price = "3", modul_Act = moduli_root[2].ToString() });
 
-         
+
 
             zapros_na_server();
 
@@ -223,7 +217,7 @@ namespace TreeCadN
         {
 
             if (MessageBox.Show(
-"Вы уверены, что хотите изменить лицензию? Заявка на приобретения модуля будет обрабатываться в течении 1 рабочего дня.",
+"Вы уверены, что хотите изменить лицензию? Для подключения модуля нужно позвонить на фабрику в отдел программного обеспечения, чтобы подтвердить заявку.",
 "Подтверждение",
 MessageBoxButton.YesNo,
 MessageBoxImage.Warning) == MessageBoxResult.Yes)
@@ -380,13 +374,13 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
             try
             {
                 string localpath = (new FileInfo(Assembly.GetExecutingAssembly().Location).Directory).ToString();
-                string TreeCadNpath = localpath + @"\"+ catalog + @"\PROCEDURE\TreeCadN.dll";
+                string TreeCadNpath = localpath + @"\" + catalog + @"\PROCEDURE\TreeCadN.dll";
 
                 log.Add("обновление dll путь к длл " + TreeCadNpath);
 
-              //  MessageBox.Show(catalog);
+                //  MessageBox.Show(catalog);
                 WebClient client1 = new WebClient();
-                var url1 = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1&catalog="+ catalog+ "&authotiz_root="+ authotiz_root;
+                var url1 = "http://ecad.giulianovars.ru/TreeCadN/hash_prov.php?type=1&catalog=" + catalog + "&authotiz_root=" + authotiz_root;
                 string response1 = client1.DownloadString(url1);
 
                 log.Add("обновление dll хэш с сервера " + response1);

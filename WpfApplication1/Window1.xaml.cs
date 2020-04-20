@@ -485,13 +485,17 @@ namespace TreeCadN
             brdncs.ToolTip = TekOtdelka.index8;
 
 
-
+            if (TekOtdelka.IDGroup1.Equals("37")||TekOtdelka.IDGroup2.Equals("37"))
+            {               
+                TekOtdelka.index5 = "1";                         
+            }
+            else
             TekOtdelka.index5 = razr_odinak;//Флаг, 1-одинаковая отделака обеих пластей, при этом назначать разную отделку нельзя
             TekOtdelka.index10 = razr_group;// спис разреш групп для отделки
 
 
 
-
+          
             if (TekOtdelka.index5 == "1")
             {
                 TekOtdelka.index2 = TekOtdelka.index1;
@@ -518,6 +522,7 @@ namespace TreeCadN
                 }
                 else//если горизонатльно
                 {
+
                     image3.Source = rotate270_loc();
                     image1.Source = rotate270(TekOtdelka.textura1);
                     button3.ToolTip = "Горизонтальное направление волокон шпона";
@@ -525,10 +530,16 @@ namespace TreeCadN
             }
             else
             {//нет направлений
-
-               
-      
-                    image1.Source = norotate(TekOtdelka.textura1);
+                if (listdet) {
+                    TekOtdelka.index3 = "0";
+                   
+                }
+                else
+                {
+                    TekOtdelka.index3 = "1";
+                }
+              
+                image1.Source = norotate(TekOtdelka.textura1);
                          image3.Source = norotate_loc("no_naprav.png");
                 button3.IsEnabled = false;
                 button3.ToolTip = "Не имеет направления волокон шпона";
@@ -555,8 +566,16 @@ namespace TreeCadN
             }
             else
             {
-
-  image2.Source = norotate(TekOtdelka.textura2);
+                if (listdet)
+                {
+                    TekOtdelka.index4 = "0";
+                }
+                else
+                {
+                    TekOtdelka.index4 = "1";
+                }
+               
+                image2.Source = norotate(TekOtdelka.textura2);
                             
                 image4.Source = norotate_loc("no_naprav.png");
                 button4.IsEnabled = false;
@@ -1081,10 +1100,10 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
             BitmapImage bitmap1 = new BitmapImage();
 
-            if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + url))
+            if (File.Exists(papka_s_foto + @"FOTO\" + url))
             {
                 bitmap1.BeginInit();
-                bitmap1.UriSource = new Uri(papka_s_foto + @"FOTO\Thumb\" + url);
+                bitmap1.UriSource = new Uri(papka_s_foto + @"FOTO\" + url);
                 bitmap1.Rotation = Rotation.Rotate270;
                 bitmap1.EndInit();
             }
@@ -1098,10 +1117,11 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
         }
         public BitmapImage norotate(string url)
         {
+           // MessageBox.Show(papka_s_foto + @"FOTO\" + url);
             BitmapImage bitmap1;
-            if (File.Exists(papka_s_foto + @"FOTO\Thumb\" + url))
+            if (File.Exists(papka_s_foto + @"FOTO\" + url))
             {
-                bitmap1 = new BitmapImage(new Uri(papka_s_foto + @"FOTO\Thumb\" + url));
+                bitmap1 = new BitmapImage(new Uri(papka_s_foto + @"FOTO\" + url));
             }
             else
             {
@@ -1393,8 +1413,8 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
         private void listView1_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-
-            if (listView1.SelectedItem != null)
+           
+                if (listView1.SelectedItem != null)
             {
                 if (stor_otd == 1)
                 {
@@ -1404,6 +1424,10 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     TekOtdelka.index1 = ((Person)listView1.SelectedItem).ID;
                     TekOtdelka.textura1 = ((Person)listView1.SelectedItem).textura;
                     TekOtdelka.naprav1 = ((Person)listView1.SelectedItem).napravl;
+                    if (TekOtdelka.IDGroup1.Equals("37") || TekOtdelka.IDGroup2.Equals("37"))
+                    {
+                        obe_plasti = 1;
+                    }
                     if (TekOtdelka.naprav1 != "1")
                     {
                         // TekOtdelka.index3 = "0";
@@ -1420,6 +1444,10 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     TekOtdelka.index2 = ((Person)listView1.SelectedItem).ID;
                     TekOtdelka.textura2 = ((Person)listView1.SelectedItem).textura;
                     TekOtdelka.naprav2 = ((Person)listView1.SelectedItem).napravl;
+                    if (TekOtdelka.IDGroup1.Equals("37") || TekOtdelka.IDGroup2.Equals("37"))
+                    {
+                        obe_plasti = 1;
+                    }
                     if (TekOtdelka.naprav2 != "1")
                     {
                         //    TekOtdelka.index4 = "0";

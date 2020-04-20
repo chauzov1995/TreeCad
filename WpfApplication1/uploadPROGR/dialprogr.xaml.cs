@@ -32,58 +32,51 @@ namespace TreeCadN.uploadPROGR
             List<string> eve = new List<string>();
 
 
-            WebClient client = new WebClient();
-            var url = "http://ecad.giulianovars.ru/zakaz/";
-            var response = client.DownloadString(url);
-            string[] masssiv = response.Split(new string[] { ".eve\">" }, StringSplitOptions.None);
+       //     WebClient client = new WebClient();
+            var url = "ftp://213.159.210.45/zakaz/";
+        
+
+
+
+            // Get the object used to communicate with the server.
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(url);
+            request.Method = WebRequestMethods.Ftp.ListDirectory;
+
+            // This example assumes the FTP site uses anonymous logon.
+            request.Credentials = new NetworkCredential("ecad", "UWnlLh3PLy");
+
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+            Stream responseStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(responseStream);
+            string responses = reader.ReadToEnd();
+
+           // MessageBox.Show(responses);
+
+            reader.Close();
+            response.Close();
+
+
+
+
+            string[] masssiv = responses.Split('\r');
 
 
             foreach (string elem in masssiv)
             {
-                string element = elem.Split(new string[] { ".eve</a>" }, StringSplitOptions.None).First();
+             //   MessageBox.Show(elem.Trim());
+             //   string element = elem.Split(new string[] { ".eve</a>" }, StringSplitOptions.None).First();
 
-                if (element.Length <= 6)
+                if (elem.Trim().IndexOf("for_spis")==-1 && elem.Trim().Length == 10)
                 {
 
+                  
 
-
-                    eve.Add(element + ".eve");
+                    eve.Add(elem.Trim());
 
                 }
             }
 
-
-            /*
-
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://ecad.giulianovars.ru/public/zakaz//");
-
-            request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-            request.Credentials = new NetworkCredential("ecad_ftp", "bFqeNo4Xp2");
-            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-
-            log.Add("запрос к фтп успех");
-            Stream responseStream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(responseStream);
-            string spisokfiles = reader.ReadToEnd();
-            string[] tolb1 = spisokfiles.Split('\n');
-            log.Add(spisokfiles);
-            for (int i = 0; i < tolb1.Length; i++)
-            {
-                tolb1[i] = tolb1[i].Split(' ').Last();
-
-            }
-
-            lb1.ItemsSource = tolb1;
-           
-
-
-            //  MessageBox.Show(reader.ReadToEnd());
-
-            reader.Close();
-            responseStream.Close();
-            response.Close();
-            Console.Read();
-             */
 
 
             lb1.ItemsSource = eve;
@@ -99,25 +92,51 @@ namespace TreeCadN.uploadPROGR
 
 
 
-            //MessageBox.Show("http://ecad.giulianovars.ru/zakaz/" + (lb1.SelectedItem as string));
-            WebClient client = new WebClient();
-            var url = "http://ecad.giulianovars.ru/zakaz/" + (lb1.SelectedItem as string);
+          
+     
+            var url = "ftp://213.159.210.45/zakaz/" + (lb1.SelectedItem as string);
             INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
             string tmppath = Environment.CurrentDirectory + @"\" + path_sysdba + @"\000001.eve";
             log.Add("Путь куда установили " + tmppath);
             // MessageBox.Show(tmppath);
-            client.DownloadFile(url, tmppath);//скачаем новую
+          //  client.DownloadFile(url, tmppath);//скачаем новую
 
 
-        
+
+
+            // Get the object used to communicate with the server.
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(url);
+            request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+            // This example assumes the FTP site uses anonymous logon.
+            request.Credentials = new NetworkCredential("ecad", "UWnlLh3PLy");
+
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+            Stream responseStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(responseStream);
+            string result = reader.ReadToEnd();
+
+            //save file locally on your pc
+            using (StreamWriter file = File.CreateText(tmppath))
+            {
+                file.WriteLine(result);
+                file.Close();
+
+            }
+            reader.Close();
+            response.Close();
+
+
+
 
             retzakaz = "1";
 
 
             neqqqqq.getParam(neqqqqq.xamb, "carica", tmppath);
             neqqqqq.getParamI(neqqqqq.Ambiente, "bcarica");
-            //  MessageBox.Show("Готово, теперь в номере заказа укажите 1");
+      
 
             Close();
         }

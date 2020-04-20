@@ -50,7 +50,7 @@ namespace TreeCadN
                 }
                 try
                 {
-                    AUTO = (text_otvet.Split(';'))[1].Substring(5);
+                    AUTO = (text_otvet.Split(';'))[1].Substring(5).Trim('^');
                 }
                 catch
                 {
@@ -300,7 +300,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
           //  EDIT = "1";
 
             string t = @"PRIM=" + tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№').Trim() + @";AVTO=" + autoptim_otvet + @";EDIT=" + EDIT;
-            //MessageBox.Show(autoptim_otvet);
+           // MessageBox.Show(t);
             //pfrhsnbt
             if (zakrit_ok)
             {

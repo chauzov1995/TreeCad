@@ -34,7 +34,7 @@ namespace TreeCadN.uploadPROGR
             this.path = path;
 
 
-
+            log.Add("Старт диалога");
           
 
 
@@ -43,6 +43,7 @@ namespace TreeCadN.uploadPROGR
              authotiz_root = client_man.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
             loadspis();
             lb2.Content = "Текущий заказ " + path.Split('\\').Last();
+            log.Add("Текущий заказ " + path.Split('\\').Last());
 
 
             if (admin != "1")
@@ -53,13 +54,14 @@ namespace TreeCadN.uploadPROGR
                 mizagr.Visibility = Visibility.Collapsed;
 
             }
+            log.Add("admin "+admin);
 
-            
         }
 
 
         void loadspis()
         {
+            log.Add("http://ecad.giulianovars.ru/php/upload_progr/load_spis.php?command=1&authotiz_root=" + authotiz_root + "&admin=" + admin);
             WebClient client = new WebClient();
            var url = "http://ecad.giulianovars.ru/php/upload_progr/load_spis.php?command=1&authotiz_root="+ authotiz_root+"&admin="+admin;
             var response = client.DownloadString(url);
@@ -101,7 +103,7 @@ namespace TreeCadN.uploadPROGR
         }
         void skachatb()
         {
-
+            log.Add("skachatb");
 
             if (admin == "1")//если админ
             {
@@ -125,6 +127,7 @@ namespace TreeCadN.uploadPROGR
                 MessageBox.Show("Готово, теперь в номере заказа укажите 1");
 
             }
+            log.Add("skachatbllll");
         }
 
 
@@ -137,9 +140,9 @@ namespace TreeCadN.uploadPROGR
 
             //2. отправляем файл на сервер
             FileInfo toUpload = new FileInfo(path);
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://ecad.giulianovars.ru/public/zakaz//" + toUpload.Name);
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(@"ftp://213.159.210.45/zakaz/" + toUpload.Name);
             request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential("ecad_ftp", "bFqeNo4Xp2");
+            request.Credentials = new NetworkCredential("ecad", "UWnlLh3PLy");
             Stream ftpStream = request.GetRequestStream();
             FileStream fileStream = File.OpenRead(path);
             byte[] buffer = new byte[1024];
@@ -181,14 +184,49 @@ namespace TreeCadN.uploadPROGR
 
             
 
-            WebClient client = new WebClient();
-            var url = "http://ecad.giulianovars.ru/zakaz/for_spis/" + (lb1.SelectedItem as zayavki).files.Split(',').First();
+         //   WebClient client = new WebClient();
+            var url = "ftp://213.159.210.45/zakaz/for_spis/" + (lb1.SelectedItem as zayavki).files.Split(',').First();
             INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
             string tmppath = Environment.CurrentDirectory + @"\" + path_sysdba + @"\000001.eve";
             log.Add("Путь куда установили " + tmppath);
             // MessageBox.Show(tmppath);
-            client.DownloadFile(url, tmppath);//скачаем новую
+           
+            
+            
+         //   client.DownloadFile(url, tmppath);//скачаем новую
+
+
+            // Get the object used to communicate with the server.
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(url);
+            request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+            // This example assumes the FTP site uses anonymous logon.
+            request.Credentials = new NetworkCredential("ecad", "UWnlLh3PLy");
+
+            // получаем ответ от сервера в виде объекта FtpWebResponse
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+            // получаем поток ответа
+            Stream responseStream = response.GetResponseStream();
+            // сохраняем файл в дисковой системе
+            // создаем поток для сохранения файла
+            FileStream fs = new FileStream(tmppath, FileMode.Create);
+
+            //Буфер для считываемых данных
+            byte[] buffer = new byte[64];
+            int size = 0;
+
+            while ((size = responseStream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                fs.Write(buffer, 0, size);
+
+            }
+            fs.Close();
+            response.Close();
+
+
+
 
 
             neqqqqq.getParam(neqqqqq.xamb, "carica", tmppath);
@@ -222,11 +260,11 @@ namespace TreeCadN.uploadPROGR
                     byte[] buffer = new byte[1024];
 
 
-                    Uri ulr = new Uri("ftp://ecad.giulianovars.ru/public/zakaz/for_spis/" + elem);
+                    Uri ulr = new Uri("ftp://213.159.210.45/zakaz/for_spis/" + elem);
 
                     FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ulr);
                     request.Method = WebRequestMethods.Ftp.DownloadFile;
-                    request.Credentials = new NetworkCredential("ecad_ftp", "bFqeNo4Xp2");
+                    request.Credentials = new NetworkCredential("ecad", "UWnlLh3PLy");
 
                     FileInfo fi = new FileInfo(savenFileDialog1.FileName);
                   

@@ -6,7 +6,7 @@
     <Window.Resources>
         <local:AgeToColorConverter x:Key="AgeToColorConverter" />
         <Style TargetType="{x:Type DataGridRow}">
-            <Setter Property="Foreground" Value="{Binding Prim, Converter={StaticResource AgeToColorConverter}}" />
+            <Setter Property="Foreground" Value="{Binding colortext, Converter={StaticResource AgeToColorConverter}}" />
         </Style>
 
     </Window.Resources>
@@ -102,14 +102,14 @@
 
         </Grid >
 
-        <DataGrid x:Name="lb_vibr_tex" Grid.Row="3"  Margin="5" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" Grid.ColumnSpan="3" AllowDrop="True" CellEditEnding="g3_CellEditEnding_1" BeginningEdit="g3_BeginningEdit_1"  PreviewTextInput="g3_PreviewTextInput"  RowEditEnding="g3_RowEditEnding"   >
+        <DataGrid x:Name="lb_vibr_tex" Grid.Row="3"  Margin="5" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" Grid.ColumnSpan="3" AllowDrop="True" CellEditEnding="g3_CellEditEnding_1" BeginningEdit="g3_BeginningEdit_1"  PreviewTextInput="g3_PreviewTextInput"  RowEditEnding="g3_RowEditEnding" CurrentCellChanged="Lb_vibr_tex_CurrentCellChanged"   >
             <DataGrid.Columns>
 
                 <DataGridTextColumn x:Name="st1"  Header="№п.п." Binding="{Binding nom_pp}" Width="60"  />
                 <DataGridTextColumn x:Name="st2" Header="Артикул" Binding="{Binding Article}" Width="60" />
                 <DataGridTextColumn x:Name="st3" Header="Название"  Binding="{Binding TName}"  Width="*"/>
                 <DataGridTextColumn x:Name="st4" Header="Примечание"  Binding="{Binding Prim}"  Width="*" />
-                <DataGridComboBoxColumn Width="150" x:Name="otdelka"  Header="Отделка" 
+                <DataGridComboBoxColumn  Width="150" x:Name="otdelka"  Header="Отделка" 
                          SelectedValueBinding="{Binding OTD}" 
                     SelectedValuePath="ID"
                     DisplayMemberPath="nameotd"  />

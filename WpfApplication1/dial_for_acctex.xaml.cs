@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -20,6 +21,8 @@ namespace TreeCadN
     {
         public texnika otvet = new texnika();
         bool zakrit_ok = false;
+        CollectionViewSource viewSource1;
+        System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
         public dial_for_acctex(texnika item)
         {
             InitializeComponent();
@@ -29,8 +32,24 @@ namespace TreeCadN
 
             //   MessageBox.Show(otvet.OTD);
 
-            combo1.ItemsSource = TAccessories.otdelka_array;
+            viewSource1 = new CollectionViewSource();
+            viewSource1.Source = TAccessories.otdelka_array;
+            viewSource1.Filter += viewSource_Filter1;
+            viewSource1.SortDescriptions.Add(new SortDescription("nameotd", ListSortDirection.Ascending));
+         
+            combo1.ItemsSource = viewSource1.View;
+
+
+
+          //  combo1.ItemsSource = TAccessories.otdelka_array;
             combo2.ItemsSource = TAccessories.izmer;
+
+            timer.Tick += new EventHandler(timerTick);
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 500);
+
+
+
+   
 
 
             rsktblo1_Copy.Text = otvet.Article;
@@ -228,5 +247,46 @@ namespace TreeCadN
 
 
         }
-    }
+
+        private void Combo2_TextInput(object sender, TextCompositionEventArgs e)
+        {
+            //combo1.ItemsSource = null;
+       }
+
+        private void Combo2_KeyDown(object sender, KeyEventArgs e)
+        {
+           
+            timer.Stop();
+            timer.Start();
+            combo1.IsDropDownOpen = true;
+           
+
+        }
+
+        private void timerTick(object sender, EventArgs e)
+        {
+            viewSource1.View.Refresh();
+            timer.Stop();
+        }
+
+
+        void viewSource_Filter1(object sender, FilterEventArgs e)
+        {
+       
+
+            e.Accepted = true;
+            foreach (string elem in combo1.Text.ToLower().Split(' '))
+            {
+                if ((e.Item as todelka).nameotd.ToLower().Contains(elem))
+                {
+
+                }
+                else
+                {
+                    e.Accepted = false;
+                }
+
+            }
+        }
+        }
 }
