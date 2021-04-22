@@ -17,9 +17,21 @@ using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.Data.SQLite;
 using TreeCadN.open_ordini;
+using System.Data.Common;
+using System.Data;
+using FirebirdSql.Data.FirebirdClient;
 
 namespace TreeCadN
 {
+    public class alert
+    {
+        public alert(String msg)
+        {
+            MessageBox.Show(msg);
+        }
+    }
+
+
     [ComVisible(true)]
     public class neqweqe
     {
@@ -382,7 +394,7 @@ namespace TreeCadN
             {
                 if (str1 == "")
                 {
-                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^51";
+                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56";
                     uslovvipol = true;
                 }
                 else
@@ -393,7 +405,7 @@ namespace TreeCadN
               MessageBoxButton.YesNo,
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
-                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^51";
+                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56";
                         uslovvipol = true;
                     }
                     else
@@ -456,6 +468,8 @@ namespace TreeCadN
             f_prim.ShowDialog();
             return f_prim.text_otvet;
         }
+
+
 
 
 
@@ -589,11 +603,13 @@ namespace TreeCadN
                 WebClient webClient = new WebClient();
                 string url;
                 url = "https://webapi.teamviewer.com/api/v1/sessions";
+                log.Add(url);
                 webClient.Headers.Add("Authorization", "Bearer 2875381-8jCmpdsLcQm5FelCc9rv");
                 webClient.Headers.Add("Content-Type", "application/json");
 
-
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 string JSON = webClient.UploadString(url, "POST", @"{""groupid"" : ""g18888010""}");
+                log.Add(JSON);
                 session_TV login = JsonConvert.DeserializeObject<session_TV>(JSON);
 
                 string code = login.code.Replace("-", "");
@@ -666,9 +682,315 @@ namespace TreeCadN
 
         }
 
-            public void evesync_save(ref object xAmbiente)
+
+
+        public void treecadtobazis(object detalirovka)
         {
-            // MessageBox.Show("asda");
+           // MessageBox.Show("asdasdasdas");
+            var typedList = (object[])detalirovka;//.Cast<string>().ToArray();
+            List<del> detali = new List<del>();
+
+
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=toBazis.sqlite; Version=3;"))
+            {
+
+
+                string zapros = "";
+
+
+                foreach (var elem in typedList)//перебор всех элементов
+                {
+                    string box = elem.GetType().InvokeMember("box", BindingFlags.GetProperty, null, elem, new object[0]).ToString();
+                    string parrentid = elem.GetType().InvokeMember("parrentid", BindingFlags.GetProperty, null, elem, new object[0]).ToString();
+                    string strdetal = elem.GetType().InvokeMember("strdetal", BindingFlags.GetProperty, null, elem, new object[0]).ToString();
+                 //   log.Add(strdetal);
+
+
+
+
+                    foreach (string strokidetalir in strdetal.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    {//перебор строк деталировка
+                         log.Add(strokidetalir);
+                        detinpu boxterr = new detinpu();
+                        boxterr.box = box;
+                        boxterr.parrentid = parrentid;
+                        boxterr.count = strokidetalir.Split(',')[1];
+                        //     new alert(boxterr.box);
+
+                        //  new alert(strokidetalir);
+
+                        foreach (string primparams in strokidetalir.Split(',')[6].Split(';'))
+                        {//здесь ищем левправверхниз
+
+                            if (primparams.ToUpper().IndexOf("Art_Detal=".ToUpper()) == 0)
+                            {
+                                boxterr.Art_Detal = primparams.Substring("Art_Detal=".Length);
+                            }
+                            if (primparams.ToUpper().IndexOf("Name=".ToUpper()) == 0)
+                            {
+                                boxterr.Name = primparams.Substring("Name=".Length).ToUpper().Trim();
+                            }
+                            if (primparams.ToUpper().IndexOf("NNomenclature_id=".ToUpper()) == 0)
+                            {
+                                boxterr.NNomenclature_id = primparams.Substring("NNomenclature_id=".Length);
+                            }
+                            if (primparams.ToUpper().IndexOf("OTDA=".ToUpper()) == 0)
+                            {
+                                boxterr.OTDA = primparams.Substring("OTDA=".Length);
+                            }
+                            if (primparams.ToUpper().IndexOf("OTDF=".ToUpper()) == 0)
+                            {
+                                boxterr.OTDF = primparams.Substring("OTDF=".Length);
+                            }
+                            if (primparams.ToUpper().IndexOf("PanDirA=".ToUpper()) == 0)
+                            {
+                                boxterr.PanDirA = primparams.Substring("PanDirA=".Length);
+                            }
+                            if (primparams.ToUpper().IndexOf("PanDirF=".ToUpper()) == 0)
+                            {
+                                boxterr.PanDirF = primparams.Substring("PanDirF=".Length);
+                            }
+                            if (primparams.ToUpper().IndexOf("KR_DOP=".ToUpper()) == 0)
+                            {
+                                boxterr.KR_DOP = primparams.Substring("KR_DOP=".Length);
+                            }
+                        }
+
+                        if (boxterr.Art_Detal != "")
+                        {
+                            boxterr.MaterialName = zaprbazisbd(boxterr.Art_Detal);
+                            boxterr.OTDAName = zaprbazisbd("TOTD_"+boxterr.OTDA);
+                            boxterr.OTDFName = zaprbazisbd("TOTD_" + boxterr.OTDF);
+                            boxterr.KR_DOPName = zaprbazisbd(boxterr.KR_DOP);
+                        }
+
+                        zapros += "('" + box + "','" + boxterr.Art_Detal + "','" + boxterr.Name + "','"
+                            + boxterr.NNomenclature_id + "','" + boxterr.OTDA + "','" + boxterr.OTDF + "','"
+                             + boxterr.PanDirA + "','" + boxterr.PanDirF + "','"
+                          + boxterr.KR_DOP + "','" + boxterr.KR_DOPName + "','" + boxterr.OTDAName + "','" + boxterr.OTDFName + "','"
+                            + boxterr.count + "','" + boxterr.MaterialName + "','" + boxterr.parrentid + "'),";
+
+
+
+
+
+                    }
+
+                }
+
+                zapros = zapros.Trim(',');
+                //   log.Add(zapros);
+
+
+                try
+                {
+                    conn.Open();
+                }
+                catch (SQLiteException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                try
+                {
+                    SQLiteCommand cmd = conn.CreateCommand();
+                    string sql_command = "DROP TABLE IF EXISTS person";
+                    cmd.CommandText = sql_command;
+                    cmd.ExecuteNonQuery();
+
+
+                    sql_command = "CREATE TABLE person("
+                     + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                     + "box TEXT, "
+                     + "Art_Detal TEXT, "
+                     + "Name TEXT, "
+                     + "NNomenclature_id TEXT, "
+                     + "OTDA TEXT, "
+                                    + "OTDF TEXT, "
+                                    + "PanDirA TEXT, "
+                                    + "PanDirF TEXT, "
+                                    + "KR_DOP TEXT, "
+                                    + "KR_DOPName TEXT, "
+                           + "OTDAName TEXT, "
+                     + "OTDFName TEXT, "
+                     + "count TEXT, "
+                     + "parrentid TEXT, "
+                     + "MaterialName TEXT)";
+                //    log.Add(sql_command);
+                    cmd.CommandText = sql_command;
+                    cmd.ExecuteNonQuery();
+
+
+                    sql_command = "INSERT INTO person(box, Art_Detal, Name, NNomenclature_id, OTDA, OTDF, PanDirA, PanDirF, KR_DOP, KR_DOPName, OTDAName, OTDFName, count, MaterialName, parrentid) "
+                     + "VALUES " + zapros;
+               //     log.Add(sql_command);
+                    cmd.CommandText = sql_command;
+                    cmd.ExecuteNonQuery();
+
+
+
+
+                }
+                catch (SQLiteException ex)
+                {
+                    new alert(ex.Message);
+                    //  new alert(sql_command);
+                }
+
+
+
+
+
+
+            }
+            MessageBox.Show("Готово");
+
+        }
+
+        string zaprbazisbd(string idmaterial)
+        {
+            string connectionString_bazis =
+     "User=SYSDBA;" +
+     "Password=masterkey;" +
+     "Database=C:\\BAZIS\\MTDBR10.FDB;" +
+     "DataSource=172.16.4.239;" +
+     "Port=14357;" +
+     "Dialect=3;" +
+     "Charset=WIN1251;" +
+     "Role=;" +
+     "Connection lifetime=15;" +
+     "Pooling=true;" +
+     "MinPoolSize=0;" +
+     "MaxPoolSize=50;" +
+     "Packet Size=8192;" +
+     "ServerType=0";
+            string material = "";
+            try
+            {
+
+                FbConnection conn = new FbConnection(connectionString_bazis);
+                conn.Open();
+                string sql = "select  * from material where  ARTICLE='" + idmaterial + "'";
+
+                FbCommand com = new FbCommand(sql, conn);
+                FbDataReader dr = com.ExecuteReader();
+
+
+                while (dr.Read())
+                {
+                    material = dr["NAME_MAT"].ToString();
+
+
+
+                }
+                dr.Close();
+                conn.Close();
+            }
+            catch (FbException ex)
+            {
+                new alert(ex.Message);
+            }
+
+            //  new alert(material);
+            return material;
+
+
+        }
+
+        public string bazisgetdrombd()
+        {
+
+            string json = "";
+            using (SQLiteConnection conn = new SQLiteConnection(@"Data Source=C:\evolution\giulianovars\toBazis.sqlite; Version=3;"))
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (SQLiteException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                try
+                {
+                    SQLiteCommand cmd = conn.CreateCommand();
+                    string sql_command = "Select * from person where Name !=''";
+                    cmd.CommandText = sql_command;
+                    SQLiteDataReader r = cmd.ExecuteReader();
+                    List<detinpu> nneww = new List<detinpu>();
+                    while (r.Read())
+                    {
+                        detinpu ddelem = new detinpu();
+                        ddelem.box = r["box"].ToString();
+                        ddelem.Art_Detal = r["Art_Detal"].ToString();
+                        ddelem.Name = r["Name"].ToString();
+                        ddelem.NNomenclature_id = r["NNomenclature_id"].ToString();
+                        ddelem.OTDA = r["OTDA"].ToString();
+                        ddelem.OTDF = r["OTDF"].ToString();
+                        ddelem.PanDirA = r["PanDirA"].ToString();
+                        ddelem.PanDirF = r["PanDirF"].ToString();
+                        ddelem.KR_DOP = r["KR_DOP"].ToString();
+                        ddelem.KR_DOPName = r["KR_DOPName"].ToString();
+                        ddelem.OTDAName = r["OTDAName"].ToString();
+                        ddelem.OTDFName = r["OTDFName"].ToString();
+                        ddelem.count = r["count"].ToString();
+                        ddelem.MaterialName = r["MaterialName"].ToString();
+                        ddelem.parrentid = r["parrentid"].ToString();
+
+                        nneww.Add(ddelem);
+
+
+
+                    }
+                    r.Close();
+
+
+
+
+
+
+                    json = JsonConvert.SerializeObject(nneww, Formatting.Indented);
+
+
+
+
+
+
+
+
+
+
+                }
+                catch (SQLiteException ex)
+                {
+                    new alert(ex.Message);
+                    //  new alert(sql_command);
+                }
+
+
+
+
+
+            }
+
+            //    new alert(json);
+            return json;
+            //   MessageBox.Show("Работает");
+        }
+
+
+
+
+        public void evesync_save(ref object xAmbiente)
+        {
+            //  MessageBox.Show("asda");
+
+
+            //  Set x = Ambiente.GetObject("GG," & a)
+            //           var x = getParam(Ambiente, "GetObject", "GG","1");
+            //   new alert(x.ToString());
+
+
             YA ps = YA.Default;
             if (ps.isSave)
             {
@@ -702,6 +1024,8 @@ namespace TreeCadN
                 evesync.saveeve saveeve = new evesync.saveeve(GetPathMDB(katalog), evepath);
                 saveeve.Show();
             }
+
+
         }
 
 
@@ -805,7 +1129,7 @@ namespace TreeCadN
 
 
                         url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root + "&yadisk=" + ps.OAuth;
-                      
+
                         response = client.DownloadData(url);
                         last_upd = System.Text.Encoding.UTF8.GetString(response);
                         ////   MessageBox.Show(last_upd);
@@ -887,13 +1211,13 @@ namespace TreeCadN
                     INIManager client_man = new INIManager(path);
                     client_ver = client_man.GetPrivateString("GN_UPD", "last_upd");//версия клиента
                 }
-             //   authotiz_root = "091993E2AED611F8052E";
+                //   authotiz_root = "091993E2AED611F8052E";
 
                 string url = "http://ecad.giulianovars.ru/php/license/load_page_for_dll.php?authotiz_root=" + authotiz_root + "&upd_time=" + client_ver;
                 var response = client.DownloadData(url);
                 string str = System.Text.Encoding.UTF8.GetString(response);
                 string[] parse = str.Split('=');
-             //   MessageBox.Show(str);
+                //   MessageBox.Show(str);
                 id_clienta_root = parse[0];
                 email_root = parse[1];
                 abilitato_root = parse[2];
@@ -1180,4 +1504,36 @@ namespace TreeCadN
             return FindPidFromIndexedProcessName(FindIndexedProcessName(process.Id));
         }
     }
+
+    class del
+    {
+        public String box;
+        public String levaya;
+        public String pravaya;
+        public String top;
+        public String bottom;
+
+    }
+    class detinpu
+    {
+        public String box;
+        public String Art_Detal;
+        public String Name;
+        public String NNomenclature_id;
+        public String OTDA;
+        public String OTDF;
+        public String PanDirA;
+        public String PanDirF;
+        public String KR_DOP;
+        public String KR_DOPName;
+        public String OTDAName;
+        public String OTDFName;
+        public String count;
+        public String MaterialName;
+        public String parrentid;
+
+    }
 }
+
+
+

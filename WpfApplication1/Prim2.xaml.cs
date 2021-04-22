@@ -299,7 +299,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             autoptim_otvet = autoptim_otvet.Trim('^');
           //  EDIT = "1";
 
-            string t = @"PRIM=" + tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№').Trim() + @";AVTO=" + autoptim_otvet + @";EDIT=" + EDIT;
+            string t = @"PRIM=" + tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№').Replace(':', ' ').Trim() + @";AVTO=" + autoptim_otvet + @";EDIT=" + EDIT;
            // MessageBox.Show(t);
             //pfrhsnbt
             if (zakrit_ok)

@@ -40,21 +40,30 @@ namespace TreeCadN
 
 
 
-
-            OleDbDataReader reader = BD.conn("SELECT STCommentD.Name, STCommentD.ID, STCommentDchasto.Chastota FROM STCommentD LEFT JOIN STCommentDchasto ON STCommentD.ID = STCommentDchasto.IDComment ORDER BY STCommentDchasto.Chastota DESC");
-            while (reader.Read())
+            try
             {
-                int Chasto = 0;
-                if (reader["Chastota"].ToString() != "") Chasto = Convert.ToInt32(reader["Chastota"]);
-                result.Add(new MyTable()
+
+                OleDbDataReader reader = BD.conn("SELECT STCommentD.Name, STCommentD.ID, STCommentDchasto.Chastota FROM STCommentD LEFT JOIN STCommentDchasto ON STCommentD.ID = STCommentDchasto.IDComment ORDER BY STCommentDchasto.Chastota DESC");
+                log.Add("вопрос сделан");
+                while (reader.Read())
                 {
-                    ID = reader["ID"].ToString(),
-                    Name = reader["Name"].ToString(),
-                    Chasto = Chasto
-                });
+                    log.Add(reader["ID"].ToString());
+                    int Chasto = 0;
+                    if (reader["Chastota"].ToString() != "") Chasto = Convert.ToInt32(reader["Chastota"]);
+                    result.Add(new MyTable()
+                    {
+                        ID = reader["ID"].ToString(),
+                        Name = reader["Name"].ToString(),
+                        Chasto = Chasto
+                    });
 
+                }
             }
-
+            catch (Exception exzcx)
+            {
+                log.Add(exzcx.Message);
+            }
+            log.Add("бдвсё");
 
             loadpage();//загрузка полож окна
             log.Add("Успешно положение окна");
@@ -407,13 +416,16 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 log.Add("Путь к бд- " + path);
                 log.Add("строка подключ к бд- " + @"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");
+                log.Add("запрос- " + zapros);
                 OleDbConnection conn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");//подключаемся к базе
                 OleDbCommand cmd = new OleDbCommand();//инициализируем запрос
                 cmd.Connection = conn;//подключаемся к бд
+                log.Add("открываем соединение");
                 conn.Open();//открываем соединение
                 cmd.CommandText = (zapros);
+                log.Add("выполн зварос");
                 OleDbDataReader reader = cmd.ExecuteReader();//выполняем запрос
-
+                log.Add("выполнили зварос");
                 return reader;
             }
             catch (Exception exx)

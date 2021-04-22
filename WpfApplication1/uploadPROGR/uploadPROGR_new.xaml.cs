@@ -54,10 +54,13 @@ namespace TreeCadN.uploadPROGR
         void FTPupload(string path, string name)
         {
 
+          
+
+
 
             // отправляем файл на сервер
             FileInfo toUpload = new FileInfo(path);
-            Uri ulr = new Uri("ftp://213.159.210.45/zakaz/for_spis/" + name);
+            Uri ulr = new Uri("ftp://giulianovars.ru/zakaz/for_spis/" + name);
          
              FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ulr);
             request.Method = WebRequestMethods.Ftp.UploadFile;

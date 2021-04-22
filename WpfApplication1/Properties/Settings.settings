@@ -62,5 +62,21 @@
     <Setting Name="Top4" Type="System.Double" Scope="User">
       <Value Profile="(Default)">-100</Value>
     </Setting>
+    <Setting Name="GiulianovarsaConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=TERMINAL2008;Initial Catalog=Giulianovarsa;Persist Security Info=True;User ID=sa;Password=eCadPro2008&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=TERMINAL2008;Initial Catalog=Giulianovarsa;Persist Security Info=True;User ID=sa;Password=eCadPro2008</Value>
+    </Setting>
+    <Setting Name="EcadmasterConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=TERMINAL2008;Initial Catalog=Ecadmaster;Persist Security Info=True;User ID=sa;Password=eCadPro2008&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=TERMINAL2008;Initial Catalog=Ecadmaster;Persist Security Info=True;User ID=sa;Password=eCadPro2008</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -146,7 +146,7 @@ namespace TreeCadN
                 {
                     type = "a",
                     ID = reader_GRACC["PriceID"].ToString(),
-                    TName = reader_GRACC["GRAFIKA"].ToString()=="0" ? reader_GRACC["MName"].ToString():reader_GRACC["MName"].ToString()+" (только в графическом исполнении, искать в дереве объектов)" ,
+                    TName = reader_GRACC["MName"].ToString(),
                     Group = reader_GRACC["MatID"].ToString(),
                     baseprice = baseprice,
                     priceredak = baseprice,
@@ -160,7 +160,8 @@ namespace TreeCadN
                     OTD = "",
                     sort = sort,
                     GROUP_dlyaspicif = reader_GRACC["TKOEFGROUP_ID"].ToString(),
-                    GRAFIKA= reader_GRACC["GRAFIKA"].ToString()
+                    GRAFIKA = reader_GRACC["GRAFIKA"].ToString(),
+
 
                 });
 
@@ -255,7 +256,7 @@ namespace TreeCadN
 
             tv1.Items.Add(root);
 
-            log.Add("парсим строку");
+            log.Add("парсим строкуs");
             pars(text);
 
 
@@ -325,7 +326,7 @@ namespace TreeCadN
                         poluch.UnitsName = poluch1.UnitsName;
                         poluch.vived = poluch1.vived;
                         poluch.TName = name;
-                       // poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
+                        // poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
                         poluch.colortext = "x:Null";
 
                     }
@@ -333,8 +334,8 @@ namespace TreeCadN
                     {
                         poluch.TName = znach[7].Replace('@', ',').Replace('$', ';');
                         poluch.Article = znach[1].Replace('@', ',').Replace('$', ';');
-                       // poluch.Prim = "!Артикула нет в базе!".Replace('@', ',').Replace('$', ';');//примечание
-                     //  poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
+                        // poluch.Prim = "!Артикула нет в базе!".Replace('@', ',').Replace('$', ';');//примечание
+                        //  poluch.Prim = znach[4].Replace('@', ',').Replace('$', ';');//примечание
                         poluch.colortext = "#FFDE0606";
                         poluch.GROUP_dlyaspicif = "";
                         poluch.UnitsName = "";
@@ -510,11 +511,13 @@ namespace TreeCadN
 
         void Grid_select(texnika poluch1)
         {
-            if (poluch1.GRAFIKA != "0") { MessageBox.Show(poluch1.Article+" "+poluch1.TName+" только в графическом исполнении, искать в дереве объектов");
+            if (poluch1.GRAFIKA != "0")
+            {
+                MessageBox.Show(poluch1.Article + " " + poluch1.TName + " можно добавить только в графическом исполнении (искать в дереве объектов)");
 
                 return;
             }
-           
+
             List<texnika> kotor_v_gr3 = array_vibr_tex.FindAll(FindComputer);
 
 
@@ -1112,7 +1115,7 @@ st14.Width.ToString() + ";";
 
                     FbTransaction fbt = fb.BeginTransaction(); //стартуем транзакцию; стартовать транзакцию можно только для открытой базы (т.е. мутод Open() уже был вызван ранее, иначе ошибка)
 
-                    FbCommand SelectSQL = new FbCommand("SELECT * FROM CCUSTOMTEXNICS WHERE CUSTOMID=" + _RIFFABRICA+ " order by POZ asc", fb); //задаем запрос на выборку
+                    FbCommand SelectSQL = new FbCommand("SELECT * FROM CCUSTOMTEXNICS WHERE CUSTOMID=" + _RIFFABRICA + " order by POZ asc", fb); //задаем запрос на выборку
 
                     SelectSQL.Transaction = fbt; //необходимо проинициализить транзакцию для объекта SelectSQL
                     FbDataReader reader = SelectSQL.ExecuteReader(); //для запросов, которые возвращают результат в виде набора данных надо использоваться метод ExecuteReader()
@@ -1237,4 +1240,23 @@ st14.Width.ToString() + ";";
         }
     }
 
+
+    [ValueConversion(typeof(object), typeof(int))]
+    public class NumberToPolarValueConverter : IValueConverter
+    {
+        public object Convert(         object value, Type targetType,         object parameter, CultureInfo culture)
+        {
+            // Все проверки для краткости выкинул
+            return (string)value != "0" ?
+                new SolidColorBrush(Colors.Gray)
+                : new SolidColorBrush(Colors.Black);
+        }
+
+        public object ConvertBack(         object value, Type targetType,         object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException("ConvertBack not supported");
+        }
+    }
+
 }
+

@@ -11,7 +11,7 @@
             <RowDefinition Height="241*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Name="lb1" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" MouseDoubleClick="lb1_MouseDoubleClick" Margin="5" >
+        <DataGrid x:Name="lb1" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" MouseDoubleClick="lb1_MouseDoubleClick" Margin="5" SelectionChanged="lb1_SelectionChanged" >
             <DataGrid.Columns>
                
                 <DataGridTextColumn Header="№ заявки у клиента" Binding="{Binding nom_zayav}"  Width="1*" />

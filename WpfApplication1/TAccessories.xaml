@@ -29,7 +29,17 @@
         <ListView x:Name="Lb_spis_tex" Grid.Row="1" Margin="1,5,5,5" Loaded="g1_Loaded"   SelectionMode="Single"  BorderThickness="0,1,1,1" Foreground="Black" KeyUp="g1_KeyUp" Grid.Column="2" KeyDown="g1_KeyDown" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
+                    <Style.Resources>
+                        <!-- Brushes omitted for clarity… -->
+                        <!-- Reduces a customer's Balance to either -1, 0, or +1 -->
+                        <local:NumberToPolarValueConverter x:Key="PolarValueConv" />
+                    </Style.Resources>
+
+                    <Setter Property="Foreground" Value="{Binding GRAFIKA, Converter={StaticResource PolarValueConv}}" />
+                  
                     <EventSetter Event="MouseDoubleClick" Handler="g1_MouseDoubleClick" />
+                  
+
                 </Style>
             </ListView.ItemContainerStyle>
 

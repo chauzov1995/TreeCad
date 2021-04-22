@@ -27,7 +27,7 @@
         <Button Content="Сохранить и выйти" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Width="116" Click="Button_Click_1"/>
         <Label x:Name="tb1" Content="" HorizontalAlignment="Left" Margin="131,8,0,0" VerticalAlignment="Top" Foreground="#FF17C30F" FontWeight="Bold"/>
         <TextBlock Margin="311,8,0,0" FontSize="14" VerticalAlignment="Top">
-      <Hyperlink  NavigateUri="http://dealers.giulianovars.ru/news/sinhronizaciya-zakazov-s-yandeksdiskom" RequestNavigate="Hyperlink_RequestNavigate" >Инструкция</Hyperlink>
+      <Hyperlink  NavigateUri="https://dealers.giulianovars.ru/news/sinhronizaciya-zakazov-s-yandeksdiskom" RequestNavigate="Hyperlink_RequestNavigate" >Инструкция</Hyperlink>
         </TextBlock>
     </Grid>
 </Window>

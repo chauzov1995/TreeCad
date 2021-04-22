@@ -60,7 +60,7 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <Button   Content="Отмена" Margin="5" Click="Button_Click_1" IsCancel="True"  Grid.Column="2" Height="30" IsTabStop="False" />
-            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" FontSize="14" Text="Запрещено использовать символы #$@№^|" Margin="5"/>
+            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" FontSize="14" Text="Запрещено использовать символы #$@№^|:" Margin="5"/>
             <Button  x:Name="b1" Content="Ок" Margin="5" Click="b1_Click" TabIndex="4" Grid.Column="1" Height="30" IsTabStop="False" >
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">

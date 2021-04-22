@@ -33,7 +33,7 @@ namespace TreeCadN.uploadPROGR
 
 
        //     WebClient client = new WebClient();
-            var url = "ftp://213.159.210.45/zakaz/";
+            var url = "ftp://giulianovars.ru/zakaz/";
         
 
 
@@ -94,7 +94,7 @@ namespace TreeCadN.uploadPROGR
 
           
      
-            var url = "ftp://213.159.210.45/zakaz/" + (lb1.SelectedItem as string);
+            var url = "ftp://giulianovars.ru/zakaz/" + (lb1.SelectedItem as string);
             INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
             string tmppath = Environment.CurrentDirectory + @"\" + path_sysdba + @"\000001.eve";
@@ -111,22 +111,28 @@ namespace TreeCadN.uploadPROGR
 
             // This example assumes the FTP site uses anonymous logon.
             request.Credentials = new NetworkCredential("ecad", "UWnlLh3PLy");
-
             FtpWebResponse response = (FtpWebResponse)request.GetResponse();
 
+            // получаем поток ответа
             Stream responseStream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(responseStream);
-            string result = reader.ReadToEnd();
+            // сохраняем файл в дисковой системе
+            // создаем поток для сохранения файла
+            FileStream fs = new FileStream(tmppath, FileMode.Create);
 
-            //save file locally on your pc
-            using (StreamWriter file = File.CreateText(tmppath))
+            //Буфер для считываемых данных
+            byte[] buffer = new byte[64];
+            int size = 0;
+
+            while ((size = responseStream.Read(buffer, 0, buffer.Length)) > 0)
             {
-                file.WriteLine(result);
-                file.Close();
+                fs.Write(buffer, 0, size);
 
             }
-            reader.Close();
+            fs.Close();
             response.Close();
+
+            Console.WriteLine("Загрузка и сохранение файла завершены");
+            Console.Read();
 
 
 

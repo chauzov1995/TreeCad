@@ -80,6 +80,7 @@ namespace TreeCadN.kommunikacii
             move_to_new_41();
 
             loadpage();
+            log.Add("lb3napolnene");
             lb3napolnene();
             lb2napolnene();
 
@@ -1021,11 +1022,14 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     param = "&" + param;
                 }
                 //загрузка дынных для сервера
+                log.Add("/загрузка дынных для сервера");
                 WebClient client = new WebClient();
+                
                 string url = "https://ecad.giulianovars.ru/php/3dsobject/3ds.php?command=" + comand + param;
+                log.Add(url);
                 byte[] response = client.DownloadData(url);
                 otvet = Encoding.UTF8.GetString(response);
-
+                log.Add("успех");
             }
             catch (Exception err)
             {
