@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:TreeCadN.open_ordini"
         mc:Ignorable="d"
         Title="Заказы" Height="450" Width="1000" MinWidth="1000" MinHeight="450" KeyUp="Window_KeyUp" Closing="Window_Closing" >
-  
-    
+
+
     <Grid>
-        
-        
+
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="99*"/>
@@ -96,7 +96,7 @@
         <DataGrid x:Name="lb1"  AllowDrop="True"  SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False"  Margin="5" Grid.Row="2" Grid.ColumnSpan="6" Loaded="lb1_Loaded" SelectionChanged="lb1_SelectionChanged" IsReadOnly="True" MouseDoubleClick="lb1_MouseDoubleClick" HorizontalGridLinesBrush="#FFDDDDDD" VerticalGridLinesBrush="#FFDDDDDD" >
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                   
+
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
             <DataGrid.Columns>
@@ -111,13 +111,12 @@
                 <DataGridTextColumn Header="Дата последнего изменения" Binding="{Binding date_last_update}"  MinWidth="20" SortMemberPath="date_last_update_sort"/>
                 <DataGridTextColumn Header="Статус" Binding="{Binding status}"  MinWidth="20"/>
             </DataGrid.Columns>
-            
+
         </DataGrid>
 
         <Button Content="Открыть" ToolTip="CTRL + ENTER" Margin="0,0,5,5" Click="Button_Click" Grid.Column="6" Grid.Row="2" Height="30" VerticalAlignment="Bottom"/>
         <Button Content="Дублировать" Grid.Column="6" Margin="0,0,5,75" VerticalAlignment="Bottom" Height="30" Click="Button_Click_3" Grid.Row="2"/>
         <Button Content="Удалить" Grid.Column="6" Margin="0,0,5,40" VerticalAlignment="Bottom" Height="30" Grid.Row="2" Click="Button_Click_8"/>
-        <Button  Content="Обновить список заказов" Grid.Column="6" Margin="0,142,5,0" VerticalAlignment="Top" Height="30"  Grid.Row="2" Click="Button_Click_1"/>
         <Button Content="Очистить" Grid.Column="5" Margin="5" Grid.Row="1" VerticalAlignment="Center" Click="Button_Click_7"/>
         <Border Grid.Column="6" Height="151" Margin="0,16,5,0" Grid.Row="1" VerticalAlignment="Top" Grid.RowSpan="2" BorderBrush="#FF898989" BorderThickness="1">
             <Image x:Name="img"  Source="/TreeCadN;component/Foto/nofoto.jpg"/>
@@ -128,7 +127,8 @@
         <Button  Grid.Column="6" Margin="0,5,5,0" VerticalAlignment="Top" Click="Button_Click_15" HorizontalAlignment="Right" Height="40" Grid.RowSpan="2" Width="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
             <Image Source="/TreeCadN;component/Foto/settings.png"/>
         </Button>
-        <Button x:Name="btn_share" Content="Скопировать заказы на шару" Grid.Column="6" Margin="0,177,5,0" VerticalAlignment="Top" Height="30" Background="#FF5DF1D6" Foreground="#FF1B7665" Click="Button_Click_2" ToolTip="Скопирует заказы из вашей локальной папки в общую папку" Grid.Row="2"/>
+        <Button x:Name="btn_share" Content="Заказы на шару" Grid.Column="6" Margin="10,10,69,0" VerticalAlignment="Top" Height="30" Background="#FF5DF1D6" Foreground="#FF1B7665" Click="Button_Click_2" ToolTip="Скопирует заказы из вашей локальной папки в общую папку" Grid.RowSpan="2"/>
+        <ListBox x:Name="lbrevis" Grid.Column="6" Height="105" Margin="0,140,5,0" Grid.Row="2" VerticalAlignment="Top"/>
 
 
 

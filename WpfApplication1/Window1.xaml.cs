@@ -53,15 +53,17 @@ namespace TreeCadN
         {
             InitializeComponent();
 
+           
+
             try
             {
                 this.listdet = listdet;
                 str2 = str1;
                 vh_func_str = str1;
                 BD.path = path; //укажем файл бд
-
+                this.Title = "Отделка " + path;
                 papka_s_foto = Environment.CurrentDirectory + @"\" + katalog + @"\";
-
+                
                 //    TekOtdelka.Add(new TekOtd() { });
 
                 zagr_spis_ncs();

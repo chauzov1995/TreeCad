@@ -624,8 +624,36 @@ namespace TreeCadN.open_ordini
 
         }
 
+       void  getrevisioni()
+        {
+            var selected_ordini = (lb1.SelectedItem as ordini);
+
+
+            object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "lstRevisioni");
+            //object engine = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "ENGINE");
+          //  object info = neqqqqq.getParam(xamb, "lstRevisioni");
+            // string nomer = neqqqqq.getParam(info, "lstRevisioni").ToString();
+
+          //  string nomer = neqqqqq.getParam(info, "Numero").ToString();
+
+            MessageBox.Show(nomer);
+           // neqqqqq.getParamI(xamb, "lstRevisioni");//сохраним
+
+
+            //      object info = neqqqqq.getParamG(xamb, "lstRevisioni");
+
+
+            //  string newnum = neqqqqq.getParamI(info, "ListCount").ToString();
+            //   neqqqqq.setParamP(info, "Numero", newnum);
+            //   MessageBox.Show(newnum);
+            //var_9A = Me.lstRevisioni.ListCount
+            //Me.infoGet().NuovoNumeroOrdine()
+        }
+
+
         private void lb1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            getrevisioni();
             string pathtmp = path_ordini + @"\";
 
             if (lb1.SelectedItem != null)

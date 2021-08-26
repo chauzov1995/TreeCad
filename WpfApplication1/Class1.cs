@@ -758,17 +758,19 @@ namespace TreeCadN
 
                         if (boxterr.Art_Detal != "")
                         {
-                            boxterr.MaterialName = zaprbazisbd(boxterr.Art_Detal);
-                            boxterr.OTDAName = zaprbazisbd("TOTD_"+boxterr.OTDA);
-                            boxterr.OTDFName = zaprbazisbd("TOTD_" + boxterr.OTDF);
-                            boxterr.KR_DOPName = zaprbazisbd(boxterr.KR_DOP);
+                           var  materchert= zaprbazisbd(boxterr.Art_Detal);
+                            boxterr.MaterialName = materchert.MaterialName;
+                            boxterr.width = materchert.width;
+                            boxterr.OTDAName = zaprbazisbd("TOTD_"+boxterr.OTDA).MaterialName;
+                            boxterr.OTDFName = zaprbazisbd("TOTD_" + boxterr.OTDF).MaterialName;
+                            boxterr.KR_DOPName = zaprbazisbd(boxterr.KR_DOP).MaterialName;
                         }
 
                         zapros += "('" + box + "','" + boxterr.Art_Detal + "','" + boxterr.Name + "','"
                             + boxterr.NNomenclature_id + "','" + boxterr.OTDA + "','" + boxterr.OTDF + "','"
                              + boxterr.PanDirA + "','" + boxterr.PanDirF + "','"
                           + boxterr.KR_DOP + "','" + boxterr.KR_DOPName + "','" + boxterr.OTDAName + "','" + boxterr.OTDFName + "','"
-                            + boxterr.count + "','" + boxterr.MaterialName + "','" + boxterr.parrentid + "'),";
+                            + boxterr.count + "','" + boxterr.MaterialName + "','" + boxterr.parrentid + "','" + boxterr.width + "'),";
 
 
 
@@ -815,13 +817,14 @@ namespace TreeCadN
                      + "OTDFName TEXT, "
                      + "count TEXT, "
                      + "parrentid TEXT, "
+                     + "width TEXT, "
                      + "MaterialName TEXT)";
                 //    log.Add(sql_command);
                     cmd.CommandText = sql_command;
                     cmd.ExecuteNonQuery();
 
 
-                    sql_command = "INSERT INTO person(box, Art_Detal, Name, NNomenclature_id, OTDA, OTDF, PanDirA, PanDirF, KR_DOP, KR_DOPName, OTDAName, OTDFName, count, MaterialName, parrentid) "
+                    sql_command = "INSERT INTO person(box, Art_Detal, Name, NNomenclature_id, OTDA, OTDF, PanDirA, PanDirF, KR_DOP, KR_DOPName, OTDAName, OTDFName, count, MaterialName, parrentid, width) "
                      + "VALUES " + zapros;
                //     log.Add(sql_command);
                     cmd.CommandText = sql_command;
@@ -847,7 +850,7 @@ namespace TreeCadN
 
         }
 
-        string zaprbazisbd(string idmaterial)
+        detinpu zaprbazisbd(string idmaterial)
         {
             string connectionString_bazis =
      "User=SYSDBA;" +
@@ -864,13 +867,15 @@ namespace TreeCadN
      "MaxPoolSize=50;" +
      "Packet Size=8192;" +
      "ServerType=0";
-            string material = "";
+
+            detinpu sasasssdds=new detinpu();
+        //    string material = "";
             try
             {
 
                 FbConnection conn = new FbConnection(connectionString_bazis);
                 conn.Open();
-                string sql = "select  * from material where  ARTICLE='" + idmaterial + "'";
+                string sql = "select  m.NAME_MAT, ma.THICKNESS from material m LEFT JOIN MATERIAL_ADVANCE  ma on m.ID_M = ma.ID_M  where  m.ARTICLE='" + idmaterial + "'";
 
                 FbCommand com = new FbCommand(sql, conn);
                 FbDataReader dr = com.ExecuteReader();
@@ -878,7 +883,8 @@ namespace TreeCadN
 
                 while (dr.Read())
                 {
-                    material = dr["NAME_MAT"].ToString();
+                    sasasssdds.MaterialName = dr["NAME_MAT"].ToString();
+                    sasasssdds.width = dr["THICKNESS"].ToString();
 
 
 
@@ -892,7 +898,7 @@ namespace TreeCadN
             }
 
             //  new alert(material);
-            return material;
+            return sasasssdds;
 
 
         }
@@ -936,7 +942,8 @@ namespace TreeCadN
                         ddelem.count = r["count"].ToString();
                         ddelem.MaterialName = r["MaterialName"].ToString();
                         ddelem.parrentid = r["parrentid"].ToString();
-
+                        ddelem.width = r["width"].ToString();
+                        //asdad
                         nneww.Add(ddelem);
 
 
@@ -1531,6 +1538,7 @@ namespace TreeCadN
         public String count;
         public String MaterialName;
         public String parrentid;
+        public String width;
 
     }
 }
