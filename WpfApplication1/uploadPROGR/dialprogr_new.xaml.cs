@@ -187,32 +187,52 @@ namespace TreeCadN.uploadPROGR
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-          
+            /* 
 
-            // (sender as Button).IsEnabled = false;
+               // (sender as Button).IsEnabled = false;
 
-            //2. отправляем файл на сервер
-            FileInfo toUpload = new FileInfo(path);
-      //  MessageBox.Show(@"ftp://giulianovars.ru/zakaz/" + toUpload.Name);
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(@"ftp://giulianovars.ru/zakaz/" + toUpload.Name);
-            request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential("ecad", "UWnlLh3PLy");
-            Stream ftpStream = request.GetRequestStream();
-            FileStream fileStream = File.OpenRead(path);
-            byte[] buffer = new byte[1024];
-            int i = 0;
-            int bytesRead = 0;
-            do
+               //2. отправляем файл на сервер
+               FileInfo toUpload = new FileInfo(path);
+         //  MessageBox.Show(@"ftp://giulianovars.ru/zakaz/" + toUpload.Name);
+               FtpWebRequest request = (FtpWebRequest)WebRequest.Create(@"ftp://giulianovars.ru/zakaz/" + toUpload.Name);
+               request.Method = WebRequestMethods.Ftp.UploadFile;
+               request.Credentials = new NetworkCredential("ecad", "UWnlLh3PLy");
+               Stream ftpStream = request.GetRequestStream();
+               FileStream fileStream = File.OpenRead(path);
+               byte[] buffer = new byte[1024];
+               int i = 0;
+               int bytesRead = 0;
+               do
+               {
+                   i++;
+                   bytesRead = fileStream.Read(buffer, 0, 1024);
+                   ftpStream.Write(buffer, 0, bytesRead);
+               }
+               while (bytesRead != 0);
+               fileStream.Close();
+               ftpStream.Close();
+            */
+            using (var client = new System.Net.WebClient())
             {
-                i++;
-                bytesRead = fileStream.Read(buffer, 0, 1024);
-                ftpStream.Write(buffer, 0, bytesRead);
+             //   client.Headers.Add("Content-Type", "multipart/form-data");
+                var asdasdasd= client.UploadFile(@"https://ecad.giulianovars.ru/zakaz/uploadzakaz.php", "POST", path);
+                string download = Encoding.UTF8.GetString(asdasdasd);
+
+              //  MessageBox.Show(download);
+
             }
-            while (bytesRead != 0);
-            fileStream.Close();
-            ftpStream.Close();
+
+
+
 
             MessageBox.Show("Заказ успешно отправлен");
+        }
+
+        void uploadzaka()
+        {
+
+          
+
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)

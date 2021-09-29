@@ -99,17 +99,85 @@
 
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
+          
             <DataGrid.Columns>
-                <DataGridTextColumn Header="№ заказа" Binding="{Binding nomer_zakaza}"  MinWidth="20" />
-                <DataGridTextColumn Header="ФИО клиента" Binding="{Binding FIO_klienta}"  MinWidth="20"/>
-                <DataGridTextColumn Header="Сумма" Binding="{Binding orderprice}" MinWidth="20"/>
-                <DataGridTextColumn Header="Дата изготовления" Binding="{Binding SROK}"  MinWidth="20" SortMemberPath="date_sorted"/>
-                <DataGridTextColumn Header="Номер в салоне" Binding="{Binding _RIFSALON}"  MinWidth="20"/>
-                <DataGridTextColumn Header="Номер на фабрике" Binding="{Binding _RIFFABRICA}"  MinWidth="20"/>
-                <DataGridTextColumn Header="Менеджер в салоне" Binding="{Binding manager_salons}"  MinWidth="20"/>
-                <DataGridTextColumn Header="Салон" Binding="{Binding SALON}"  MinWidth="20"/>
-                <DataGridTextColumn Header="Дата последнего изменения" Binding="{Binding date_last_update}"  MinWidth="20" SortMemberPath="date_last_update_sort"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding status}"  MinWidth="20"/>
+                <DataGridTextColumn Binding="{Binding nomer_zakaza}" >
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="№ заказа" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="ФИО клиента" Binding="{Binding FIO_klienta}"  MinWidth="20">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="ФИО клиента" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Сумма" Binding="{Binding orderprice}" MinWidth="20">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="Сумма" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Дата изготовления" Binding="{Binding SROK}"  MinWidth="20" SortMemberPath="date_sorted">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="Дата изготовления" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Номер в салоне" Binding="{Binding _RIFSALON}"  MinWidth="20">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="Номер в салоне" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Номер на фабрике" Binding="{Binding _RIFFABRICA}"  MinWidth="20">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="Номер на фабрике" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Менеджер в салоне" Binding="{Binding manager_salons}"  MinWidth="20">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="Менеджер в салоне" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Салон" Binding="{Binding SALON}"  MinWidth="20">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="Салон" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Дата последнего изменения" Binding="{Binding date_last_update}"  MinWidth="20" SortMemberPath="date_last_update_sort">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="Дата последнего изменения" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Статус" Binding="{Binding status}"  MinWidth="20">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="Статусa" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Примечание" Binding="{Binding prim}"  MinWidth="20">
+                    <DataGridTextColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="Примечание" MinWidth="20" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
             </DataGrid.Columns>
 
         </DataGrid>
@@ -128,7 +196,7 @@
             <Image Source="/TreeCadN;component/Foto/settings.png"/>
         </Button>
         <Button x:Name="btn_share" Content="Заказы на шару" Grid.Column="6" Margin="10,10,69,0" VerticalAlignment="Top" Height="30" Background="#FF5DF1D6" Foreground="#FF1B7665" Click="Button_Click_2" ToolTip="Скопирует заказы из вашей локальной папки в общую папку" Grid.RowSpan="2"/>
-        <ListBox x:Name="lbrevis" Grid.Column="6" Height="105" Margin="0,140,5,0" Grid.Row="2" VerticalAlignment="Top"/>
+        <ListBox x:Name="lbrevis" Grid.Column="6" Margin="0,140,5,110" Grid.Row="2"/>
 
 
 

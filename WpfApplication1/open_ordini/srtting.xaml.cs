@@ -35,7 +35,8 @@ namespace TreeCadN.open_ordini
 
             Settings1 ps = Settings1.Default;
 
-         
+
+
             spiscolumn.Add(new spissettings() { Value = "№ заказа", IsSelected = ps.spisotobrstolb[0] == '1' });
             spiscolumn.Add(new spissettings() { Value = "ФИО клиента", IsSelected = ps.spisotobrstolb[1] == '1' });
             spiscolumn.Add(new spissettings() { Value = "Сумма", IsSelected = ps.spisotobrstolb[2] == '1' });
@@ -46,6 +47,7 @@ namespace TreeCadN.open_ordini
             spiscolumn.Add(new spissettings() { Value = "Салон", IsSelected = ps.spisotobrstolb[7] == '1' });
             spiscolumn.Add(new spissettings() { Value = "Дата последнего изменения", IsSelected = ps.spisotobrstolb[8] == '1' });
             spiscolumn.Add(new spissettings() { Value = "Статус", IsSelected = ps.spisotobrstolb[9] == '1' });
+            spiscolumn.Add(new spissettings() { Value = "Примечание", IsSelected =  ps.spisotobrstolb[10] == '1' });
 
             lb1.ItemsSource = spiscolumn;
         }
@@ -96,11 +98,13 @@ namespace TreeCadN.open_ordini
                     string _RIFFABRICA = neqqqqq.getParam(info2, "Var", "_RIFFABRICA").ToString();
                     string _RIFSALON = neqqqqq.getParam(info2, "Var", "_RIFSALON").ToString();
                     string SROK = neqqqqq.getParam(info2, "Var", "SROK").ToString();
-                    string SALON = neqqqqq.getParam(info2, "Var", "SALON").ToString();
+                    string SALON = neqqqqq.getParam(info2, "Var", "SALON").ToString();                                   
+                    object prim = neqqqqq.getParamG(info, "rif").ToString();
+     
 
 
-                    m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK, SALON) " +
-                        "VALUES ('" + file + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "', '"+ SALON + "')";
+                    m_sqlCmd.CommandText = "INSERT OR IGNORE INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK, SALON, prim) " +
+                        "VALUES ('" + file + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "', '"+ SALON + "', '"+ prim + "')";
                     m_sqlCmd.ExecuteNonQuery();
 
 

@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WpfApplication1.Properties" GeneratedClassName="Settings1">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TreeCadN.Properties" GeneratedClassName="Settings1">
   <Profiles />
   <Settings>
     <Setting Name="history1" Type="System.String" Scope="User">
@@ -30,6 +30,9 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="zakladka5" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="zakladka6" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
