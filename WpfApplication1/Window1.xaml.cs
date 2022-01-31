@@ -131,7 +131,7 @@ namespace TreeCadN
             seldopotd.Clear();
             seldopotd.Add(new Person()
             {
-                ID = "1",
+                ID = "0",
                 NAME = "Нет"
             });
             comboBox1.SelectedIndex = 0;
@@ -509,7 +509,7 @@ namespace TreeCadN
             TekOtdelka.index6 = words[5];//Индекс Эффекта
             TekOtdelka.index7 = words[6];//Галочка одинак отделка
             TekOtdelka.index8 = words[7];//нестанд цвет
-            TekOtdelka.index9 = words[8];//не исп
+            TekOtdelka.index9 = words[8];//если нчс то ссылка на цвет
             TekOtdelka.index10 = words[9];// спис разреш групп для отделки
 
             log.Add("1");

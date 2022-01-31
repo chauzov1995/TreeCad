@@ -168,18 +168,7 @@ namespace TreeCadN
         bool pismo_prov_1 = false, pismo_prov_2 = false, pismo_prov_3 = false;
 
 
-        string hash_value(string local_path)
-        {
-
-            RIPEMD160 myRIPEMD160 = RIPEMD160Managed.Create();
-            FileStream tmppathStream = File.OpenRead(local_path);
-            byte[] hashValue = myRIPEMD160.ComputeHash(tmppathStream);
-            tmppathStream.Close();
-            string hash = BitConverter.ToString(hashValue).Replace("-", String.Empty);
-
-
-            return hash;
-        }
+   
 
         void otpravka_rez(int id)
         {
@@ -386,7 +375,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 log.Add("обновление dll хэш с сервера " + response1);
 
                 //dll нуждается в обновлении
-                if (hash_value(TreeCadNpath) != response1)
+              /*  if (hash_value(TreeCadNpath) != response1)
                 {
                     log.Add("обновление dll нуждается в обновлении");
 
@@ -422,7 +411,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
 
 
-                }
+                }*/
 
             }
             catch (Exception err)
@@ -432,7 +421,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
             }
 
         }
-
+        /*
         static string hash_value(string local_path)
         {
 
@@ -444,7 +433,7 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
 
             return hash;
-        }
+        }*/
     }
 
 }

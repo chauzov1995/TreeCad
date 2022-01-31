@@ -330,11 +330,11 @@ namespace TreeCadN.open_ordini
                     ps.spiswidth += ";1";
                 }
 
-
+           
 
                 lb1.Columns[i].Visibility = ps.spisotobrstolb[i] == '1' ? Visibility.Visible : Visibility.Collapsed;
                 lb1.Columns[i].DisplayIndex = Convert.ToInt32(ps.spisindex.Split(';')[i]);
-                lb1.Columns[i].Width = new DataGridLength(double.Parse(ps.spiswidth.Split(';')[i], CultureInfo.InvariantCulture), DataGridLengthUnitType.Star);
+                lb1.Columns[i].Width = new DataGridLength(double.Parse(ps.spiswidth.Split(';')[i]== "Auto" ? "1": ps.spiswidth.Split(';')[i], CultureInfo.InvariantCulture), DataGridLengthUnitType.Star);
 
             }
 
@@ -410,7 +410,7 @@ namespace TreeCadN.open_ordini
             string file_path_load1 = path_ordini + @"\" + evefile + ".eve";
             double date_last_update = ConvertToUnixTime(File.GetLastWriteTime(file_path_load1));
 
-
+            log.Add("SELECT * FROM ordini where nomer_zakaza ='" + evefile + "' limit 1");
             m_sqlCmd.CommandText = "SELECT * FROM ordini where nomer_zakaza ='" + evefile + "' limit 1";
 
 
@@ -460,8 +460,9 @@ namespace TreeCadN.open_ordini
                                                   "status='" + status + "', " +
                                                   "prim='" + prim + "' " +
                     " where nomer_zakaza ='" + evefile + "'";
+                log.Add(m_sqlCmd.CommandText);
                 m_sqlCmd.ExecuteNonQuery();
-
+           
             }
             else
             {
@@ -471,7 +472,8 @@ namespace TreeCadN.open_ordini
                 if (File.Exists(file_path_load1))
                 {
                     m_sqlCmd.CommandText = "INSERT INTO ordini (file_path, nomer_zakaza, FIO, manager, orderprice, _RIFFABRICA, _RIFSALON, SROK, date_last_update, status, prim) " +
-                        "VALUES ('" + file_path_load1 + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "', '" + date_last_update + "', '"+ status + ", '" + prim + "')";
+                        "VALUES ('" + file_path_load1 + "', '" + nomfile + "','" + FIO + "','" + Manager + "', '" + orderprice + "', '" + _RIFFABRICA + "', '" + _RIFSALON + "', '" + SROK + "', '" + date_last_update + "', '"+ status + "', '" + prim + "')";
+                    log.Add(m_sqlCmd.CommandText);
                     m_sqlCmd.ExecuteNonQuery();
                 }
 
