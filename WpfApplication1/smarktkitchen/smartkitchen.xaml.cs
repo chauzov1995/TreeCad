@@ -1,5 +1,4 @@
-﻿using Firebase.Database;
-using Firebase.Database.Query;
+﻿
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -158,45 +157,7 @@ namespace TreeCadN.smarktkitchen
 
         async Task registrfirebaseAsync(string asdasdasd, string macaddr)
         {
-            // MessageBox.Show("registrfirebaseAsync");
-            try
-            {
-
-                var auth = "8S61wPpcoQu4mBRZw3qcAYrW9yuOZVULFHe0hYgS"; // your app secret
-                var firebase = new FirebaseClient(
-                  "https://giulia-novars-smart.europe-west1.firebasedatabase.app/",
-                  new FirebaseOptions
-                  {
-                      AuthTokenAsyncFactory = () => Task.FromResult(auth)
-                  });
-
-
-
-                var m = JsonConvert.DeserializeObject(asdasdasd);
-                /*
-                var dino = await firebase
-      .Child("dinosaurs")
-      .PostAsync(m);
-
-                // note that there is another overload for the PostAsync method which delegates the new key generation to the firebase server
-
-                Console.WriteLine($"Key for the new dinosaur: {dino.Key}");
-                */
-                // add new item directly to the specified location (this will overwrite whatever data already exists at that location)
-                await firebase
-                  //   .Child("dinosaurs")
-                  .Child("zakaz-s/" + macaddr)
-                  .PutAsync(m);
-                /*
-                // delete given child node
-                await firebase
-                  .Child("dinosaurs")
-                  .Child("t-rex")
-                  .DeleteAsync();*/
-
-            }
-            catch (Exception easd) { MessageBox.Show(easd.Message); }
-
+            
         }
 
 
