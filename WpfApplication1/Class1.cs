@@ -20,7 +20,7 @@ using TreeCadN.open_ordini;
 using System.Data.Common;
 using System.Data;
 using FirebirdSql.Data.FirebirdClient;
-using TreeCadN.smarktkitchen;
+//using TreeCadN.smarktkitchen;
 
 namespace TreeCadN
 {
@@ -83,7 +83,7 @@ namespace TreeCadN
                         GNviewer(Environment.CurrentDirectory + @"\GIULIANOVARSA\procedure");
                         break;
                     case "smartkitchen":
-                        returnValue=smartkitchen(s);
+                    //    returnValue=smartkitchen(s);
                         break;
                     case "uploadPROGR":
 
@@ -563,13 +563,13 @@ namespace TreeCadN
             f_TAccess.ShowDialog();
             return f_TAccess.text_otvet;
         }
-        public string smartkitchen(string path)
-        {
+       // public string smartkitchen(string path)
+      //  {
            //   MessageBox.Show(path);
-            smartkitchen f_TAccess = new smarktkitchen.smartkitchen(path);
-            f_TAccess.ShowDialog();
-            return f_TAccess.otvet;
-        }
+         //   smartkitchen f_TAccess = new smarktkitchen.smartkitchen(path);
+         //   f_TAccess.ShowDialog();
+        //    return f_TAccess.otvet;
+     //   }
         public string zenakorp(string path, string param)
         {
             //  MessageBox.Show(param);

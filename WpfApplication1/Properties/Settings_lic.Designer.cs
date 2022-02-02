@@ -12,7 +12,7 @@ namespace TreeCadN.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
     internal sealed partial class Settings_lic : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings_lic defaultInstance = ((Settings_lic)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings_lic())));
