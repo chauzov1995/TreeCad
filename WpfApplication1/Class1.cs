@@ -398,7 +398,7 @@ namespace TreeCadN
             {
                 if (str1 == "")
                 {
-                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56";
+                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60";
                     uslovvipol = true;
                 }
                 else
@@ -409,7 +409,7 @@ namespace TreeCadN
               MessageBoxButton.YesNo,
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
-                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56";
+                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60";
                         uslovvipol = true;
                     }
                     else
@@ -551,8 +551,8 @@ namespace TreeCadN
         {
             this.Ambiente = xAmbiente;
             string katalog = getParamI(Ambiente, "xPercorso").ToString();
-
-            Prim2 f_prim = new Prim2(GetPathMDB(katalog), text);
+            Prim3 f_prim = new Prim3(GetPathMDB(katalog), text);
+            //    Prim2 f_prim = new Prim2(GetPathMDB(katalog), text);
             f_prim.ShowDialog();
             return f_prim.text_otvet;
         }

@@ -64,13 +64,13 @@ namespace TreeCadN
             items.Add(new Licenz { id = "3", lic = "Экспорт в dwg (AutoCAD)", price = "4", modul_Act = moduli_root[1].ToString() });
             items.Add(new Licenz { id = "4", lic = "Sketch Up", price = "2", modul_Act = moduli_root[8].ToString() });
             items.Add(new Licenz { id = "5", lic = "Предметы для обстановки помещений", price = "3", modul_Act = moduli_root[11].ToString() });
-            items.Add(new Licenz { id = "6", lic = "Спецэффекты (плавное открывание дверей и пр.)", price = "3", modul_Act = moduli_root[2].ToString() });
+          //  items.Add(new Licenz { id = "6", lic = "Спецэффекты (плавное открывание дверей и пр.)", price = "3", modul_Act = moduli_root[2].ToString() });
 
 
 
             zapros_na_server();
 
-            for (int i = 0; i <= 6; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 if (items[i].modul_Act == "1")
                 {

@@ -134,6 +134,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\lib\net451\System.Data.SQLite.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System.Data.SQLite.EF6, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.EF6.1.0.115.5\lib\net451\System.Data.SQLite.EF6.dll</HintPath>
@@ -243,6 +244,9 @@
     <Compile Include="Prim.xaml.cs">
       <DependentUpon>Prim.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Prim3.xaml.cs">
+      <DependentUpon>Prim3.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings1.cs" />
     <Compile Include="Properties\Settings1.Designer.cs">
       <DependentUpon>Settings1.settings</DependentUpon>
@@ -341,6 +345,10 @@
     <Page Include="open_ordini\status.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Prim3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="smarktkitchen\smartkitchen.xaml">
       <SubType>Designer</SubType>

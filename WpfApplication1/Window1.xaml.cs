@@ -1343,6 +1343,22 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 TekOtdelka.naprav1 = "0";
 
             }
+            if(TekOtdelka.index7.Equals("1"))
+            {
+
+
+
+             
+                
+                    image6.Source = norotate_loc("tek3.png");
+                    TekOtdelka.index7 = "0";
+                    obe_plasti = 0;
+                
+
+               // strrazobr(strsobr());
+              //  listView1.SelectedIndex = -1;
+
+            }
 
 
             strrazobr(strsobr());

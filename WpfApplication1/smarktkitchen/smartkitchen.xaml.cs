@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,6 +30,7 @@ namespace TreeCadN.smarktkitchen
 
 
         public string otvet ="";
+        List<tabcontr> asdssgbbvbdasd;
 
         public smartkitchen(string vhod)
         {
@@ -75,9 +78,16 @@ namespace TreeCadN.smarktkitchen
 
 
 
-            lb1.ItemsSource = asdasdasdasdasdasd;
+        asdssgbbvbdasd = new List<tabcontr>() { 
+            new tabcontr(){name= "dev2222",valuies=asdasdasdasdasdasd }
+            
+            };
 
-            lbspisplat.ItemsSource = spisplat;
+
+            tabbb2.ItemsSource = asdssgbbvbdasd;
+          //  lb1.ItemsSource = asdasdasdasdasdasd;
+
+            //lbspisplat.ItemsSource = spisplat;
 
 
 
@@ -155,21 +165,48 @@ namespace TreeCadN.smarktkitchen
 
 
 
-        async Task registrfirebaseAsync(string asdasdasd, string macaddr)
+
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            
-        }
-
-
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            registrfirebaseAsync("{}",  "asdasd");
-
             string nomzakaza = nomzak.Text.Trim();
-            MessageBox.Show(nomzakaza);
+            if(nomzakaza.Length<5 || nomzakaza.Length>6)
+            {
+                MessageBox.Show("Номер заказа заполнен неверно" +nomzakaza);
+                return;
+            }
+     
+
+
+
+          
 
             string itogstr = sborstroki();
+
+            MessageBox.Show(itogstr);
+
+
+            var httpWebRequest = WebRequest.Create("https://europe-west1-giulia-novars-smart.cloudfunctions.net/getConfig/konstrSetZakaz/" + nomzakaza);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "{\"dev1\":\""+ itogstr + "\"}";
+
+                streamWriter.Write(json);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+            }
+
+
+
+
+
 
             otvet = itogstr;
             Close();
@@ -182,10 +219,10 @@ namespace TreeCadN.smarktkitchen
 
         string sborstroki()
         {
-
+            
 
             string itogstr = "";
-
+            /*
             foreach (var elems in lb1.Items)
             {
 
@@ -203,6 +240,7 @@ namespace TreeCadN.smarktkitchen
                 // 1^0^Подсветка 1^none;2^0^Подсветка 2^none;3^0^Подсветка 3^none;4^1^Подсветка 4^none;5^0^Ретротоп^none
             }
             itogstr = itogstr.Trim(';');
+            */
             return itogstr;
         }
 
@@ -226,16 +264,34 @@ namespace TreeCadN.smarktkitchen
 
         private void lb1_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (var elem in lb1.Items)
+          //  MessageBox.Show("loadedd");
+
+            var lb111111 = sender as ListBox;
+
+
+            foreach (var elem in lb111111.Items)
             {
-                ListBoxItem item = (ListBoxItem)lb1.ItemContainerGenerator.ContainerFromItem(elem);
+                ListBoxItem item = (ListBoxItem)lb111111.ItemContainerGenerator.ContainerFromItem(elem);
                 var elemss = (HIGT)elem;
                 item.IsSelected =  elemss.selected;
                 ListBox sublist = FindVisualChild<ListBox>(item);
                 sublist.SelectedIndex = elemss.Name.FindIndex(ex=>ex.selected==true);
             }
-
+            
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var  dfgdf = raborstroki("1^1^Подсветка 1^none^svet;2^0^Подсветка 2^none^svet;3^0^Подсветка 3^none^svet;4^0^Подсветка 4^none^svet;5^0^Ретротоп^none^retrotop_up");
+            int index = asdssgbbvbdasd.Count+1;
+            asdssgbbvbdasd.Add(new tabcontr() { name = "dev"+ index, valuies= dfgdf });
+            tabbb2.Items.Refresh();
+        }
+
+        
+
+
+   
     }
 
     public class DirectoryListing
@@ -252,6 +308,14 @@ namespace TreeCadN.smarktkitchen
         public string nazv { get; set; }
         public string type { get; set; }
         public List<DirectoryListing> Name { get; set; }
+
+    }
+
+    public class tabcontr
+    {
+        public string name { get; set; }
+        public List<HIGT> valuies { get; set; }
+
 
     }
 
