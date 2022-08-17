@@ -1,18 +1,19 @@
-﻿<Window x:Class="TreeCadN.Prim3"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="TreeCadN.Prim3"
         Title="Примечание" Height="500" Width="600" WindowStartupLocation="Manual" Icon="Foto/favicons.png" MinWidth="600" MinHeight="500" Closing="Window_Closing" KeyUp="Window_KeyUp">
 
 
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="32"/>
+            <RowDefinition/>
+            <RowDefinition Height="70"/>
             <RowDefinition Height="17"/>
             <RowDefinition Height="100"/>
-            <RowDefinition Height="100"/>
+            <RowDefinition x:Name="ddddd" Height="100"/>
             <RowDefinition Height="40"/>
 
         </Grid.RowDefinitions>
@@ -24,10 +25,10 @@
             <TextBox Grid.Column="0" Grid.Row="0" x:Name="tb2" Margin="5" ToolTip="Поиск" TextChanged="tb2_TextChanged" TabIndex="1" VerticalAlignment="Top"/>
             <Button  Grid.Row="0"  x:Name="b4" Content="Очистить фильтр"   Click="b4_Click" HorizontalAlignment="Left" VerticalAlignment="Center" Height="22" Margin="5" Width="110" Grid.Column="1" IsTabStop="False"/>
         </Grid>
-        <ListView Name="grid"  Grid.Row="1" TabIndex="2" Loaded="DataGrid_Loaded" KeyUp="grid_KeyUp" SizeChanged="grid_SizeChanged" GotFocus="grid_GotFocus" Foreground="Black"  >
+        <ListView x:Name="grid"  Grid.Row="1" TabIndex="2" Loaded="DataGrid_Loaded" KeyUp="grid_KeyUp" SizeChanged="grid_SizeChanged" GotFocus="grid_GotFocus" Foreground="Black"  >
             <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <EventSetter Event="MouseDoubleClick" Handler="grid_MouseDoubleClick" />
+                <Style TargetType="{x:Type ListViewItem}">
+                    <EventSetter Event="Control.MouseDoubleClick" Handler="grid_MouseDoubleClick" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.View>
@@ -36,25 +37,21 @@
 
                     <GridViewColumn x:Name="gr1"   DisplayMemberBinding="{Binding Name}" >
 
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Name" Click="lvUsersColumnHeader_Click">Примечание</GridViewColumnHeader>
-                        </GridViewColumn.Header>
+                        <GridViewColumnHeader Tag="Name" Click="lvUsersColumnHeader_Click" Content="Примечание"/>
 
                     </GridViewColumn>
                     <GridViewColumn  Width="70" DisplayMemberBinding="{Binding Chasto}" >
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Chasto" Click="lvUsersColumnHeader_Click">Частота использования</GridViewColumnHeader>
-                        </GridViewColumn.Header>
+                        <GridViewColumnHeader Tag="Chasto" Click="lvUsersColumnHeader_Click" Content="Частота использования"/>
 
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
 
         </ListView>
-        <TextBox Grid.Column="0" Grid.Row="2"  x:Name="tb1"  TextWrapping="WrapWithOverflow" Margin="5,5,5,5" KeyUp="tb1_KeyUp" TabIndex="3" />
+        <TextBox Grid.Column="0" Grid.Row="2"  x:Name="tb1"  TextWrapping="WrapWithOverflow" Margin="5,5,5,5" KeyUp="tb1_KeyUp" TabIndex="3" TextChanged="tb1_TextChanged" />
         <TextBox Grid.Column="0" Grid.Row="4"  x:Name="tb3"  TextWrapping="WrapWithOverflow" Margin="5,5,514,5" KeyUp="tb1_KeyUp" TabIndex="3" TextChanged="tb3_TextChanged" IsTabStop="False" Visibility="Collapsed" />
 
-        <Grid  Grid.Row="5" Margin="0,100,0,0" Grid.RowSpan="3">
+        <Grid  Grid.Row="6" Margin="0,0,0,0" Grid.RowSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="309*"/>
                 <ColumnDefinition Width="100"/>
@@ -74,12 +71,17 @@
             </Button>
         </Grid>
         <Label Margin="5,70,471,0" Grid.Row="2" Padding="0" Height="17" Content="Автопримечание" Grid.RowSpan="2"/>
-        <CheckBox x:Name="cb1" Content="Автопримечания в спецификацию" HorizontalAlignment="Left" Margin="140,0,0,0" Grid.Row="3" VerticalAlignment="Center" Height="17" Checked="cb1_Checked" Unchecked="cb1_Unchecked" IsTabStop="False"/>
-        <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="lbbutton" Margin="5,5,5,5" Grid.Row="4" SelectionChanged="Lbbutton_SelectionChanged">
+        <CheckBox x:Name="cb1" Content="Выводить в спецификацию" HorizontalAlignment="Left" Margin="140,0,0,0" Grid.Row="3" VerticalAlignment="Center" Height="17" Checked="cb1_Checked" Unchecked="cb1_Unchecked" IsTabStop="False" Click="cb1_Click"/>
+        <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="lbbutton" Margin="5,5,5,5" Grid.Row="4" SelectionChanged="Lbbutton_SelectionChanged" PreviewMouseUp="lbbutton_PreviewMouseUp">
             <ListBox.ItemTemplate >
                 <DataTemplate>
-                    <Border CornerRadius="5"  BorderBrush="#FFAEAEAE" BorderThickness="1" >
-                        <TextBlock Padding="5,2" Text="{Binding name}"  ToolTip="При нажатии, автопримечание переместится в место где находится курсор" Background="{x:Null}" />
+                    <Border CornerRadius="5"  BorderBrush="#FFAEAEAE" BorderThickness="1" Padding="4,0,0,0"  >
+                        <StackPanel  Orientation="Horizontal">
+                            <Image Source="{Binding imagebg}" Width="15" Height="15"/>
+                            <TextBlock Padding="5,2" Text="{Binding name}"  ToolTip="При нажатии, автопримечание переместится в место где находится курсор" Background="{x:Null}" />
+                        </StackPanel>
+
+
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -91,7 +93,104 @@
 
         </ListBox>
         <Rectangle x:Name="rectang" Margin="5,5,5,5"  Grid.Row="4" Fill="#4CCDCDCD" />
-        <TextBox x:Name="tbizmen" HorizontalAlignment="Stretch" Grid.Row="5" TextWrapping="Wrap"  VerticalAlignment="Stretch" Margin="5,0,5,5"/>
+
+
+
+
+
+
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="26"/>
+                <RowDefinition Height="77*"/>
+            </Grid.RowDefinitions>
+            <Label Content="ВНИМАНИЕ ПРОВЕРЬ РУЧНЫЕ ПРИМЕЧАНИЯ!!!" HorizontalAlignment="Center"  VerticalAlignment="Top" Height="26" Foreground="Red" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
+            <ListView x:Name="lvstalo" Grid.Row="1"  Grid.ColumnSpan="2" Margin="0,0,0,0" >
+                <ListView.ItemContainerStyle>
+                    <Style  TargetType="ListBoxItem">
+                        <Setter Property="Background" Value="{Binding colorbg}"/>
+                        <Setter Property="Focusable" Value="False" />
+                
+                        
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+
+                    <GridView >
+                        <GridViewColumn   DisplayMemberBinding="{Binding deystvie}" Width="100" >
+                            <GridViewColumnHeader  Tag="deystvie"  Content="Действие"/>
+
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Было"  >
+
+                           
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding bilo}" Background="#00000000" BorderThickness="0" Padding="10,0,10,0" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Стало"  >
+
+
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding stalo}" Background="#00000000" BorderThickness="0" Padding="10,0,10,0"  />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+
+                        </GridViewColumn>
+                        
+                     
+                    
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <!--        <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="bilo" Margin="5,0,2.5,5" Grid.Row="1" >
+                <ListBox.ItemTemplate >
+                    <DataTemplate>
+                        <Border CornerRadius="5"  BorderBrush="#FFAEAEAE" BorderThickness="1" Padding="0,0,0,0" Background="#66FF7D7D"  >
+                            <StackPanel  Orientation="Horizontal">
+                              
+                                <TextBlock Padding="5,2" Text="{Binding name}"  ToolTip="При нажатии, автопримечание переместится в место где находится курсор" Background="{x:Null}" />
+                            </StackPanel>
+
+
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+              
+
+            </ListBox>
+            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="stalo" Margin="2.5,0,5,5" Grid.Row="1" SelectionChanged="Lbbutton_SelectionChanged" PreviewMouseUp="lbbutton_PreviewMouseUp" Grid.Column="1">
+                <ListBox.ItemTemplate >
+                    <DataTemplate>
+                        <Border CornerRadius="5"  BorderBrush="#FFAEAEAE" BorderThickness="1" Padding="0,0,0,0" Background="#6699FF7D"  >
+                            <StackPanel  Orientation="Horizontal">
+
+                                <TextBlock Padding="5,2" Text="{Binding name}"  ToolTip="При нажатии, автопримечание переместится в место где находится курсор" Background="{x:Null}" />
+                            </StackPanel>
+
+
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+
+            </ListBox>
+
+!-->
+
+
+
+        </Grid>
 
     </Grid>
 

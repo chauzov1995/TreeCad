@@ -398,7 +398,7 @@ namespace TreeCadN
             {
                 if (str1 == "")
                 {
-                    str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60";
+                    str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60";
                     uslovvipol = true;
                 }
                 else
@@ -409,7 +409,7 @@ namespace TreeCadN
               MessageBoxButton.YesNo,
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
-                        str1 = "0;0;1;1;0;0;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60";
+                        str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60";
                         uslovvipol = true;
                     }
                     else
@@ -551,10 +551,37 @@ namespace TreeCadN
         {
             this.Ambiente = xAmbiente;
             string katalog = getParamI(Ambiente, "xPercorso").ToString();
-            Prim3 f_prim = new Prim3(GetPathMDB(katalog), text);
-            //    Prim2 f_prim = new Prim2(GetPathMDB(katalog), text);
-            f_prim.ShowDialog();
-            return f_prim.text_otvet;
+
+            object xamb = getParam(Ambiente, "GetObject", "XAMB");
+            object info = getParamG(xamb, "INFO");
+            object info2 = getParamG(info, "INFO");
+
+            int intver = 1;
+            try
+            {
+                string Versio = getParam(info2, "Var", "Versio").ToString();
+                 intver = int.Parse(Versio.Split(',')[0]);
+            }
+            catch (Exception) {
+            
+            }
+
+            //
+            //MessageBox.Show(intver.ToString());
+            if (intver >= 2)
+            {
+                Prim3 f_prim = new Prim3(GetPathMDB(katalog), text);          
+                f_prim.ShowDialog();
+                return f_prim.text_otvet;
+            }
+            else
+            {
+                Prim2 f_prim = new Prim2(GetPathMDB(katalog), text);
+                f_prim.ShowDialog();
+                return f_prim.text_otvet;
+            }
+
+          
         }
         public string TAccess(string path, int filtr, string text)
         {
@@ -565,10 +592,15 @@ namespace TreeCadN
         }
         public string smartkitchen(string path)
         {
-             // MessageBox.Show(path);
+
+            backgrvibor f_TAccess = new smarktkitchen.backgrvibor();
+            f_TAccess.ShowDialog();
+            return "";
+            /*
+       
             smartkitchen f_TAccess = new smarktkitchen.smartkitchen(path);
            f_TAccess.ShowDialog();
-            return f_TAccess.otvet;
+            return f_TAccess.otvet;*/
         }
         public string zenakorp(string path, string param)
         {

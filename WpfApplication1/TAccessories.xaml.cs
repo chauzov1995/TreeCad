@@ -484,11 +484,22 @@ namespace TreeCadN
                 this.Width = ps.Width;
                 this.Height = ps.Height;
             }
-            string[] kolonki = ps.kolonki.Split(';');
+            /// string[] kolonki = ps.kolonki.Split(';');
 
-
-
-
+           // st1.Width.Value= ps.st1;
+            st1.Width = new DataGridLength(ps.st1, DataGridLengthUnitType.Pixel);// = ;
+            st2.Width = new DataGridLength(ps.st2, DataGridLengthUnitType.Pixel);// = ;
+            st3.Width = new DataGridLength(ps.st3, DataGridLengthUnitType.Pixel);// = ;
+            st4.Width = new DataGridLength(ps.st4, DataGridLengthUnitType.Pixel);// = ;
+            otdelka.Width = new DataGridLength(ps.st5, DataGridLengthUnitType.Pixel);// = ;
+            edizmer.Width = new DataGridLength(ps.st6, DataGridLengthUnitType.Pixel);// = ;
+            st7.Width = new DataGridLength(ps.st7, DataGridLengthUnitType.Pixel);// = ;
+            st8.Width = new DataGridLength(ps.st8, DataGridLengthUnitType.Pixel);// = ;
+            st9.Width = new DataGridLength(ps.st9, DataGridLengthUnitType.Pixel);// = ;
+            st11.Width = ps.st11;
+            st12.Width = ps.st12;
+            st13.Width = ps.st13;
+            st14.Width = ps.st14;
 
         }
 
@@ -792,6 +803,21 @@ namespace TreeCadN
                 ps.Width = this.Width;
                 ps.Height = this.Height;
             }
+
+            ps.st1 = st1.Width.Value;
+            ps.st2 = st2.Width.Value;
+            ps.st3 = st3.Width.Value;
+            ps.st4 = st4.Width.Value;
+            ps.st5 = otdelka.Width.Value;
+            ps.st6 = edizmer.Width.Value;
+            ps.st7 = st7.Width.Value;
+            ps.st8 = st8.Width.Value;
+            ps.st9 = st9.Width.Value;
+
+            ps.st11 = st11.Width;
+            ps.st12 = st12.Width;
+            ps.st13 = st13.Width;
+            ps.st14 = st14.Width;
 
             /*
             ps.kolonki =

@@ -33,8 +33,8 @@ namespace TreeCadN
             InitializeComponent();
             BD.path = path; //укажем файл бд
             this.text_otvet = text.Trim();
-
-            //PRIM=a2131231232321;AVTO=asdasdasda
+           // MessageBox.Show(this.text_otvet);
+            //PRIM=a2131231232321;AVTO=asdasdasda//
 
 
             if (text_otvet.Contains("PRIM=") && text_otvet.Contains(";AVTO=") && text_otvet.Contains(";EDIT="))
@@ -110,7 +110,8 @@ namespace TreeCadN
          
             foreach (string elem in split_AUTO)
             {
-                var elemnew = new btn_spis() { name = elem };
+                  var  splitelemrech = elem.Split('#');
+                var elemnew = new btn_spis() { name = splitelemrech.Length==2? splitelemrech [1]: elem };
                 spisbtn.Add(elemnew);
                 lbbutton.Items.Add(elemnew);
              
@@ -490,8 +491,24 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
     class btn_spis
     {
-
+        public string id { get; set; }
+        public bool vibran { get; set; } = true;
+        public string imagebg { get; set; } = "/TreeCadN;component/Foto/galka.png";
         public string name { get; set; }
+
+        public void setvibran(bool galka,bool reload=false)
+        {
+            this.vibran = galka;
+            if (reload)
+            {
+                this.imagebg = "/TreeCadN;component/Foto/reload.png";
+            }
+            else
+            {
+                this.imagebg = galka ? "/TreeCadN;component/Foto/galka.png" : "/TreeCadN;component/Foto/crest.png";
+            }
+        }
+      
 
     }
 

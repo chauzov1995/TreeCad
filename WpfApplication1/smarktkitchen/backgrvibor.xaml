@@ -1,0 +1,180 @@
+﻿<Window x:Class="TreeCadN.smarktkitchen.backgrvibor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TreeCadN.smarktkitchen"
+        mc:Ignorable="d"
+        Title="Window1" Height="800" Width="900">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="210"/>
+            <RowDefinition Height="210"/>
+            <RowDefinition Height="210"/>
+            <RowDefinition Height="65*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <Border  BorderBrush="Gainsboro" BorderThickness="5" >
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+
+                    <RowDefinition Height="72*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100*"/>
+
+
+                    <ColumnDefinition Width="330"/>
+                </Grid.ColumnDefinitions>
+
+
+                <Image  Source="/TreeCadN;component/smarktkitchen/Group 109.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3"  />
+
+                <CheckBox Content="Контроллер 1" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                <ListView x:Name="lv1" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Тип устройства">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox    Content="{Binding typename}" IsChecked="{Binding enabled}"  />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Способ упралвения">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ComboBox    ItemsSource="{Binding sposobupravl}" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Center"  >
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding name}"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+
+                                            </ComboBox>
+
+                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </Grid>
+        </Border>
+        <Border  BorderBrush="Gainsboro" BorderThickness="5" Grid.Row="1" >
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+
+                    <RowDefinition Height="72*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100*"/>
+
+
+                    <ColumnDefinition Width="330"/>
+                </Grid.ColumnDefinitions>
+
+
+                <Image  Source="/TreeCadN;component/smarktkitchen/Group 110.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3"  />
+
+                <CheckBox Content="Контроллер 2" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Unchecked_1" />
+                <ListView x:Name="lv2" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Тип устройства">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox    Content="{Binding typename}"  />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Способ упралвения">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ComboBox    ItemsSource="{Binding sposobupravl}" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Center"  >
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding name}"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+
+                                            </ComboBox>
+
+                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </Grid>
+        </Border>
+        <Border  BorderBrush="Gainsboro" BorderThickness="5" Grid.Row="2">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+
+                    <RowDefinition Height="72*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100*"/>
+
+
+                    <ColumnDefinition Width="330"/>
+                </Grid.ColumnDefinitions>
+
+
+                <Image  Source="/TreeCadN;component/smarktkitchen/Group 108.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3"  />
+
+                <CheckBox Content="Контроллер 3" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_2" Unchecked="CheckBox_Unchecked_2" />
+                <ListView x:Name="lv3" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Тип устройства">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox    Content="{Binding typename}"  />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Способ упралвения">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ComboBox    ItemsSource="{Binding sposobupravl}" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Center"  >
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding name}"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+
+                                            </ComboBox>
+
+                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </Grid>
+        </Border>
+        <Button Content="Сохранить" Margin="813,60,25,20" Grid.Row="4" Click="Button_Click"/>
+        <Button Content="Отмена" Margin="707,60,147,20" Grid.Row="4"/>
+
+    </Grid>
+</Window>

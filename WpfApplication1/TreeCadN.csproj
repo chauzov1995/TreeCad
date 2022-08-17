@@ -272,6 +272,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Update.settings</DependentUpon>
     </Compile>
+    <Compile Include="smarktkitchen\backgrvibor.xaml.cs">
+      <DependentUpon>backgrvibor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="smarktkitchen\smartkitchen.xaml.cs">
       <DependentUpon>smartkitchen.xaml</DependentUpon>
     </Compile>
@@ -349,6 +352,10 @@
     <Page Include="Prim3.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="smarktkitchen\backgrvibor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="smarktkitchen\smartkitchen.xaml">
       <SubType>Designer</SubType>
@@ -542,6 +549,22 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Foto\gns_no.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Foto\crest.png" />
+    <Resource Include="Foto\galka.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Foto\reload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="smarktkitchen\Group 109.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="smarktkitchen\Group 110.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="smarktkitchen\Group 108.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

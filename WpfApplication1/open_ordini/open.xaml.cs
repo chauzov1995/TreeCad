@@ -99,7 +99,7 @@ namespace TreeCadN.open_ordini
                 this.Width = ps.Width;
                 this.Height = ps.Height;
             }
-
+            proporc.Width = new GridLength(ps.proporc, GridUnitType.Pixel);// = ;
 
 
 
@@ -826,6 +826,7 @@ namespace TreeCadN.open_ordini
             Settings1 ps = Settings1.Default;
             ps.Top = this.Top;
             ps.Left = this.Left;
+            ps.proporc = proporc.Width.Value;
 
 
             if (this.WindowState == WindowState.Maximized)

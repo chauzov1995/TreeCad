@@ -142,5 +142,17 @@ namespace TreeCadN.open_ordini {
                 this["spiswidth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("185")]
+        public double proporc {
+            get {
+                return ((double)(this["proporc"]));
+            }
+            set {
+                this["proporc"] = value;
+            }
+        }
     }
 }

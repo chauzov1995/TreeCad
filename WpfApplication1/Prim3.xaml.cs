@@ -22,12 +22,16 @@ namespace TreeCadN
     /// </summary>
     public partial class Prim3 : Window
     {
+        string logdlas = "";
 
         List<btn_spis> spisbtn = new List<btn_spis>();
-        public string text_otvet, PRIM, AUTO, EDIT;
+        List<bilostalo> bilostalo = new List<bilostalo>();
+        List<btn_spis> spisbtnSAUTO = new List<btn_spis>();
+        public string text_otvet, PRIM, AUTO, SAUTO, EDIT;
         bool zakrit_ok = false;
         static BD_Connect BD = new BD_Connect();
         List<MyTable> result = new List<MyTable>();
+        bool autoprimisred = false;
         public Prim3(string path, string text)
         {
             InitializeComponent();
@@ -35,9 +39,9 @@ namespace TreeCadN
             this.text_otvet = text.Trim();
 
             //PRIM=a2131231232321;AVTO=asdasdasda
+           // MessageBox.Show(this.text_otvet);
 
-
-            if (text_otvet.Contains("PRIM=") && text_otvet.Contains(";AVTO=") && text_otvet.Contains(";EDIT="))
+            if (text_otvet.Contains("PRIM=") && text_otvet.Contains(";AVTO=") && text_otvet.Contains(";EDIT=") )
             {
 
                 try
@@ -64,15 +68,24 @@ namespace TreeCadN
                 {
                     EDIT = "0";
                 }
+                try
+                {                
+                    SAUTO = (text_otvet.Split(';'))[3].Substring(6).Trim('^');
+                }
+                catch
+                {
+                    SAUTO = "";
+                }
             }
             else
             {
                 PRIM = text_otvet;
                 AUTO = "";
+                SAUTO = "";
                 EDIT = "0";
             }
 
-
+            //
 
 
             if (EDIT.Equals("1")) {
@@ -95,6 +108,7 @@ namespace TreeCadN
                 });
 
             }
+            reader.Close();
 
             loadpage();//загрузка полож окна
             proverka_uhoda_za_granicu(); //проверка ухода за границу
@@ -110,15 +124,96 @@ namespace TreeCadN
          
             foreach (string elem in split_AUTO)
             {
-                var elemnew = new btn_spis() { name = elem };
-                spisbtn.Add(elemnew);
+                    var splitelemrech = elem.Split('#');
+                    btn_spis elemnew;
+                    if (splitelemrech.Length == 2)
+                    {
+                         elemnew = new btn_spis() { name =  splitelemrech[1].Trim(), id= splitelemrech[0].Trim() };
+                    }
+                    else
+                    { 
+                         elemnew = new btn_spis() { name =  elem.Trim() };
+                    }
+                   
+                    /*
+                    string[] splitenable = elem.Split('#');
+                    var elemnew = new btn_spis() { 
+                        name = splitenable[0],
+                        vibran = splitenable.Length==2? splitenable[1]=="1":true
+                    };*/
+                    spisbtn.Add(elemnew);
                 lbbutton.Items.Add(elemnew);
              
             }
-        }
 
-          //  lbbutton.ItemsSource = spisbtn;
+             
 
+            }
+
+         //   MessageBox.Show(SAUTO);
+            if (!SAUTO.Equals(""))
+            {
+                string[] split_SAUTO = SAUTO.Split('^');
+
+                foreach (string elem in split_SAUTO)
+                {
+                   // var elemnew = new btn_spis() { name = elem.Trim() };
+                    var splitelemrech = elem.Split('#');
+                    var elemnew = new btn_spis() { name = splitelemrech[1].Trim(), id = splitelemrech[0].Trim() };
+
+
+                    /*
+                    string[] splitenable = elem.Split('#');
+                    var elemnew = new btn_spis() { 
+                        name = splitenable[0],
+                        vibran = splitenable.Length==2? splitenable[1]=="1":true
+                    };*/
+
+                    var findelem=spisbtn.Find(x => x.id == elemnew.id);
+
+                   if (findelem != null)
+                    {
+                       // MessageBox.Show(findelem.name +" "+ elemnew.name);
+                        if(findelem.name.Trim().ToLower() == elemnew.name.Trim().ToLower())//просто крести
+                        {
+                            findelem.setvibran(false);  //показываес что элемент крестик
+                        }
+                        else  //крестик и  указываем что изменен1
+                        {
+                            findelem.setvibran(false,true);  //показываес что элемент крестик
+                            lvstalo.Items.Add(new bilostalo() { bilo = elemnew.name, stalo = findelem.name, deystvie = "Изменено", colorbg= "#66FFF500" });
+                           // bilo.Items.Add(elemnew);
+                           // stalo.Items.Add(findelem);
+                            spisbtnSAUTO.Add(elemnew);
+                        }
+
+                       
+                    }
+                    else
+                    {
+                        
+
+                        logdlas += elemnew.name+" - АВТОПРИМЕЧАНИЕ УДАЛЕНО"+Environment.NewLine;
+                        spisbtnSAUTO.Add(elemnew);
+                        lvstalo.Items.Add(new bilostalo() { bilo = elemnew.name, stalo = "", deystvie = "Удалено", colorbg = "#66FF0000" });
+                      //  bilo.Items.Add(elemnew);
+                      //  stalo.Items.Add(null);
+                        
+                    }
+                   
+                   
+                   // lbbutton.Items.Add(elemnew);
+
+                }
+            }
+            if (spisbtnSAUTO.Count == 0)
+            {
+                ddddd.Height =new GridLength(0);
+            }
+
+            
+          //  tbizmen.Text= logdlas;
+         
 
             tb1.CaretIndex = tb1.Text.Length;
         }
@@ -208,7 +303,7 @@ namespace TreeCadN
 
 
         private void b1_Click(object sender, RoutedEventArgs e)
-        {
+        {          
             zakrit_ok = true;
             Close();
 
@@ -293,24 +388,32 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             string autoptim_otvet = "";
             foreach(btn_spis elem in lbbutton.Items)
             {
-                autoptim_otvet+=(elem as btn_spis).name+"^";
-
+                if (!elem.vibran)
+                {
+                    autoptim_otvet += elem.id+"#"+elem.name + "^";
+                }
             }
             autoptim_otvet = autoptim_otvet.Trim('^');
-          //  EDIT = "1";
+            //  EDIT = "1";
 
-            string t = @"PRIM=" + tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№').Replace(':', ' ').Trim() + @";AVTO=" + autoptim_otvet + @";EDIT=" + EDIT;
-           // MessageBox.Show(t);
+            string t = @"PRIM=" + tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№').Replace(':', ' ').Trim() + @";AVTO=" + AUTO + @";EDIT=" + (cb1.IsChecked.Value?"1":"0") + @";SAVTO=" + autoptim_otvet ;
+
+          //string t = @"PRIM=" + tb1.Text.Replace('\'', ' ').Replace('"', '#').Replace(';', '|').Replace(',', '@').Replace('/', '№').Replace(':', ' ').Trim() + @";AVTO=" + autoptim_otvet + @";EDIT=" + EDIT;
+           //  MessageBox.Show(t);
             //pfrhsnbt
             if (zakrit_ok)
             {
-              
-                this.text_otvet = t;
+                if (chekupdate())
+                {
+                    this.text_otvet = t;
+                }
+               
 
             }
             else
             {
-                if (this.text_otvet != t)
+                //if (this.text_otvet != t)
+                if (chekupdate())
                 {
                     if (MessageBox.Show(
         "Вы изменили примечания, хотели бы Вы их сохранить?",
@@ -323,7 +426,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
                 }
 
             }
-
+            
 
 
         }
@@ -362,6 +465,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         private void tb2_TextChanged(object sender, TextChangedEventArgs e)
         {
             viewSource.View.Refresh();
+
         }
 
         private void b4_Click(object sender, RoutedEventArgs e)
@@ -414,10 +518,10 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
 
         private void cb1_Checked(object sender, RoutedEventArgs e)
         {
-
+          
         //    lbbutton.IsEnabled = true;
             rectang.Visibility = Visibility.Collapsed;
-            EDIT = "1";
+          //  EDIT = "1";
 
         }
 
@@ -427,25 +531,69 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         {
 
 
+      
+
+
+        }
+
+        private void tb1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            chekupdate();
+
+
+
+        }
+      bool   chekupdate()
+        {
+           
+            if (!(PRIM.Replace('#', '"').Replace('$', ';').Replace('@', ',').Replace('№', '/').Replace('^', ' ').Replace('|', ';').Trim() == tb1.Text.Trim()) || autoprimisred || EDIT!=(cb1.IsChecked.Value?"1":"0"))
+            {
+                Title = "Примечание*";
+                return true;
+            }
+            else
+            {
+                Title = "Примечание";
+                return false;
+            }
+
+        }
+
+        private void cb1_Click(object sender, RoutedEventArgs e)
+        {
+          ////  MessageBox.Show("asdasd");
+           // autoprimisred = true;
+            chekupdate();
+        }
+
+        private void lbbutton_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+           
+          
+
             try
             {
-                if (lbbutton.SelectedItem != null)
+                var item = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
+                if (item != null)
                 {
+                    autoprimisred = true;
+                    chekupdate();
+                    btn_spis elem = item.Content as btn_spis;
+
+                    elem.setvibran( !elem.vibran);
+           
+                    lbbutton.Items.Refresh();
+
+                    if (!elem.vibran)
+                    {
 
 
-                    string text = (lbbutton.SelectedItem as btn_spis).name;
-                    //    lbbutton.Items.Remove(lbbutton.SelectedItem);
-
-                    //   lbbutton.ItemsSource = null;
-                    //  lbbutton.ItemsSource = spisbtn;
-                    tb1.SelectedText = text;
-                    tb1.CaretIndex = tb1.SelectionLength + tb1.SelectionStart;
-                    // tb1.Focus();
-
-                  
-                    lbbutton.Items.Remove(lbbutton.SelectedItem);
-                    tb1.Focus();
-                    // lbbutton.UnselectAll();
+                        string text = elem.name;
+                        tb1.SelectedText = text;
+                        tb1.CaretIndex = tb1.SelectionLength + tb1.SelectionStart;
+                        tb1.Focus();
+                    }
+           
                 }
             }
             catch (Exception exx)
@@ -460,7 +608,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         {
             //    lbbutton.IsEnabled = false;
             rectang.Visibility = Visibility.Visible;
-            EDIT = "0";
+         //   EDIT = "0";
         }
 
         private void grid_KeyUp(object sender, KeyEventArgs e)
@@ -488,7 +636,16 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
     }
 
 
-  
+    class bilostalo
+    {
+        public string bilo { get; set; }
+        public string stalo { get; set; }
+        public string deystvie { get; set; }
+        public string colorbg { get; set; }
+       
+
+
+    }
 
 
 

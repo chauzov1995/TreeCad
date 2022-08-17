@@ -805,7 +805,7 @@ namespace TreeCadN
 
             try
             {
-                TekOtdelka.index6 = seldopotd[(comboBox1.SelectedIndex)].ID;
+                TekOtdelka.index6 = comboBox1.SelectedIndex==0?"1": seldopotd[(comboBox1.SelectedIndex)].ID;
             }
             catch
             {
@@ -938,7 +938,7 @@ namespace TreeCadN
 
             if (comboBox1.SelectedIndex == 0)
             {
-                TekOtdelka.index6 = "0";
+                TekOtdelka.index6 = "1";
 
             }
             else
