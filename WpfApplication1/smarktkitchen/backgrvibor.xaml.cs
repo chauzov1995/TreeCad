@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,20 +20,21 @@ namespace TreeCadN.smarktkitchen
     /// </summary>
     public partial class backgrvibor : Window
     {
+        public string otvet = "";
 
-      static  List<sposobupravl> sposuptrall = new List<sposobupravl>()
+        static  List<sposobupravl> sposuptrall = new List<sposobupravl>()
         {
-          new  sposobupravl(){ name="Без дублирующего управления"},
-          new  sposobupravl(){ name="Механическая кнопка"},
-          new  sposobupravl(){ name="ИК датчик на взмах"},
-          new  sposobupravl(){ name="ИК датчик на закрытие дверцы"},
+          new  sposobupravl(){ name="Без дублирующего управления", typedev="none"},
+          new  sposobupravl(){ name="Механическая кнопка", typedev="mehbtn"},
+          new  sposobupravl(){ name="ИК датчик на взмах", typedev="irsens"},
+          new  sposobupravl(){ name="ИК датчик на закрытие дверцы", typedev="irsens2"},
       
         };
 
         static List<sposobupravl> sposuptzapasnica = new List<sposobupravl>()
         {
 
-          new  sposobupravl(){ name="Механическая кнопка"},
+          new  sposobupravl(){ name="Механическая кнопка", typedev="mehbtn"},
 
 
         };
@@ -40,33 +42,35 @@ namespace TreeCadN.smarktkitchen
 
         List<typedevice> spistypedevice1= new List<typedevice>()
         {
-          new  typedevice(){ typename="Подсветка 1", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 2", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 3", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 4", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Запасница", sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
+          new  typedevice(){ typename="Подсветка 1", selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 2", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 3", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Запасница", selectedtype = sposuptzapasnica[0] , sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
         };
 
         List<typedevice> spistypedevice2 = new List<typedevice>()
         {
-          new  typedevice(){ typename="Подсветка 1", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 2", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 3", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 4", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Ретротоп", sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
+          new  typedevice(){ typename="Подсветка 1", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 2", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 3", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Ретротоп",  selectedtype = sposuptzapasnica[0] ,sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
         };
 
         List<typedevice> spistypedevice3 = new List<typedevice>()
         {
-          new  typedevice(){ typename="Подсветка 1", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 2", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 3", sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 4", sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 1", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 2", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 3",  selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
          // new  typedevice(){ typename="Запасница", sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
         };
-        public backgrvibor()
+        public backgrvibor(string path)
         {
             InitializeComponent();
+            MessageBox.Show(path);
+
             lv1.ItemsSource = spistypedevice1;
             lv2.ItemsSource = spistypedevice2;
             lv3.ItemsSource = spistypedevice3;
@@ -107,20 +111,56 @@ namespace TreeCadN.smarktkitchen
             lv3.IsEnabled = false;
         }
 
+       void sobrfunk(ListView lv1istb)
+        {
+
+            List<Exportjson> exp1 = new List<Exportjson>();
+            List<typedevice> typedevices = lv1istb.ItemsSource as List<typedevice>;
+            int i = 0;
+            foreach (typedevice typedevice in typedevices)
+            {
+                i++;
+                bool enabled = typedevice.enabled;
+                bool enabledskyvella = typedevice.enabledskyvella;
+                string typedev = typedevice.selectedtype.typedev;
+
+                exp1.Add(new Exportjson() { postfix = "_" + i, type = enabled ? (i >= 5 ? "retrotop" : "svet") : "none", parametr = new Parametr() { typeupravl = typedev, skyvella = enabledskyvella } });
+
+            }
+            export.Add(exp1);
+
+        }
+        List<List<Exportjson>> export;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string finalotvet
-                = (lv1.ItemsSource as List<typedevice>)[0].enabled.ToString();
-            MessageBox.Show(finalotvet);
+          export = new List<List<Exportjson>>();
+
+
+            sobrfunk(lv1);
+            sobrfunk(lv2);
+            sobrfunk(lv3);
+
+
+
+
+            string json = JsonConvert.SerializeObject(export);
+
+            otvet = json;
+            MessageBox.Show(json);
+            Close();
         }
     }
 
 
     public class typedevice
     {
+         
         public string typename { get; set; }
+    
         public bool enabled { get; set; }
+        public bool enabledskyvella { get; set; }
         public List<sposobupravl> sposobupravl { get; set; }
+        public sposobupravl selectedtype { get; set; }
         public string visibleskyvella { get; set; }
       
 
@@ -130,8 +170,24 @@ namespace TreeCadN.smarktkitchen
     {
         public string name { get; set; }
    
-
+            public string typedev { get; set; }
 
 
     }
+
+
+    public partial class Exportjson
+    {
+        public string postfix { get; set; }
+        public string type { get; set; }
+        public Parametr parametr { get; set; }
+    }
+
+    public partial class Parametr
+    {
+        public string typeupravl { get; set; }
+   
+        public bool skyvella { get; set; }
+    }
+
 }

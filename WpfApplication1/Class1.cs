@@ -593,9 +593,9 @@ namespace TreeCadN
         public string smartkitchen(string path)
         {
 
-            backgrvibor f_TAccess = new smarktkitchen.backgrvibor();
+            backgrvibor f_TAccess = new smarktkitchen.backgrvibor(path);
             f_TAccess.ShowDialog();
-            return "";
+            return f_TAccess.otvet;
             /*
        
             smartkitchen f_TAccess = new smarktkitchen.smartkitchen(path);

@@ -35,7 +35,7 @@
                 <ListView x:Name="lv1" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Тип устройства">
+                            <GridViewColumn Header="Тип устройства" Width="120">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox    Content="{Binding typename}" IsChecked="{Binding enabled}"  />
@@ -43,11 +43,11 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Способ упралвения">
+                            <GridViewColumn Header="Способ упралвения" Width="400">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <ComboBox    ItemsSource="{Binding sposobupravl}" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Center"  >
+                                            <ComboBox  SelectedItem="{Binding selectedtype}"  ItemsSource="{Binding sposobupravl}" HorizontalAlignment="Left" VerticalAlignment="Center"  >
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock Text="{Binding name}"/>
@@ -56,7 +56,7 @@
 
                                             </ComboBox>
 
-                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>

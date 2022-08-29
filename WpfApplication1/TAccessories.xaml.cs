@@ -50,6 +50,7 @@ namespace TreeCadN
 
             InitializeComponent();
             this.neqqqqq = _neqqqqq;
+            this.Title = "Аксессуары/Техника БД:"+ path;
             BD.path = path; //укажем файл бд
             this.text_otvet = text;
             log.Add("Запуск окна");
