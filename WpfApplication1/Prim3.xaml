@@ -94,6 +94,7 @@
         </ListBox>
         <Rectangle x:Name="rectang" Margin="5,5,5,5"  Grid.Row="4" Fill="#4CCDCDCD" />
 
+        <Label x:Name="lb2" Content="233 символа(ов)" Margin="0,0,5,5" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="117" HorizontalContentAlignment="Right" Foreground="#FF8C8C8C"/>
 
 
 

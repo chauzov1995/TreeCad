@@ -216,6 +216,7 @@ namespace TreeCadN
          
 
             tb1.CaretIndex = tb1.Text.Length;
+            lb2.Content = tb1.Text.Length + " символа(ов)";
         }
 
 
@@ -541,7 +542,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             chekupdate();
 
 
-
+            lb2.Content = tb1.Text.Length + " символа(ов)";
         }
       bool   chekupdate()
         {

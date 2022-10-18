@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +23,7 @@ namespace TreeCadN.smarktkitchen
     public partial class backgrvibor : Window
     {
         public string otvet = "";
+        public string nomerzakazafabrik = "";
 
         static  List<sposobupravl> sposuptrall = new List<sposobupravl>()
         {
@@ -66,10 +69,12 @@ namespace TreeCadN.smarktkitchen
           new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
          // new  typedevice(){ typename="Запасница", sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
         };
-        public backgrvibor(string path)
+        public backgrvibor(string path, string _RIFFABRICA)
         {
             InitializeComponent();
             MessageBox.Show(path);
+
+            nomerzakazafabrik = _RIFFABRICA;
 
             lv1.ItemsSource = spistypedevice1;
             lv2.ItemsSource = spistypedevice2;
@@ -111,7 +116,7 @@ namespace TreeCadN.smarktkitchen
             lv3.IsEnabled = false;
         }
 
-       void sobrfunk(ListView lv1istb)
+       void sobrfunk(ListView lv1istb, bool enabledctr, int nomerkontr)
         {
 
             List<Exportjson> exp1 = new List<Exportjson>();
@@ -127,18 +132,18 @@ namespace TreeCadN.smarktkitchen
                 exp1.Add(new Exportjson() { postfix = "_" + i, type = enabled ? (i >= 5 ? "retrotop" : "svet") : "none", parametr = new Parametr() { typeupravl = typedev, skyvella = enabledskyvella } });
 
             }
-            export.Add(exp1);
+            export.Add(new Exportcontroller(){enable= enabledctr, nomerkontr= nomerkontr, exportjson = exp1 });
 
         }
-        List<List<Exportjson>> export;
+        List<Exportcontroller> export;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-          export = new List<List<Exportjson>>();
+          export = new List<Exportcontroller>();
 
 
-            sobrfunk(lv1);
-            sobrfunk(lv2);
-            sobrfunk(lv3);
+            sobrfunk(lv1,cb1.IsChecked.Value, 1);
+            sobrfunk(lv2, cb2.IsChecked.Value, 2);
+            sobrfunk(lv3, cb3.IsChecked.Value, 3);
 
 
 
@@ -146,10 +151,87 @@ namespace TreeCadN.smarktkitchen
             string json = JsonConvert.SerializeObject(export);
 
             otvet = json;
-            MessageBox.Show(json);
+
+            if(nomerzakazafabrik == "")
+            {
+                MessageBox.Show("Заказу не присвоен фабричный номер. Состав умной кухни будет сохранён локально.");
+            }
+            else {
+                newzakaz(nomerzakazafabrik, json);
+            }
+
+         
+     
+
+
+
+            MessageBox.Show(otvet);
             Close();
         }
+
+
+
+
+
+
+        static void newzakaz(string zakaz,string json)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://smart.giulianovars.ru/api/app/v1.0/treecad/zakaznew");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string jsonsend = "{\"zakaz\":"+ zakaz + "," +
+                              "\"struktura\":" + json + "}";
+
+                streamWriter.Write(jsonsend);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                string result = streamReader.ReadToEnd();
+                // MessageBox.Show(result);
+                if (result == "1")
+                {
+                    if (MessageBoxResult.Yes == MessageBox.Show("Для этого заказа, состав умной кухни был сохранён ранее. Вы хотите изменить состав?", "Внимание", MessageBoxButton.OKCancel, MessageBoxImage.Warning))
+                    {
+
+
+                        updatezakaz(zakaz, json);
+                    }
+                }
+             
+            }
+        }
+
+        static void updatezakaz(string zakaz, string json)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://smart.giulianovars.ru/api/app/v1.0/treecad/zakazupdate");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string jsonsend = "{\"zakaz\":" + zakaz + "," +
+                               "\"struktura\":" + json + "}";
+
+                streamWriter.Write(jsonsend);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+
+              //  MessageBox.Show(result);
+            }
+        }
     }
+
+
+
 
 
     public class typedevice
@@ -175,6 +257,14 @@ namespace TreeCadN.smarktkitchen
 
     }
 
+
+    public partial class Exportcontroller
+    {
+     
+        public int nomerkontr { get; set; }
+        public bool enable { get; set; }
+        public List<Exportjson> exportjson { get; set; }
+    }
 
     public partial class Exportjson
     {

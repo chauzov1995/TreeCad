@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeCadN.smarktkitchen"
         mc:Ignorable="d"
-        Title="Window1" Height="800" Width="900">
+        Title="Window1" Height="725" Width="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="210"/>
             <RowDefinition Height="210"/>
-            <RowDefinition Height="210"/>
-            <RowDefinition Height="65*"/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="215"/>
+
+            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
-        <Border  BorderBrush="Gainsboro" BorderThickness="5" >
+        <Border  BorderBrush="#FFA7A7A7" BorderThickness="5,5,5,0" >
             <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
@@ -29,9 +29,9 @@
                 </Grid.ColumnDefinitions>
 
 
-                <Image  Source="/TreeCadN;component/smarktkitchen/Group 109.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3"  />
+                <Image  Source="/TreeCadN;component/smarktkitchen/Group 109.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3" Margin="5,5,5,5"  />
 
-                <CheckBox Content="Контроллер 1" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                <CheckBox x:Name="cb1" Content="Контроллер 1" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
                 <ListView x:Name="lv1" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
@@ -67,7 +67,7 @@
 
             </Grid>
         </Border>
-        <Border  BorderBrush="Gainsboro" BorderThickness="5" Grid.Row="1" >
+        <Border  BorderBrush="#FFA7A7A7" BorderThickness="5,5,5,0" Grid.Row="1" >
             <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
@@ -82,9 +82,9 @@
                 </Grid.ColumnDefinitions>
 
 
-                <Image  Source="/TreeCadN;component/smarktkitchen/Group 110.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3"  />
+                <Image  Source="/TreeCadN;component/smarktkitchen/Group 110.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3" Margin="0,5,5,5"  />
 
-                <CheckBox Content="Контроллер 2" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Unchecked_1" />
+                <CheckBox x:Name="cb2" Content="Контроллер 2" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Unchecked_1" />
                 <ListView x:Name="lv2" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
@@ -120,7 +120,7 @@
 
             </Grid>
         </Border>
-        <Border  BorderBrush="Gainsboro" BorderThickness="5" Grid.Row="2">
+        <Border  BorderBrush="#FFA7A7A7" BorderThickness="5,5,5,5" Grid.Row="2">
             <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
@@ -135,9 +135,9 @@
                 </Grid.ColumnDefinitions>
 
 
-                <Image  Source="/TreeCadN;component/smarktkitchen/Group 108.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3"  />
+                <Image  Source="/TreeCadN;component/smarktkitchen/Group 108.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3" Margin="0,5,5,5"  />
 
-                <CheckBox Content="Контроллер 3" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_2" Unchecked="CheckBox_Unchecked_2" />
+                <CheckBox x:Name="cb3" Content="Контроллер 3" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_2" Unchecked="CheckBox_Unchecked_2" />
                 <ListView x:Name="lv3" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
@@ -173,8 +173,8 @@
 
             </Grid>
         </Border>
-        <Button Content="Сохранить" Margin="813,60,25,20" Grid.Row="4" Click="Button_Click"/>
-        <Button Content="Отмена" Margin="707,60,147,20" Grid.Row="4"/>
+        <Button Content="Сохранить" Grid.Row="3" Click="Button_Click" Width="85" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="785,10,0,0"/>
+        <Button Content="Отмена" Grid.Row="3" Width="85" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="695,10,0,0"/>
 
     </Grid>
 </Window>

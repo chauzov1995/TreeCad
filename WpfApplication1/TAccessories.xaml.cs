@@ -805,21 +805,21 @@ namespace TreeCadN
                 ps.Height = this.Height;
             }
 
-            ps.st1 = st1.Width.Value;
-            ps.st2 = st2.Width.Value;
-            ps.st3 = st3.Width.Value;
-            ps.st4 = st4.Width.Value;
-            ps.st5 = otdelka.Width.Value;
-            ps.st6 = edizmer.Width.Value;
-            ps.st7 = st7.Width.Value;
-            ps.st8 = st8.Width.Value;
-            ps.st9 = st9.Width.Value;
+            ps.st1 = st1.ActualWidth;
+            ps.st2 = st2.ActualWidth;
+            ps.st3 = st3.ActualWidth;
+            ps.st4 = st4.ActualWidth;
+            ps.st5 = otdelka.ActualWidth;
+            ps.st6 = edizmer.ActualWidth;
+            ps.st7 = st7.ActualWidth;
+            ps.st8 = st8.ActualWidth;
+            ps.st9 = st9.ActualWidth;
 
-            ps.st11 = st11.Width;
-            ps.st12 = st12.Width;
-            ps.st13 = st13.Width;
-            ps.st14 = st14.Width;
-
+            ps.st11 = st11.ActualWidth;
+            ps.st12 = st12.ActualWidth;
+            ps.st13 = st13.ActualWidth;
+            ps.st14 = st14.ActualWidth;
+            //MessageBox.Show(st14.Width.ToString());
             /*
             ps.kolonki =
 st1.Width.ToString() + ";" +

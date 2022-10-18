@@ -592,8 +592,14 @@ namespace TreeCadN
         }
         public string smartkitchen(string path)
         {
+            object xamb = getParam(Ambiente, "GetObject", "XAMB");           
+            object info = getParamG(xamb, "INFO");
+            object info2 = getParamG(info, "INFO");
+            string _RIFFABRICA = getParam(info2, "Var", "_RIFFABRICA").ToString();
 
-            backgrvibor f_TAccess = new smarktkitchen.backgrvibor(path);
+          //  //_RIFFABRICA = "32313";
+
+                        backgrvibor f_TAccess = new smarktkitchen.backgrvibor(path, _RIFFABRICA);
             f_TAccess.ShowDialog();
             return f_TAccess.otvet;
             /*
