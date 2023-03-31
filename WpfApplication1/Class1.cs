@@ -398,7 +398,7 @@ namespace TreeCadN
             {
                 if (str1 == "")
                 {
-                    str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60";
+                    str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^54";
                     uslovvipol = true;
                 }
                 else
@@ -409,7 +409,7 @@ namespace TreeCadN
               MessageBoxButton.YesNo,
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
-                        str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60";
+                        str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^54";
                         uslovvipol = true;
                     }
                     else
@@ -712,7 +712,7 @@ namespace TreeCadN
 
         public void art_to_buf(ref object xAmbiente)
         {
-
+            
             this.Ambiente = xAmbiente;
             this.xamb = getParam(Ambiente, "GetObject", "XAMB");
             string currbox = getParam(xamb, "curbox").ToString();
@@ -722,6 +722,15 @@ namespace TreeCadN
             //  cod = cod.Remove(3);
 
             Clipboard.SetText(cod);
+            
+            /*
+
+            this.Ambiente = xAmbiente;
+            this.xamb = getParam(Ambiente, "GetObject", "REMOTO");
+           string currbox = getParamI(xamb, "RichiediPreventivo").ToString();
+
+            MessageBox.Show(currbox);
+           // ambiente.GetObject("REMOTO").RichiediPreventivo()*/
         }
 
 

@@ -571,8 +571,18 @@ namespace TreeCadN
             else
             {//если такая уже есть
 
-                dial_for_acctex_danet dial_for_acctex_danet = new dial_for_acctex_danet(this);
-                dial_for_acctex_danet.ShowDialog();
+                if (filtrtoko1stuk(poluch.Article))
+                {
+                    redakilidob = 1;
+                }
+                else {
+                    dial_for_acctex_danet dial_for_acctex_danet = new dial_for_acctex_danet(this);
+                    dial_for_acctex_danet.ShowDialog();
+
+                }
+
+
+              
                 if (redakilidob == 1)
                 {
                     //добавить новую строку
@@ -585,7 +595,7 @@ namespace TreeCadN
                 if (redakilidob == 2)
                 {
 
-                    dial_for_acctex dial_for_acctex1 = new dial_for_acctex((lb_vibr_tex.SelectedItem as texnika));
+                    dial_for_acctex dial_for_acctex1 = new dial_for_acctex((lb_vibr_tex.SelectedItem as texnika),this);
                     dial_for_acctex1.ShowDialog();
 
 
@@ -599,6 +609,33 @@ namespace TreeCadN
 
             }
 
+
+        }
+
+      public  bool filtrtoko1stuk(string atrikle)
+        {           
+            string[] array = {
+                "EXS22BL",
+"EXD22BL",
+"EXS22GR",
+"EXD22GR",
+"EXS25BL",
+"EXD25BL",
+"EXS25GR",
+"EXD25GR",
+
+"18300123",
+"18300002",
+"18300003",
+"18300124",
+"18300005",
+"18300006",
+
+
+
+
+            };                        
+               return array.Contains(atrikle);          
 
         }
 
@@ -876,7 +913,7 @@ st14.Width.ToString() + ";";
             {
                 if (lb_vibr_tex.SelectedIndex != -1)
                 {
-                    dial_for_acctex dial_for_acctex1 = new dial_for_acctex((lb_vibr_tex.SelectedItem as texnika));
+                    dial_for_acctex dial_for_acctex1 = new dial_for_acctex((lb_vibr_tex.SelectedItem as texnika),this);
                     dial_for_acctex1.ShowDialog();
 
                     lb_vibr_tex.SelectedItem = dial_for_acctex1.otvet;
@@ -976,8 +1013,10 @@ st14.Width.ToString() + ";";
             {
                 if ((e.Row.Item as texnika).type == "a")
                 {
-                    string[] slovarb = { "Примечание", "Отделка", "Кол-во", "Цена ред." };
-                    e.Cancel = isreadonly_forGRID(e, slovarb);
+                    List<string> slovarb =new List<string>()  { "Примечание", "Отделка", "Цена ред." };
+                    if (!filtrtoko1stuk((e.Row.Item as texnika).Article)) { slovarb.Add("Кол-во"); }
+                  
+                    e.Cancel = isreadonly_forGRID(e, slovarb.ToArray());
                 }
                 if ((e.Row.Item as texnika).type == "t")
                 {
@@ -1016,7 +1055,7 @@ st14.Width.ToString() + ";";
         {
             if (lb_vibr_tex.SelectedIndex != -1)
             {
-                dial_for_acctex dial_for_acctex1 = new dial_for_acctex((lb_vibr_tex.SelectedItem as texnika));
+                dial_for_acctex dial_for_acctex1 = new dial_for_acctex((lb_vibr_tex.SelectedItem as texnika), this);
                 dial_for_acctex1.ShowDialog();
 
                 lb_vibr_tex.SelectedItem = dial_for_acctex1.otvet;

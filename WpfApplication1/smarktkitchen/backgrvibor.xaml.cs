@@ -36,9 +36,9 @@ namespace TreeCadN.smarktkitchen
 
         static List<sposobupravl> sposuptzapasnica = new List<sposobupravl>()
         {
-
+          new  sposobupravl(){ name="Без дублирующего управления", typedev="none"},
           new  sposobupravl(){ name="Механическая кнопка", typedev="mehbtn"},
-
+         
 
         };
 
@@ -72,13 +72,87 @@ namespace TreeCadN.smarktkitchen
         public backgrvibor(string path, string _RIFFABRICA)
         {
             InitializeComponent();
-            MessageBox.Show(path);
+           // MessageBox.Show(path);
+            this.otvet = path;
 
             nomerzakazafabrik = _RIFFABRICA;
+            //MessageBox.Show(nomerzakazafabrik);
+
+
+            if (!getsavedannie(nomerzakazafabrik))
+            {
+                if (path == "")
+                {
+                    lv1.IsEnabled = false;
+                    lv2.IsEnabled = false;
+                    lv3.IsEnabled = false;
+                }
+                else
+                {
+                    try { razobrfunc(path.Replace('^', ',')); } catch (Exception e) { MessageBox.Show(e.Message); }
+                }
+            }
+            
 
             lv1.ItemsSource = spistypedevice1;
             lv2.ItemsSource = spistypedevice2;
             lv3.ItemsSource = spistypedevice3;
+        }
+
+        void razobrfunc(string oldstroka)
+        {
+           List< Exportcontroller> m = JsonConvert.DeserializeObject<List<Exportcontroller>>(oldstroka);
+
+            cb1.IsChecked = m[0].enable;
+            lv1.IsEnabled = m[0].enable;
+            for (int i = 0; i < m[0].exportjson.Count; i++) { 
+                Exportjson controller=m[0].exportjson[i];
+
+                //new typedevice() { typename = "Подсветка 1", selectedtype = sposuptrall[0], sposobupravl = sposuptrall, visibleskyvella = "Visible" },
+                spistypedevice1[i].enabled = controller.type!="none";
+                spistypedevice1[i].enabledskyvella = controller.parametr.skyvella;
+                if (i == 4) { spistypedevice1[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); } else
+                {
+                    spistypedevice1[i].selectedtype = sposuptrall.Find(x => x.typedev == controller.parametr.typeupravl);
+                }
+              
+            }
+
+            cb2.IsChecked = m[1].enable;
+            lv2.IsEnabled = m[1].enable;
+            for (int i = 0; i < m[1].exportjson.Count; i++)
+            {
+                Exportjson controller = m[1].exportjson[i];
+
+                //new typedevice() { typename = "Подсветка 1", selectedtype = sposuptrall[0], sposobupravl = sposuptrall, visibleskyvella = "Visible" },
+                spistypedevice2[i].enabled = controller.type != "none";
+                spistypedevice2[i].enabledskyvella = controller.parametr.skyvella;
+                if (i == 4) { spistypedevice2[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); }
+                else
+                {
+                    spistypedevice2[i].selectedtype = sposuptrall.Find(x => x.typedev == controller.parametr.typeupravl);
+                }
+
+            }
+
+
+            cb3.IsChecked = m[2].enable;
+            lv3.IsEnabled = m[2].enable;
+            for (int i = 0; i < m[2].exportjson.Count; i++)
+            {
+                Exportjson controller = m[2].exportjson[i];
+
+                //new typedevice() { typename = "Подсветка 1", selectedtype = sposuptrall[0], sposobupravl = sposuptrall, visibleskyvella = "Visible" },
+                spistypedevice3[i].enabled = controller.type != "none";
+                spistypedevice3[i].enabledskyvella = controller.parametr.skyvella;
+                if (i == 4) { spistypedevice3[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); }
+                else
+                {
+                    spistypedevice3[i].selectedtype = sposuptrall.Find(x => x.typedev == controller.parametr.typeupravl);
+                }
+
+            }
+            //  MessageBox.Show(m[0].nomerkontr.ToString());
         }
 
         private void Rectangle_MouseEnter(object sender, MouseEventArgs e)
@@ -118,18 +192,20 @@ namespace TreeCadN.smarktkitchen
 
        void sobrfunk(ListView lv1istb, bool enabledctr, int nomerkontr)
         {
-
+           
             List<Exportjson> exp1 = new List<Exportjson>();
+
             List<typedevice> typedevices = lv1istb.ItemsSource as List<typedevice>;
             int i = 0;
             foreach (typedevice typedevice in typedevices)
             {
+                
                 i++;
                 bool enabled = typedevice.enabled;
                 bool enabledskyvella = typedevice.enabledskyvella;
                 string typedev = typedevice.selectedtype.typedev;
-
-                exp1.Add(new Exportjson() { postfix = "_" + i, type = enabled ? (i >= 5 ? "retrotop" : "svet") : "none", parametr = new Parametr() { typeupravl = typedev, skyvella = enabledskyvella } });
+               
+                exp1.Add(new Exportjson() { postfix = "_" + i, type = enabled ? (i >= 5 ? "retrotop_up" : "svet") : "none", parametr = new Parametr() { typeupravl = typedev, skyvella = enabledskyvella } });
 
             }
             export.Add(new Exportcontroller(){enable= enabledctr, nomerkontr= nomerkontr, exportjson = exp1 });
@@ -150,7 +226,7 @@ namespace TreeCadN.smarktkitchen
 
             string json = JsonConvert.SerializeObject(export);
 
-            otvet = json;
+            otvet = json.Replace(',','^');
 
             if(nomerzakazafabrik == "")
             {
@@ -165,11 +241,52 @@ namespace TreeCadN.smarktkitchen
 
 
 
-            MessageBox.Show(otvet);
+          //  MessageBox.Show(otvet);
             Close();
         }
 
 
+         bool getsavedannie(string zakaz)
+        {
+            if(zakaz == "")return false;
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://smart.giulianovars.ru/api/app/v1.0/treecad/getzakaz");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))//ss
+            {
+                string jsonsend = "{\"zakaz\":" + zakaz + "}";
+
+                streamWriter.Write(jsonsend);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            if (httpResponse.StatusCode == HttpStatusCode.OK)
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    string result = streamReader.ReadToEnd();
+                    //    MessageBox.Show(result);
+
+                    if (result == "1")
+                    {
+
+                    }
+                    else
+                    {
+                        try { razobrfunc(result); } catch (Exception e) { MessageBox.Show(e.Message); }
+                    }
+
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
 
@@ -180,7 +297,7 @@ namespace TreeCadN.smarktkitchen
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))//ss
             {
                 string jsonsend = "{\"zakaz\":"+ zakaz + "," +
                               "\"struktura\":" + json + "}";
@@ -195,9 +312,9 @@ namespace TreeCadN.smarktkitchen
                 // MessageBox.Show(result);
                 if (result == "1")
                 {
-                    if (MessageBoxResult.Yes == MessageBox.Show("Для этого заказа, состав умной кухни был сохранён ранее. Вы хотите изменить состав?", "Внимание", MessageBoxButton.OKCancel, MessageBoxImage.Warning))
+                    if (MessageBoxResult.OK == MessageBox.Show("Для этого заказа, состав умной кухни был сохранён ранее. Вы хотите изменить состав?", "Внимание", MessageBoxButton.OKCancel, MessageBoxImage.Warning))
                     {
-
+                        
 
                         updatezakaz(zakaz, json);
                     }
@@ -228,6 +345,13 @@ namespace TreeCadN.smarktkitchen
               //  MessageBox.Show(result);
             }
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+   
     }
 
 

@@ -31,7 +31,7 @@
 
                 <Image  Source="/TreeCadN;component/smarktkitchen/Group 109.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3" Margin="5,5,5,5"  />
 
-                <CheckBox x:Name="cb1" Content="Контроллер 1" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                <CheckBox x:Name="cb1" Content="Контроллер 1 (Запасница с пристенной зоной)" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
                 <ListView x:Name="lv1" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
@@ -84,23 +84,23 @@
 
                 <Image  Source="/TreeCadN;component/smarktkitchen/Group 110.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3" Margin="0,5,5,5"  />
 
-                <CheckBox x:Name="cb2" Content="Контроллер 2" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Unchecked_1" />
+                <CheckBox x:Name="cb2" Content="Контроллер 2  (Ретротоп и островная часть)" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Unchecked_1" />
                 <ListView x:Name="lv2" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Тип устройства">
+                            <GridViewColumn Header="Тип устройства" Width="120">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox    Content="{Binding typename}"  />
+                                        <CheckBox    Content="{Binding typename}" IsChecked="{Binding enabled}"  />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Способ упралвения">
+                            <GridViewColumn Header="Способ упралвения" Width="400">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <ComboBox    ItemsSource="{Binding sposobupravl}" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Center"  >
+                                            <ComboBox  SelectedItem="{Binding selectedtype}"  ItemsSource="{Binding sposobupravl}" HorizontalAlignment="Left" VerticalAlignment="Center"  >
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock Text="{Binding name}"/>
@@ -109,7 +109,7 @@
 
                                             </ComboBox>
 
-                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -137,23 +137,23 @@
 
                 <Image  Source="/TreeCadN;component/smarktkitchen/Group 108.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3" Margin="0,5,5,5"  />
 
-                <CheckBox x:Name="cb3" Content="Контроллер 3" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_2" Unchecked="CheckBox_Unchecked_2" />
+                <CheckBox x:Name="cb3" Content="Контроллер 3 (Отдельная зона, только свет)" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_2" Unchecked="CheckBox_Unchecked_2" />
                 <ListView x:Name="lv3" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Тип устройства">
+                            <GridViewColumn Header="Тип устройства" Width="120">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox    Content="{Binding typename}"  />
+                                        <CheckBox    Content="{Binding typename}" IsChecked="{Binding enabled}"  />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Способ упралвения">
+                            <GridViewColumn Header="Способ упралвения" Width="400">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <ComboBox    ItemsSource="{Binding sposobupravl}" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Center"  >
+                                            <ComboBox  SelectedItem="{Binding selectedtype}"  ItemsSource="{Binding sposobupravl}" HorizontalAlignment="Left" VerticalAlignment="Center"  >
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock Text="{Binding name}"/>
@@ -162,7 +162,7 @@
 
                                             </ComboBox>
 
-                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -174,7 +174,7 @@
             </Grid>
         </Border>
         <Button Content="Сохранить" Grid.Row="3" Click="Button_Click" Width="85" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="785,10,0,0"/>
-        <Button Content="Отмена" Grid.Row="3" Width="85" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="695,10,0,0"/>
-
+        <Button Content="Отмена" Grid.Row="3" Width="85" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="695,10,0,0" Click="Button_Click_1"/>
+       
     </Grid>
 </Window>

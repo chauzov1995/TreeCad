@@ -114,7 +114,7 @@ namespace вызов
             File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"C:\evolution\giulianovars\TreeCadN.dll", true);
  
 
-            Process.Start(@"C:\evolution\giulianovars\giulianovars.exe", @"/C giulianovarsa  /O 1174 /TAB2 ");
+            Process.Start(@"C:\evolution\giulianovars\giulianovars.exe", @"/C giulianovarsa  ");///O 45 /TAB2 
 
 
 

@@ -477,7 +477,7 @@ namespace TreeCadN
                 TekOtdelka.naprav2 = "0";
             }
 
-            if(estbli1 || estbli1)
+            if(estbli1 || estbli2)
             {
                 MessageBox.Show("Выбранная отделка была выведена из прайса. Устанавливаем \"Нет отделки\"");
 

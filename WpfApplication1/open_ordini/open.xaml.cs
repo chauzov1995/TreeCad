@@ -885,8 +885,8 @@ namespace TreeCadN.open_ordini
 
                 object xamb = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "XAMB");
                 //object engine = neqqqqq.getParam(neqqqqq.Ambiente, "GetObject", "ENGINE");
-
-                neqqqqq.getParam(xamb, "carica", selected_ordini.file_path);
+             //   MessageBox.Show(path_ordini + @"\" + selected_ordini.nomer_zakaza + ".eve");
+                neqqqqq.getParam(xamb, "carica", path_ordini+@"\"+ selected_ordini.nomer_zakaza+".eve");
                 neqqqqq.getParamI(neqqqqq.Ambiente, "bcarica");
 
 

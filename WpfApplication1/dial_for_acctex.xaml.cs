@@ -23,11 +23,12 @@ namespace TreeCadN
         bool zakrit_ok = false;
         CollectionViewSource viewSource1;
         System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
-        public dial_for_acctex(texnika item)
+        TAccessories aasdsadasd;
+        public dial_for_acctex(texnika item, TAccessories asdad)
         {
             InitializeComponent();
 
-
+            this.aasdsadasd = asdad;
             otvet = item;
 
             //   MessageBox.Show(otvet.OTD);
@@ -121,8 +122,16 @@ namespace TreeCadN
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            zakrit_ok = true;
-            Close();
+            if (aasdsadasd.filtrtoko1stuk(rsktblo1_Copy.Text) && rsktb3.Text != "1")
+            {
+                MessageBox.Show("Количество данного артикула может быть только 1");
+
+            }
+            else
+            {
+                zakrit_ok = true;
+                Close();
+            }
         }
 
 
@@ -213,18 +222,32 @@ namespace TreeCadN
         {
             if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                zakrit_ok = true;
-                Close();
+                if (aasdsadasd.filtrtoko1stuk(rsktblo1_Copy.Text) && rsktb3.Text != "1")
+                {
+                    MessageBox.Show("Количество данного артикула может быть только 1");
+
+                }
+                else
+                {
+                    zakrit_ok = true;
+                    Close();
+                }
             }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+          
+          //  MessageBox.Show("ntcn");
             if (zakrit_ok)
             {
+             
                 try
                 {
+                 
+                 
+
+
                     otvet.Article = rsktblo1_Copy.Text;
                     otvet.nom_pp = Convert.ToInt32(rsktb1.Text);
                     otvet.TName = rsktb2.Text;
@@ -234,6 +257,9 @@ namespace TreeCadN
                     otvet.UnitsName = (combo2.SelectedItem as todelka).ID;
                     otvet.baseprice = Convert.ToSingle(rsktb3_Copy.Text);
                     otvet.priceredak = Convert.ToSingle(rsktb3_Copy1.Text);
+
+
+
 
                     //Close();
                 }
