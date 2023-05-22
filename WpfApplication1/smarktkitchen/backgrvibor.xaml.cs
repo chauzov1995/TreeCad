@@ -240,7 +240,7 @@ namespace TreeCadN.smarktkitchen
      
 
 
-
+            //
           //  MessageBox.Show(otvet);
             Close();
         }

@@ -283,8 +283,12 @@ MessageBoxImage.Warning) == MessageBoxResult.Yes)
 
         private void proxy_setting_Click(object sender, RoutedEventArgs e)
         {
-            Proxy proxy = new Proxy();
+
+
+            licenziidrugie proxy = new licenziidrugie(id_clienta_root);
             proxy.ShowDialog();
+            //Proxy proxy = new Proxy();
+            // proxy.ShowDialog();
         }
     }
 

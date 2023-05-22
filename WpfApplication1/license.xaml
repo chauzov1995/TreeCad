@@ -1,9 +1,9 @@
 ﻿<Window x:Class="TreeCadN.license"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Лицензирование 3CAD" Height="403" Width="742" Icon="Foto/favicons.png" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="Лицензирование 3CAD" Height="403" Width="758" Icon="Foto/favicons.png" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <StackPanel Orientation="Horizontal">
-        <StackPanel Orientation="Vertical" Width="586">
+        <StackPanel Orientation="Vertical" Width="600">
             <Border BorderBrush="#e5e5e5" BorderThickness="0,0,1,0">
                 <StackPanel  Height="50" Orientation="Horizontal">
                     <Image Source="Foto/logo.png" Height="32"   Margin="20 0 0 0" />
@@ -64,7 +64,7 @@
         </StackPanel>
         <StackPanel  Margin="0,0,20,0" Width="150">
             <Button x:Name="btn_zhivoy" Margin="0 4 0 0"   Height="30" Content="&quot;Я живой&quot;" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" Click="btn_zhivoy_Click"/>
-            <Button x:Name="proxy_setting"  Margin="0,4,0,0"  Height="30" Content="Настройка прокси" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" Click="proxy_setting_Click"/>
+            <Button x:Name="proxy_setting"  Margin="0,4,0,0"  Height="30" Content="Лицензии в салоне" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" Click="proxy_setting_Click"/>
             <TextBlock x:Name="tv_tek" TextWrapping="Wrap" Text="Ваша ver 1.0.1133" Padding="5,0" Margin="0,5,0,0"/>
             <TextBlock x:Name="tv_ak" TextWrapping="Wrap" Text="Актуальная ver 1.0.1133" Padding="5,0"/>
             <Button x:Name="btnShowSelectedItem"    Height="30" Content="Подтвердить" Click="btnShowSelectedItem_Click" Background="#FFE42C3E" Foreground="White" FontSize="14" BorderThickness="0" IsDefault="True" Margin="0,203,0,0"/>

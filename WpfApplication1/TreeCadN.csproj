@@ -227,6 +227,9 @@
     <Compile Include="license.xaml.cs">
       <DependentUpon>license.xaml</DependentUpon>
     </Compile>
+    <Compile Include="licenziidrugie.xaml.cs">
+      <DependentUpon>licenziidrugie.xaml</DependentUpon>
+    </Compile>
     <Compile Include="open_ordini\open.xaml.cs">
       <DependentUpon>open.xaml</DependentUpon>
     </Compile>
@@ -334,6 +337,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="filtero.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="licenziidrugie.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
