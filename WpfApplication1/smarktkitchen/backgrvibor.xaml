@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeCadN.smarktkitchen"
         mc:Ignorable="d"
-        Title="Window1" Height="725" Width="900">
+        Title="Smart Kitchen" Height="725" Width="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="210"/>

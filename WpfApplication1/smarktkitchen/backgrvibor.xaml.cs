@@ -214,7 +214,9 @@ namespace TreeCadN.smarktkitchen
             export.Add(new Exportcontroller(){enable= enabledctr, nomerkontr= nomerkontr, exportjson = exp1 });
 
         }
-        List<Exportcontroller> export;
+
+
+     public   List<Exportcontroller> export;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
           export = new List<Exportcontroller>();

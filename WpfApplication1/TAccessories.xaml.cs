@@ -1251,46 +1251,121 @@ st14.Width.ToString() + ";";
 
         }
 
-        private void btnsk_Click(object sender, RoutedEventArgs e)
+        void addartsk(String artikul, String prim="")
         {
-           // array_smkitch
-            backgrvibor f_TAccess = new smarktkitchen.backgrvibor("sasdasd", nomerzakazafabrik);
-            f_TAccess.ShowDialog();
-            // f_TAccess.otvet
-            array_smkitch = new List<texnika>();
-            array_vibr_tex.RemoveAll(x => x.priznsmartkitchen);
-
-            //добавление одной единицы
-            var asdasd=new texnika(    array_spis_tex.Find(x => x.Article.Equals("BUSK")));
-            nom_PP++;
-            asdasd.nom_pp= nom_PP;
-            asdasd.priznsmartkitchen = true; 
-            asdasd.gruppirovka = 1;
-            array_smkitch.Add(asdasd);
-
-            //добавление одной единицы
-             asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals("BUSK1")));
-            nom_PP++;
-            asdasd.nom_pp = nom_PP;
-            asdasd.priznsmartkitchen = true;      
-            asdasd.gruppirovka = 1;
-            array_smkitch.Add(asdasd);
-
-            //добавление одной единицы
-             asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals("PDKUPSK")));
+            var asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals(artikul)));
             nom_PP++;
             asdasd.nom_pp = nom_PP;
             asdasd.priznsmartkitchen = true;
             asdasd.gruppirovka = 1;
-            array_smkitch.Add(asdasd);
+            asdasd.Prim = prim;
+            var asdasd2 = array_smkitch.Find(x => x.Article.Equals(artikul));
+            if (asdasd2 != null)
+            {
+                asdasd2.kolvo++;
+            }
+            else {
+                array_smkitch.Add(asdasd);
+            }
+          
+         
+        }
+        private void btnsk_Click(object sender, RoutedEventArgs e)
+        {
+           // array_smkitch
+            backgrvibor f_TAccess = new backgrvibor("", nomerzakazafabrik);
+            f_TAccess.ShowDialog();
+           var exportsk= f_TAccess.export;
+            if (exportsk!= null) {
+                array_smkitch = new List<texnika>();
+                array_vibr_tex.RemoveAll(x => x.priznsmartkitchen);
+
+                bool maincontr = false;
+                foreach (Exportcontroller contr in exportsk)
+                {
+                    if (contr.enable)
+                    {
+                        if (maincontr)
+                        {//доп контроллер                    
+                            addartsk("BUSK1");
+                        }
+                        else
+                        {// первый контролллер
+                            addartsk("BUSK");
+                        }
+                        maincontr = true;
+                   
+
+                    foreach (Exportjson sostav in contr.exportjson)
+                    {
+                        if (sostav.type == "svet")
+                        {
+                            addartsk("90W");
+                            if (sostav.parametr.typeupravl == "irsens")
+                            {
+                              addartsk("SVMLB");
+                            }
+                            if (sostav.parametr.typeupravl == "irsens2")
+                            {
+                                addartsk("SVMLG");
+                            }
+                            if (sostav.parametr.typeupravl == "mehbtn")
+                            {
+                               addartsk("PDKUPSK");
+                            }
+                            if (sostav.parametr.skyvella)
+                            {
+                                addartsk("1T3002", "Отдать электрикам на доработку");
+                                addartsk("83377714", "Отдать электрикам на доработку");                              
+                            }
+                            }
+                        if (sostav.type == "retrotop_up")
+                        {
+                            if (sostav.parametr.typeupravl == "mehbtn")
+                            {
+                                addartsk("PDKUM");
+                            }
+                        }
 
 
-            
-            //обнволение итогового списка
-            array_vibr_tex.AddRange(array_smkitch);
-            lb_vibr_tex.ItemsSource = null;
-            lb_vibr_tex.ItemsSource = array_vibr_tex;
-            // return f_TAccess.otvet;
+                        }
+
+                    }
+
+                }
+                /*
+                //добавление одной единицы
+                var asdasd=new texnika(    array_spis_tex.Find(x => x.Article.Equals("BUSK")));
+                nom_PP++;
+                asdasd.nom_pp= nom_PP;
+                asdasd.priznsmartkitchen = true; 
+                asdasd.gruppirovka = 1;
+                array_smkitch.Add(asdasd);
+
+                //добавление одной единицы
+                 asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals("BUSK1")));
+                nom_PP++;
+                asdasd.nom_pp = nom_PP;
+                asdasd.priznsmartkitchen = true;      
+                asdasd.gruppirovka = 1;
+                array_smkitch.Add(asdasd);
+
+                //добавление одной единицы
+                 asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals("PDKUPSK")));
+                nom_PP++;
+                asdasd.nom_pp = nom_PP;
+                asdasd.priznsmartkitchen = true;
+                asdasd.gruppirovka = 1;
+                array_smkitch.Add(asdasd);
+
+             */
+
+                //обнволение итогового списка
+                array_vibr_tex.AddRange(array_smkitch);
+                lb_vibr_tex.ItemsSource = null;
+                lb_vibr_tex.ItemsSource = array_vibr_tex;
+                // return f_TAccess.otvet;
+            }
         }
     }
 
