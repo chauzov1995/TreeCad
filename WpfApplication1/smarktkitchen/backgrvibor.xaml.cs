@@ -24,6 +24,7 @@ namespace TreeCadN.smarktkitchen
     {
         public string otvet = "";
         public string nomerzakazafabrik = "";
+    
 
         static  List<sposobupravl> sposuptrall = new List<sposobupravl>()
         {
@@ -192,7 +193,9 @@ namespace TreeCadN.smarktkitchen
 
        void sobrfunk(ListView lv1istb, bool enabledctr, int nomerkontr)
         {
-           
+
+         
+
             List<Exportjson> exp1 = new List<Exportjson>();
 
             List<typedevice> typedevices = lv1istb.ItemsSource as List<typedevice>;
@@ -216,6 +219,8 @@ namespace TreeCadN.smarktkitchen
         {
           export = new List<Exportcontroller>();
 
+
+            
 
             sobrfunk(lv1,cb1.IsChecked.Value, 1);
             sobrfunk(lv2, cb2.IsChecked.Value, 2);

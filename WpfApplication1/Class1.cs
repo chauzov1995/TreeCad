@@ -585,8 +585,13 @@ namespace TreeCadN
         }
         public string TAccess(string path, int filtr, string text)
         {
+            object xamb = getParam(Ambiente, "GetObject", "XAMB");
+            object info = getParamG(xamb, "INFO");
+            object info2 = getParamG(info, "INFO");
+            string _RIFFABRICA = getParam(info2, "Var", "_RIFFABRICA").ToString();
+
             //   MessageBox.Show(path);
-            TAccessories f_TAccess = new TAccessories(path, text, this);
+            TAccessories f_TAccess = new TAccessories(path, text, this, _RIFFABRICA);
             f_TAccess.ShowDialog();
             return f_TAccess.text_otvet;
         }

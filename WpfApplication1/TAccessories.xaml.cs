@@ -17,7 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using FirebirdSql.Data.FirebirdClient;
-
+using TreeCadN.smarktkitchen;
 
 namespace TreeCadN
 {
@@ -39,16 +39,19 @@ namespace TreeCadN
         System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
         String ismanager;
         List<texnika> array_vibr_tex = new List<texnika>();
+        List<texnika> array_smkitch = new List<texnika>();
         public int redakilidob = 0;
         int nom_PP = 0;
         bool g1_KeyUp_bool = false;
         texnika index_for_poisl;
         neqweqe neqqqqq;
+        public string nomerzakazafabrik = "";
 
-        public TAccessories(string path, string text, neqweqe _neqqqqq)
+        public TAccessories(string path, string text, neqweqe _neqqqqq,  string _RIFFABRICA)
         {
 
             InitializeComponent();
+            nomerzakazafabrik = _RIFFABRICA;
             this.neqqqqq = _neqqqqq;
             this.Title = "Аксессуары/Техника БД:"+ path;
             BD.path = path; //укажем файл бд
@@ -384,6 +387,8 @@ namespace TreeCadN
 
 
             this.Hide();
+          
+            
 
             string t = str_sobr(array_vibr_tex);
 
@@ -449,6 +454,7 @@ namespace TreeCadN
                 //      MessageBox.Show(text_otvet);
 
             }
+            MessageBox.Show(t);
             return t;
 
         }
@@ -1244,10 +1250,77 @@ st14.Width.ToString() + ";";
         {
 
         }
+
+        private void btnsk_Click(object sender, RoutedEventArgs e)
+        {
+           // array_smkitch
+            backgrvibor f_TAccess = new smarktkitchen.backgrvibor("sasdasd", nomerzakazafabrik);
+            f_TAccess.ShowDialog();
+            // f_TAccess.otvet
+            array_smkitch = new List<texnika>();
+            array_vibr_tex.RemoveAll(x => x.priznsmartkitchen);
+
+            //добавление одной единицы
+            var asdasd=new texnika(    array_spis_tex.Find(x => x.Article.Equals("BUSK")));
+            nom_PP++;
+            asdasd.nom_pp= nom_PP;
+            asdasd.priznsmartkitchen = true; 
+            asdasd.gruppirovka = 1;
+            array_smkitch.Add(asdasd);
+
+            //добавление одной единицы
+             asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals("BUSK1")));
+            nom_PP++;
+            asdasd.nom_pp = nom_PP;
+            asdasd.priznsmartkitchen = true;      
+            asdasd.gruppirovka = 1;
+            array_smkitch.Add(asdasd);
+
+            //добавление одной единицы
+             asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals("PDKUPSK")));
+            nom_PP++;
+            asdasd.nom_pp = nom_PP;
+            asdasd.priznsmartkitchen = true;
+            asdasd.gruppirovka = 1;
+            array_smkitch.Add(asdasd);
+
+
+            
+            //обнволение итогового списка
+            array_vibr_tex.AddRange(array_smkitch);
+            lb_vibr_tex.ItemsSource = null;
+            lb_vibr_tex.ItemsSource = array_vibr_tex;
+            // return f_TAccess.otvet;
+        }
     }
 
     public class texnika
     {
+        public texnika() { }
+        public texnika(texnika previousTexnika) {
+            type = previousTexnika.type;
+            ID = previousTexnika.ID;
+            nom_pp = previousTexnika.nom_pp;
+            TName = previousTexnika.TName;
+            Article = previousTexnika.Article;
+            Group = previousTexnika.Group;
+            GroupName = previousTexnika.GroupName;
+            baseprice = previousTexnika.baseprice;
+            priceredak = previousTexnika.priceredak;
+            UnitsId = previousTexnika.UnitsId;
+            UnitsName = previousTexnika.UnitsName;
+            OTD = previousTexnika.OTD;
+            kolvo = previousTexnika.kolvo;
+            vived = previousTexnika.vived;
+            sort = previousTexnika.sort;
+            GROUP_dlyaspicif = previousTexnika.GROUP_dlyaspicif;
+            colortext = previousTexnika.colortext; 
+            GRAFIKA = previousTexnika.GRAFIKA;
+            gruppirovka = previousTexnika.gruppirovka;
+            priznsmartkitchen = previousTexnika.priznsmartkitchen;
+           
+     
+    }
 
         public string type { get; set; }
         public string ID { get; set; }
@@ -1268,6 +1341,10 @@ st14.Width.ToString() + ";";
         public string GROUP_dlyaspicif { get; set; }
         public string colortext { get; set; }
         public string GRAFIKA { get; set; }
+        public int gruppirovka { get; set; }
+        public bool priznsmartkitchen { get; set; }
+
+        
     }
 
     public class todelka
