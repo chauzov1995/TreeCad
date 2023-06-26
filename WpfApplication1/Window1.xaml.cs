@@ -711,7 +711,18 @@ namespace TreeCadN
             stor_otd = 1;// на внешнюю пласть
 
 
-            comboBox2.SelectedItem = GROUPE.Find(x => x.ID.Equals(TekOtdelka.IDGroup1));
+            var iteresda= GROUPE.Find(x => x.ID.Equals(TekOtdelka.IDGroup1));
+            if (iteresda == null)
+            {
+                comboBox2.SelectedIndex = 0;
+            }
+            else
+            {
+                comboBox2.SelectedItem = iteresda;
+            }
+           
+          
+
             if (!reload_text)
             {
                 viewSource.View.Refresh();

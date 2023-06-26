@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeCadN.smarktkitchen"
         mc:Ignorable="d"
-        Title="Smart Kitchen" Height="725" Width="900">
+        Title="Smart Kitchen" Height="725" Width="1000" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        
+        >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="210"/>
@@ -35,7 +37,7 @@
                 <ListView x:Name="lv1" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Тип устройства" Width="120">
+                            <GridViewColumn Header="Тип устройства" Width="170">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox    Content="{Binding typename}" IsChecked="{Binding enabled}"  />
@@ -43,7 +45,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Способ упралвения" Width="400">
+                            <GridViewColumn Header="Способ упралвения" Width="450">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -56,7 +58,7 @@
 
                                             </ComboBox>
 
-                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
+                                            <CheckBox Content="для светлиьников Sky/Vella/Oda" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -88,7 +90,7 @@
                 <ListView x:Name="lv2" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Тип устройства" Width="120">
+                            <GridViewColumn Header="Тип устройства" Width="170">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox    Content="{Binding typename}" IsChecked="{Binding enabled}"  />
@@ -96,7 +98,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Способ упралвения" Width="400">
+                            <GridViewColumn Header="Способ упралвения" Width="450">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -109,7 +111,7 @@
 
                                             </ComboBox>
 
-                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
+                                            <CheckBox Content="для светлиьников Sky/Vella/Oda" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -141,7 +143,7 @@
                 <ListView x:Name="lv3" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Тип устройства" Width="120">
+                            <GridViewColumn Header="Тип устройства" Width="170">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox    Content="{Binding typename}" IsChecked="{Binding enabled}"  />
@@ -149,7 +151,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Способ упралвения" Width="400">
+                            <GridViewColumn Header="Способ упралвения" Width="450">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -162,7 +164,7 @@
 
                                             </ComboBox>
 
-                                            <CheckBox Content="Светильник Sky/Vella" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
+                                            <CheckBox Content="для светлиьников Sky/Vella/Oda" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -173,8 +175,8 @@
 
             </Grid>
         </Border>
-        <Button Content="Сохранить" Grid.Row="3" Click="Button_Click" Width="85" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="785,10,0,0"/>
-        <Button Content="Отмена" Grid.Row="3" Width="85" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="695,10,0,0" Click="Button_Click_1"/>
-       
+        <Button Content="Сохранить" Grid.Row="3" Click="Button_Click" Margin="814,10,100,40"/>
+        <Button Content="Отмена" Grid.Row="3" Margin="905,10,10,40" Click="Button_Click_1"/>
+
     </Grid>
 </Window>

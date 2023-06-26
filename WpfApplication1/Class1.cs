@@ -590,8 +590,11 @@ namespace TreeCadN
             object info2 = getParamG(info, "INFO");
             string _RIFFABRICA = getParam(info2, "Var", "_RIFFABRICA").ToString();
 
-            //   MessageBox.Show(path);
-            TAccessories f_TAccess = new TAccessories(path, text, this, _RIFFABRICA);
+            INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
+            string ragsoc = manager.GetPrivateString("giulianovars", "ragsoc");//получ ключ активации
+
+          //  MessageBox.Show(ragsoc);
+            TAccessories f_TAccess = new TAccessories(path, text, this, _RIFFABRICA, ragsoc=="999");
             f_TAccess.ShowDialog();
             return f_TAccess.text_otvet;
         }
@@ -604,7 +607,7 @@ namespace TreeCadN
 
           //  //_RIFFABRICA = "32313";
 
-                        backgrvibor f_TAccess = new smarktkitchen.backgrvibor(path, _RIFFABRICA);
+                        backgrvibor f_TAccess = new smarktkitchen.backgrvibor(path, _RIFFABRICA,false);//
             f_TAccess.ShowDialog();
             return f_TAccess.otvet;
             /*

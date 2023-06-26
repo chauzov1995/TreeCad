@@ -46,13 +46,16 @@ namespace TreeCadN
         texnika index_for_poisl;
         neqweqe neqqqqq;
         public string nomerzakazafabrik = "";
+        public string smartkitchenvh_str = "";
+        public bool konstruktor=false;
 
-        public TAccessories(string path, string text, neqweqe _neqqqqq,  string _RIFFABRICA)
+        public TAccessories(string path, string text, neqweqe _neqqqqq,  string _RIFFABRICA, bool konstruktor)
         {
 
             InitializeComponent();
             nomerzakazafabrik = _RIFFABRICA;
             this.neqqqqq = _neqqqqq;
+            this.konstruktor=konstruktor;
             this.Title = "Аксессуары/Техника БД:"+ path;
             BD.path = path; //укажем файл бд
             this.text_otvet = text;
@@ -271,7 +274,12 @@ namespace TreeCadN
         {
 
             array_vibr_tex = new List<texnika>();
-            string[] elems = vh_str.Split(';');
+
+            string[] skrazdel= vh_str.Split(new string[]{"`S"},StringSplitOptions.None);
+         //   MessageBox.Show(skrazdel.Length+"");
+            //string[] elems = (skrazdel.Length==0? vh_str: skrazdel[0]).Split(';');
+            string[] elems =  skrazdel[0].Split(';');
+            smartkitchenvh_str = skrazdel.Length==2?  skrazdel[1]:"";
 
             log.Add("запуск цикла парсим");
             log.Add("входная строка " + vh_str);
@@ -356,6 +364,8 @@ namespace TreeCadN
                     poluch.type = znach[0].Replace('@', ',').Replace('$', ';');//типп аксес или техн
                     poluch.kolvo = Convert.ToSingle(znach[2].Replace('@', ',').Replace('.', ',').Replace('$', ';'));//Колво
                     poluch.priceredak = Convert.ToSingle(znach[9].Replace('@', ',').Replace('.', ',').Replace('$', ';'));//цена ред
+                    poluch.gruppirovka = znach.Length>=11? Convert.ToInt32(znach[10]):0;//для группировки
+                    poluch.priznsmartkitchen = znach.Length >= 12 ? Convert.ToInt32(znach[10]) : 0;//признак диалог sk
 
 
                     // poluch.GROUP_dlyaspicif = znach[5].Replace('@', ',');//группа специфик
@@ -450,11 +460,15 @@ namespace TreeCadN
                 otvet_massiv.nom_pp.ToString().Replace(',', '@').Replace(';', '$') + "~" +
                 name + "~" +
                 otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + ";";
+                otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + "~" +
+                otvet_massiv.gruppirovka.ToString() + "~" +
+                otvet_massiv.priznsmartkitchen.ToString() + 
+                ";";
                 //      MessageBox.Show(text_otvet);
 
             }
-            MessageBox.Show(t);
+            t += smartkitchenvh_str==""?"":"`S" +smartkitchenvh_str;
+        //MessageBox.Show(t);
             return t;
 
         }
@@ -1256,7 +1270,7 @@ st14.Width.ToString() + ";";
             var asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals(artikul)));
             nom_PP++;
             asdasd.nom_pp = nom_PP;
-            asdasd.priznsmartkitchen = true;
+            asdasd.priznsmartkitchen = 1;
             asdasd.gruppirovka = 1;
             asdasd.Prim = prim;
             var asdasd2 = array_smkitch.Find(x => x.Article.Equals(artikul));
@@ -1273,12 +1287,13 @@ st14.Width.ToString() + ";";
         private void btnsk_Click(object sender, RoutedEventArgs e)
         {
            // array_smkitch
-            backgrvibor f_TAccess = new backgrvibor("", nomerzakazafabrik);
+            backgrvibor f_TAccess = new backgrvibor(smartkitchenvh_str, nomerzakazafabrik,konstruktor);
             f_TAccess.ShowDialog();
+            smartkitchenvh_str = f_TAccess.otvet;
            var exportsk= f_TAccess.export;
             if (exportsk!= null) {
                 array_smkitch = new List<texnika>();
-                array_vibr_tex.RemoveAll(x => x.priznsmartkitchen);
+                array_vibr_tex.RemoveAll(x => x.priznsmartkitchen==1);
 
                 bool maincontr = false;
                 foreach (Exportcontroller contr in exportsk)
@@ -1315,8 +1330,7 @@ st14.Width.ToString() + ";";
                             }
                             if (sostav.parametr.skyvella)
                             {
-                                addartsk("1T3002", "Отдать электрикам на доработку");
-                                addartsk("83377714", "Отдать электрикам на доработку");                              
+                                addartsk("1T30021");                                                         
                             }
                             }
                         if (sostav.type == "retrotop_up")
@@ -1417,7 +1431,7 @@ st14.Width.ToString() + ";";
         public string colortext { get; set; }
         public string GRAFIKA { get; set; }
         public int gruppirovka { get; set; }
-        public bool priznsmartkitchen { get; set; }
+        public int priznsmartkitchen { get; set; }
 
         
     }

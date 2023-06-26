@@ -46,7 +46,7 @@ namespace TreeCadN.smarktkitchen
 
         List<typedevice> spistypedevice1= new List<typedevice>()
         {
-          new  typedevice(){ typename="Подсветка 1", selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка в запасницу", selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall, visibleskyvella="Visible"},
           new  typedevice(){ typename="Подсветка 2", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
           new  typedevice(){ typename="Подсветка 3", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
           new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
@@ -55,11 +55,11 @@ namespace TreeCadN.smarktkitchen
 
         List<typedevice> spistypedevice2 = new List<typedevice>()
         {
-          new  typedevice(){ typename="Подсветка 1", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+          new  typedevice(){ typename="Подсветка в ретро-топ", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
           new  typedevice(){ typename="Подсветка 2", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
           new  typedevice(){ typename="Подсветка 3", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
           new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Ретротоп",  selectedtype = sposuptzapasnica[0] ,sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
+          new  typedevice(){ typename="Ретро-топ (тип 5)",  selectedtype = sposuptzapasnica[0] ,sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
         };
 
         List<typedevice> spistypedevice3 = new List<typedevice>()
@@ -70,17 +70,21 @@ namespace TreeCadN.smarktkitchen
           new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
          // new  typedevice(){ typename="Запасница", sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
         };
-        public backgrvibor(string path, string _RIFFABRICA)
+        bool konstruktor = false;
+        public backgrvibor(string path, string _RIFFABRICA, bool konstruktor)
         {
             InitializeComponent();
+
            // MessageBox.Show(path);
             this.otvet = path;
-
+            this.konstruktor = konstruktor;
+            Title = "Smart Kitchen" + (konstruktor?" конструктор":"");
             nomerzakazafabrik = _RIFFABRICA;
             //MessageBox.Show(nomerzakazafabrik);
 
-
-            if (!getsavedannie(nomerzakazafabrik))
+            
+           // if (!getsavedannie(nomerzakazafabrik))
+           if(true)
             {
                 if (path == "")
                 {
@@ -235,14 +239,17 @@ namespace TreeCadN.smarktkitchen
 
             otvet = json.Replace(',','^');
 
-            if(nomerzakazafabrik == "")
+            if (konstruktor)
             {
-                MessageBox.Show("Заказу не присвоен фабричный номер. Состав умной кухни будет сохранён локально.");
+                if (nomerzakazafabrik == "")
+                {
+                    MessageBox.Show("Заказу не присвоен фабричный номер. Состав умной кухни будет сохранён локально.");
+                }
+                else
+                {
+                    newzakaz(nomerzakazafabrik, json);
+                }
             }
-            else {
-                newzakaz(nomerzakazafabrik, json);
-            }
-
          
      
 
