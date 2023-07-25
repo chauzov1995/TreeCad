@@ -307,33 +307,39 @@ namespace TreeCadN.smarktkitchen
 
         static void newzakaz(string zakaz,string json)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://smart.giulianovars.ru/api/app/v1.0/treecad/zakaznew");
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))//ss
+            try
             {
-                string jsonsend = "{\"zakaz\":"+ zakaz + "," +
-                              "\"struktura\":" + json + "}";
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://smart.giulianovars.ru/api/app/v1.0/treecad/zakaznew");
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
 
-                streamWriter.Write(jsonsend);
-            }
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                string result = streamReader.ReadToEnd();
-                // MessageBox.Show(result);
-                if (result == "1")
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))//ss
                 {
-                    if (MessageBoxResult.OK == MessageBox.Show("Для этого заказа, состав умной кухни был сохранён ранее. Вы хотите изменить состав?", "Внимание", MessageBoxButton.OKCancel, MessageBoxImage.Warning))
-                    {
-                        
+                    string jsonsend = "{\"zakaz\":" + zakaz + "," +
+                                  "\"struktura\":" + json + "}";
 
-                        updatezakaz(zakaz, json);
-                    }
+                    streamWriter.Write(jsonsend);
                 }
-             
+
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    string result = streamReader.ReadToEnd();
+                    // MessageBox.Show(result);
+                    if (result == "1")
+                    {
+                        if (MessageBoxResult.OK == MessageBox.Show("Для этого заказа, состав умной кухни был сохранён ранее. Вы хотите изменить состав?", "Внимание", MessageBoxButton.OKCancel, MessageBoxImage.Warning))
+                        {
+
+
+                            updatezakaz(zakaz, json);
+                        }
+                    }
+
+                }
+            } catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 

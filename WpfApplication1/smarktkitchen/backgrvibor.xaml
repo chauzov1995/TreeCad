@@ -45,7 +45,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Способ упралвения" Width="450">
+                            <GridViewColumn Header="Способ управления" Width="450">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -58,7 +58,7 @@
 
                                             </ComboBox>
 
-                                            <CheckBox Content="для светлиьников Sky/Vella/Oda" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
+                                            <CheckBox Content="для светильников Sky/Vela/Oda" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -86,7 +86,7 @@
 
                 <Image  Source="/TreeCadN;component/smarktkitchen/Group 110.png" Stretch="Uniform"   Grid.Column="6" HorizontalAlignment="Right" Grid.RowSpan="3" Margin="0,5,5,5"  />
 
-                <CheckBox x:Name="cb2" Content="Контроллер 2  (Ретротоп и островная часть)" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Unchecked_1" />
+                <CheckBox x:Name="cb2" Content="Контроллер 2  (Ретро-топ и островная часть)" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.ColumnSpan="6" Width="409" Margin="10,0,0,0" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Unchecked_1" />
                 <ListView x:Name="lv2" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView>
@@ -98,7 +98,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Способ упралвения" Width="450">
+                            <GridViewColumn Header="Способ управления" Width="450">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -111,7 +111,7 @@
 
                                             </ComboBox>
 
-                                            <CheckBox Content="для светлиьников Sky/Vella/Oda" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
+                                            <CheckBox Content="для светильников Sky/Vela/Oda" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -151,7 +151,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Способ упралвения" Width="450">
+                            <GridViewColumn Header="Способ управления" Width="450">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -164,7 +164,7 @@
 
                                             </ComboBox>
 
-                                            <CheckBox Content="для светлиьников Sky/Vella/Oda" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
+                                            <CheckBox Content="для светильников Sky/Vela/Oda" Visibility="{Binding visibleskyvella}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding enabledskyvella}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>

@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Management;
+using System.IO.Compression;
 
 namespace вызов
 {
@@ -417,6 +418,27 @@ namespace вызов
 
             });
             textBox5.Text = result.ToString();
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            foreach (Process proc in Process.GetProcessesByName("giulianovars"))
+            {
+                proc.Kill();
+            }
+            if(Directory.Exists(@"C:\evolution\giulianovars\Giulianovarsa"))
+            Directory.Delete(@"C:\evolution\giulianovars\Giulianovarsa", true);
+            if (Directory.Exists(@"C:\evolution\giulianovars\Giulianovarsa_arh"))
+                Directory.Delete(@"C:\evolution\giulianovars\Giulianovarsa_arh", true);
+         //   File.Delete(@"C:\evolution\giulianovars\GIULIANOVARSA.zip");
+         //   File.Copy(@"\\KUZNECOV-AA\C$\out\GIULIANOVARSA.zip", @"C:\evolution\giulianovars\GIULIANOVARSA.zip");
+
+            ZipFile.ExtractToDirectory(@"\\KUZNECOV-AA\C$\out\GIULIANOVARSA.zip", @"C:\evolution\giulianovars\Giulianovarsa_arh");
+            Directory.Move(@"C:\evolution\giulianovars\Giulianovarsa_arh\Giulianovarsa", @"C:\evolution\giulianovars\Giulianovarsa");
+
+            MessageBox.Show("Готово");
+            Process.Start(@"C:\evolution\giulianovars\giulianovars.exe", @"/C giulianovarsa  ");///O 45 /TAB2 
+
         }
     }
 

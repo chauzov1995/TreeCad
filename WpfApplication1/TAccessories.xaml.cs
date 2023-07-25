@@ -1265,24 +1265,32 @@ st14.Width.ToString() + ";";
 
         }
 
-        void addartsk(String artikul, String prim="")
+        void addartsk(String artikul, String prim = "")
         {
             var asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals(artikul)));
+            if (asdasd == null)
+            {
+                MessageBox.Show("Артикул "+ artikul + " не найден в базе данных");
+              //  return;
+            }
+            else { 
             nom_PP++;
             asdasd.nom_pp = nom_PP;
             asdasd.priznsmartkitchen = 1;
             asdasd.gruppirovka = 1;
             asdasd.Prim = prim;
+
             var asdasd2 = array_smkitch.Find(x => x.Article.Equals(artikul));
             if (asdasd2 != null)
             {
                 asdasd2.kolvo++;
             }
-            else {
+            else
+            {
                 array_smkitch.Add(asdasd);
             }
-          
-         
+
+        }
         }
         private void btnsk_Click(object sender, RoutedEventArgs e)
         {
@@ -1313,6 +1321,7 @@ st14.Width.ToString() + ";";
 
                     foreach (Exportjson sostav in contr.exportjson)
                     {
+                            
                         if (sostav.type == "svet")
                         {
                             addartsk("90W");
