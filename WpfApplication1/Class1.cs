@@ -21,6 +21,7 @@ using System.Data.Common;
 using System.Data;
 using FirebirdSql.Data.FirebirdClient;
 using TreeCadN.smarktkitchen;
+using System.Collections;
 
 namespace TreeCadN
 {
@@ -628,8 +629,12 @@ namespace TreeCadN
 
             kommunikacii.kommunikacii_main f_kommunikacii = new kommunikacii.kommunikacii_main(path);
             f_kommunikacii.ShowDialog();
+         //   MessageBox.Show(Environment.CurrentDirectory);
+          //  String split = f_kommunikacii.selectedModel.Substring(0, f_kommunikacii.selectedModel.LastIndexOf(@"3dsObject"));
+            String asdasdasd = f_kommunikacii.selectedModel.Replace(Environment.CurrentDirectory+@"\", "");
+        
             log.Add(f_kommunikacii.selectedModel);
-            return f_kommunikacii.selectedModel;
+            return asdasdasd;
         }
 
         public void evesync(string path, string pathordini)
@@ -1175,7 +1180,7 @@ namespace TreeCadN
                 //MessageBox.Show(CATALOGGN);
 
                 //получим код авторизации
-                INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
+                INIManager manager = new INIManager(GetEcadProIni());
                 string authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
 
                 //   Obnov_dll_N.Create(catalog, authotiz_root);//обновление dll treecadN ред
@@ -1233,19 +1238,48 @@ namespace TreeCadN
                     }
                 }
 
-
+                /*
                 string file1 = Environment.CurrentDirectory + @"\Giulianovarsa\PROCEDURE\TreeCadS.dll";
                 string file2 = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TreeCadS.dll";
                 if (File.GetCreationTime(file1) > File.GetCreationTime(file2))
                 {
                     File.Copy(file1, file2);
                 }
-
+                */
             }
             catch (Exception e)
             {
-                //  MessageBox.Show(e.Message);
+                 // MessageBox.Show(e.Message);
             }
+
+          string file1= GetServ_path() + @"\Giulianovarsa\procedure\updN.ini";
+          string file2= localdirr() + @"\updN.ini";
+           
+            if (File.GetLastWriteTime(file1) != File.GetLastWriteTime(file2))
+            {
+               //  MessageBox.Show(File.GetLastWriteTime(file1) + " " + File.GetLastWriteTime(file2));
+
+
+
+                /*
+                Assembly s = Assembly.LoadFile(@"C:\evolution\giulianovars\copy_treecad.dll");
+                Type ourClass = s.GetType("copy_treecad.Class1", true, true);
+                Object instane = Activator.CreateInstance(ourClass);
+                MethodInfo meth = ourClass.GetMethod("GNLICENSE1"); //нужен тот Show, который не принимает параметров
+                object result = meth.Invoke(instane, new object[] {
+            });*/
+                
+
+                copifileini();
+                regdll();
+                  ecadroiniresave();
+                  updatesystema();
+
+                File.Copy(file1, file2, true); //подветрждаем успех
+            }
+            // regdll();
+          //  MessageBox.Show("asdasdaa");
+         //   ecadroiniresave();
 
         }
 
@@ -1316,7 +1350,7 @@ namespace TreeCadN
 
 
 
-        string GetPathMDB(string catalog)
+        string GetPathMDB(string catalog, bool local = true)
         {
 
             //     var client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
@@ -1328,9 +1362,15 @@ namespace TreeCadN
             {
 
                 case "GIULIANOVARSA":
+                    if(local)
                     return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\systema.mdb";
+                    else
+                        return Environment.CurrentDirectory + @"\GIULIANOVARSA\procedure\systema.mdb";
                 default:
-                    return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\system.mdb";
+                    if (local)
+                        return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\system.mdb";
+                    else
+                        return Environment.CurrentDirectory + @"\GIULIANOVARSA\procedure\system.mdb";
             }
         }
 
@@ -1349,6 +1389,246 @@ namespace TreeCadN
         public static string GetServ_path()
         {
             return Environment.CurrentDirectory;
+        }
+
+        public static string localdirr()
+        {
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        }
+
+
+
+        void ecadroiniresave()
+        {
+
+
+          
+
+
+
+            //var parser = new FileIniDataParser();
+            IniFile data = new IniFile(Environment.CurrentDirectory + @"\Giulianovarsa\PROCEDURE\ecadpro.ini");
+           // var parser2 = new FileIniDataParser();
+            IniFile data2 = new IniFile(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+            foreach (string section in data.GetAllSections())
+            {
+                Console.WriteLine("[" + section + "]");
+
+                //Iterate through all the keys in the current section
+                //printing the values
+               
+
+                foreach (string key in data.GetAllDataSection(section))
+                {
+                    var splitvalue=key.Split('=');
+                   // MessageBox.Show(key+" "+section);
+                    Console.WriteLine(splitvalue[0] + " = " + splitvalue[1]);
+                    data2.Write(splitvalue[0], splitvalue[1], section);
+                 
+                 
+                }
+                   
+            }
+           
+         
+        }
+        void copifileini()
+        {
+            //MessageBox.Show(Environment.CurrentDirectory + @"\Giulianovarsa\PROCEDURE\file.ini");
+
+            IniFile data = new IniFile(Environment.CurrentDirectory + @"\Giulianovarsa\PROCEDURE\file.ini");
+            foreach (string section in data.GetAllSections())
+            {
+                log.Add("[" + section + "]");
+
+
+                //Iterate through all the keys in the current section
+                //printing the values
+               foreach(string key in data.GetAllDataSection(section))
+                {
+                    var splitvalue = key.Split('=');
+                    log.Add(splitvalue[0] + " = " + splitvalue[1]);
+                    try
+                    {
+                        if (section == "*")
+                        {
+                            File.Copy(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1], localdirr() + @"\" + splitvalue[1], true);
+                        }
+                        else
+                        {
+                            if (Path.GetFullPath(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1]).ToLower() != Path.GetFullPath(GetServ_path() + @"\" + section + @"\" + splitvalue[1]).ToLower())
+                                File.Copy(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1], GetServ_path() + @"\" + section + @"\" + splitvalue[1], true);
+                        }
+
+                    }catch (Exception ex)
+                    {
+
+                        log.Add(ex.Message);
+                    }
+
+
+                }
+
+
+            }
+        }
+
+        void regdll()
+        {
+            //string newvalue = "PATHORDINI = AddBackslash(ws.CurrentDirectory)'*!+#!@@$!";
+            string[] readText = File.ReadAllLines(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS",Encoding.Default);
+            for (int i = 0; i < readText.Length; i++)
+            {
+                if (readText[i].Contains("'*!+#!@@$!"))
+                {
+                    readText[i] = "PATHEXE = \"" + localdirr()+ "\\TreeCadN.dll\"'*!+#!@@$!";
+                  //  MessageBox.Show(readText[i]);
+                 
+                }
+             
+            }
+            File.WriteAllLines(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS", readText, Encoding.Default);
+
+
+            /*
+            Process.Start(new ProcessStartInfo("regsvr32.exe", localdirr() + @"\TreeCadS.dll")
+            {
+                Verb = "runas"
+            });
+            */
+            /*
+
+            Assembly asm = Assembly.LoadFile(localdirr()+ @"\copy_treecad.dll");
+            RegistrationServices regAsm = new RegistrationServices();
+            
+            bool bResult=  regAsm.RegisterAssembly(asm, AssemblyRegistrationFlags.SetCodeBase);
+            MessageBox.Show(regAsm.GetManagedCategoryGuid().ToString());
+            MessageBox.Show(asm.CodeBase);
+            */
+
+
+
+        }
+
+        void  updatesystema()
+        {
+            BD_Connect BD;
+            OleDbDataReader reader_otd;
+            string catalog = "GIULIANOVARSA";
+            /*
+            0. удалить если есть с буквой н файл
+            1. переименовываем система с буквой н
+            2. копируем файл из процедур в правильный путь
+            3. копируем содержимое из старой базы в новую            
+            */
+            string percwe = GetPathMDB(catalog); //локальный правильный путь
+            string percwe_N = percwe + "_N";//временный с буковой н
+            string patchProc = GetPathMDB(catalog, false);// чистый из процедур
+
+            if (File.Exists(patchProc))
+            {
+
+
+
+                if (File.Exists(percwe_N)) File.Delete(percwe_N);
+                if (File.Exists(percwe)) File.Move(percwe, percwe_N);
+                File.Copy(patchProc, percwe);
+
+
+
+
+                if (File.Exists(percwe_N))
+                {
+
+                    //=========================STCommentDchasto
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From STCommentDchasto");
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into STCommentDchasto(id, IDComment, Chastota) In '" + percwe + "' Select id, IDComment, Chastota From STCommentDchasto");
+                    BD.Close();
+
+                    //=========================konstruktor
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From konstruktor");
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into konstruktor(id, Nam, umol) In '" + percwe + "' Select id, Nam, umol From konstruktor");
+                    BD.Close();
+
+                    //=========================manager
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From manager");
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into manager(id, Nam, umol) In '" + percwe + "' Select id, Nam, umol From manager");
+                    BD.Close();
+
+                    //=========================TkoefGroupShablon
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From TkoefGroupShablon");
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into TkoefGroupShablon(id, title,tkoefgroup) In '" + percwe + "' Select id, title,tkoefgroup From TkoefGroupShablon");
+                    BD.Close();
+
+                    //=========================Model3DSUser
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From Model3DSUser");//
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into Model3DSUser(id, treeid, title, l, a, p, path, kolvocolor) In '" + percwe + "' Select id, treeid, title, l, a, p, path, kolvocolor From Model3DSUser");
+                    BD.Close();
+
+                    //=========================ModelTreeUser
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From ModelTreeUser");
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into ModelTreeUser(id, parentid, title) In '" + percwe + "' Select id, parentid, title From Model3DSUser");
+                    BD.Close();
+
+                    //=========================Import
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From Import");
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into import3ds(id, nazv, path3ds,pathjpg,pathjpgugo,x,y,z,category) In '" + percwe + "' Select id,nazv,path3ds,pathjpg,pathjpgugo,x,y,z,category From import3ds");
+                    BD.Close();
+
+
+                    //=========================import3ds_category
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From import3ds_category");
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into import3ds_category(id, nazv) In '" + percwe + "' Select id,nazv From import3ds_category");
+                    BD.Close();
+
+                    //=========================import3ds_server
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From import3ds_server");
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into import3ds_server(id, id_server, nazv,path3ds,pathjpg,pathjpgugo,x,y,z,category,new,loc_3ds,loc_jpg,loc_ugojpg,polzgroup) In '" + percwe + "' Select id, id_server, nazv,path3ds,pathjpg,pathjpgugo,x,y,z,category,new,loc_3ds,loc_jpg,loc_ugojpg,polzgroup From import3ds_server");
+                    BD.Close();
+
+                    //=========================import3ds_category_server
+                    BD = new BD_Connect(percwe);
+                    reader_otd = BD.execute("Delete From import3ds_category_server");
+                    BD.Close();
+                    BD = new BD_Connect(percwe_N);
+                    reader_otd = BD.execute("Insert into import3ds_category_server(id, id_server, nazv,new) In '" + percwe + "' Select id, id_server, nazv,new From import3ds_category_server");
+                    BD.Close();
+
+                    /*
+                     BD = new BD_Connect(percwe);
+                     reader_otd = BD.execute("UPDATE Ver_upd SET Ver = '421' ");
+                     BD.Close();
+                    */
+                }
+            }
+
         }
 
 
@@ -1518,10 +1798,14 @@ namespace TreeCadN
             }
 
 
-        }               
+        }
     }
 
 
+
+
+
+ 
 
     public static class log
     {

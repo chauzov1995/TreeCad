@@ -43,7 +43,7 @@ namespace TreeCadN
             try
             {
 
-                OleDbDataReader reader = BD.conn("SELECT STCommentD.Name, STCommentD.ID, STCommentDchasto.Chastota FROM STCommentD LEFT JOIN STCommentDchasto ON STCommentD.ID = STCommentDchasto.IDComment ORDER BY STCommentDchasto.Chastota DESC");
+                OleDbDataReader reader = BD.execute("SELECT STCommentD.Name, STCommentD.ID, STCommentDchasto.Chastota FROM STCommentD LEFT JOIN STCommentDchasto ON STCommentD.ID = STCommentDchasto.IDComment ORDER BY STCommentDchasto.Chastota DESC");
                 log.Add("вопрос сделан");
                 while (reader.Read())
                 {
@@ -83,10 +83,10 @@ namespace TreeCadN
         {
             try
             {
-                var asdsa = BD.conn("UPDATE STCommentDchasto SET Chastota = (Chastota+1) WHERE IDComment = " + x);
+                var asdsa = BD.execute("UPDATE STCommentDchasto SET Chastota = (Chastota+1) WHERE IDComment = " + x);
                 if (asdsa.RecordsAffected == 0)
                 {
-                    BD.conn("INSERT INTO STCommentDchasto (IDComment, Chastota) VALUES (" + x + ",1) ");
+                    BD.execute("INSERT INTO STCommentDchasto (IDComment, Chastota) VALUES (" + x + ",1) ");
                 }
             }
             catch
@@ -143,7 +143,7 @@ namespace TreeCadN
 MessageBoxButton.YesNo,
 MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                BD.conn("DELETE FROM  STCommentDchasto");
+                BD.execute("DELETE FROM  STCommentDchasto");
                 MessageBox.Show("Список успешно очищен, перезапустите окно");
             }
 
@@ -408,20 +408,33 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
     
     public class BD_Connect
     {
+        public BD_Connect() { }
+        
+
+        public BD_Connect(string path)
+        {
+            this.path = path;
+        }
 
         public string path;
-        public OleDbDataReader conn(string zapros)
+        public OleDbConnection conn1;
+
+        public void Close()
+        {
+            conn1.Close();
+        }
+        public OleDbDataReader execute(string zapros)
         {
             try
             {
                 log.Add("Путь к бд- " + path);
                 log.Add("строка подключ к бд- " + @"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");
                 log.Add("запрос- " + zapros);
-                OleDbConnection conn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");//подключаемся к базе
+                conn1 = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=" + path + @";Mode=Share Deny None;Jet OLEDB:System database=\System.mdw;");//подключаемся к базе
                 OleDbCommand cmd = new OleDbCommand();//инициализируем запрос
-                cmd.Connection = conn;//подключаемся к бд
+                cmd.Connection = conn1;//подключаемся к бд
                 log.Add("открываем соединение");
-                conn.Open();//открываем соединение
+                conn1.Open();//открываем соединение
                 cmd.CommandText = (zapros);
                 log.Add("выполн зварос");
                 OleDbDataReader reader = cmd.ExecuteReader();//выполняем запрос

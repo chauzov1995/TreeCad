@@ -95,7 +95,7 @@ namespace TreeCadN
                 tb3.IsEnabled = false;
                 cb1.IsChecked = false;
             }
-            OleDbDataReader reader = BD.conn("SELECT STCommentD.Name, STCommentD.ID, STCommentDchasto.Chastota FROM STCommentD LEFT JOIN STCommentDchasto ON STCommentD.ID = STCommentDchasto.IDComment ORDER BY STCommentDchasto.Chastota DESC");
+            OleDbDataReader reader = BD.execute("SELECT STCommentD.Name, STCommentD.ID, STCommentDchasto.Chastota FROM STCommentD LEFT JOIN STCommentDchasto ON STCommentD.ID = STCommentDchasto.IDComment ORDER BY STCommentDchasto.Chastota DESC");
             while (reader.Read())
             {
                 int Chasto = 0;
@@ -224,10 +224,10 @@ namespace TreeCadN
         {
             try
             {
-                var asdsa = BD.conn("UPDATE STCommentDchasto SET Chastota = (Chastota+1) WHERE IDComment = " + x);
+                var asdsa = BD.execute("UPDATE STCommentDchasto SET Chastota = (Chastota+1) WHERE IDComment = " + x);
                 if (asdsa.RecordsAffected == 0)
                 {
-                    BD.conn("INSERT INTO STCommentDchasto (IDComment, Chastota) VALUES (" + x + ",1) ");
+                    BD.execute("INSERT INTO STCommentDchasto (IDComment, Chastota) VALUES (" + x + ",1) ");
                 }
             }
             catch
@@ -331,7 +331,7 @@ namespace TreeCadN
 MessageBoxButton.YesNo,
 MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                BD.conn("DELETE FROM  STCommentDchasto");
+                BD.execute("DELETE FROM  STCommentDchasto");
                 MessageBox.Show("Список успешно очищен, перезапустите окно");
             }
 

@@ -127,7 +127,7 @@ namespace TreeCadN
 
         void first_def_zagr() //загрузка дополнительных параметров
         {
-            OleDbDataReader reader = BD.conn("SELECT Name, id FROM TOtdelka WHERE IDGroup=25 or IDGroup=26 or IDGroup=41 or IDGroup=47 ORDER BY Name ASC");
+            OleDbDataReader reader = BD.execute("SELECT Name, id FROM TOtdelka WHERE IDGroup=25 or IDGroup=26 or IDGroup=41 or IDGroup=47 ORDER BY Name ASC");
             seldopotd.Clear();
             seldopotd.Add(new Person()
             {
@@ -178,7 +178,7 @@ namespace TreeCadN
             }
 
 
-            OleDbDataReader reader = BD.conn("SELECT NAME, ID FROM TOTDELKAGROUP " + s + " order by NAME ASC");
+            OleDbDataReader reader = BD.execute("SELECT NAME, ID FROM TOTDELKAGROUP " + s + " order by NAME ASC");
 
             GROUPE.Add(new Person()
             {
@@ -217,7 +217,7 @@ namespace TreeCadN
 
             }
 
-            OleDbDataReader reader = BD.conn("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup FROM TOtdelka " + s + "  ORDER BY Name ASC");
+            OleDbDataReader reader = BD.execute("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup FROM TOtdelka " + s + "  ORDER BY Name ASC");
             idselect = new List<Person>();
             idselect.Add(new Person()//нулевая отделка
             {
@@ -412,7 +412,7 @@ namespace TreeCadN
             razr_group = TekOtdelka.index10;
 
 
-            OleDbDataReader reader = BD.conn("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup  FROM TOtdelka WHERE id=" + TekOtdelka.index1 + "");
+            OleDbDataReader reader = BD.execute("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup  FROM TOtdelka WHERE id=" + TekOtdelka.index1 + "");
          
             bool estbli1 = true;
             while (reader.Read())
@@ -447,7 +447,7 @@ namespace TreeCadN
             reader.Close();
             reader = null;//Загружаем фон для текстуры 1
 
-            reader = BD.conn("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup   FROM TOtdelka WHERE id=" + TekOtdelka.index2 + "");
+            reader = BD.execute("SELECT Name, id, TEKSTURA, NAPRAVLENIE, IDGroup   FROM TOtdelka WHERE id=" + TekOtdelka.index2 + "");
             
             bool estbli2 = true;
                 while (reader.Read())

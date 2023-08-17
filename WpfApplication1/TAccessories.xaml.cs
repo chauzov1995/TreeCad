@@ -78,7 +78,7 @@ namespace TreeCadN
 
             //отделка
             log.Add("Подключимся к бд");
-            OleDbDataReader reader_otd = BD.conn("SELECT Id, Name FROM TOtdelka order by Name ASC");
+            OleDbDataReader reader_otd = BD.execute("SELECT Id, Name FROM TOtdelka order by Name ASC");
 
             otdelka_array = new List<todelka>();
             otdelka_array.Add(new todelka() { ID = "", nameotd = "" });
@@ -101,7 +101,7 @@ namespace TreeCadN
             otdelka.ItemsSource = otdelka_array;
             //.ItemsSource = todelka;
             //ед изм
-            OleDbDataReader reader_izmer = BD.conn("SELECT UnitsID, UnitsName FROM TUnits order by UnitsName ASC");
+            OleDbDataReader reader_izmer = BD.execute("SELECT UnitsID, UnitsName FROM TUnits order by UnitsName ASC");
 
             while (reader_izmer.Read())
             {
@@ -124,7 +124,7 @@ namespace TreeCadN
 
             log.Add("загрузим аксссуары");
             //аксессуары
-            OleDbDataReader reader_GRACC = BD.conn("SELECT TPrice1.GRAFIKA, TPrice1.Articul, TUnits.UnitsID, TPrice1.TKOEFGROUP_ID, TUnits.UnitsName, TPrice1.MName, TPrice1.MatID,  TPrice1.PriceID,  TPrice1.Price, TMAT.MATNAME,  TPrice1.Visibl FROM (TPrice1  LEFT OUTER JOIN  TMAT ON TPrice1.MatID = TMAT.MATID) LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID  ");//WHERE TPrice1.GRAFIKA=0
+            OleDbDataReader reader_GRACC = BD.execute("SELECT TPrice1.GRAFIKA, TPrice1.Articul, TUnits.UnitsID, TPrice1.TKOEFGROUP_ID, TUnits.UnitsName, TPrice1.MName, TPrice1.MatID,  TPrice1.PriceID,  TPrice1.Price, TMAT.MATNAME,  TPrice1.Visibl FROM (TPrice1  LEFT OUTER JOIN  TMAT ON TPrice1.MatID = TMAT.MATID) LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID  ");//WHERE TPrice1.GRAFIKA=0
             //LEFT OUTER JOIN  TUnits ON TUnits.UnitsID=TPrice1.UnitsID
             while (reader_GRACC.Read())
             {
@@ -176,7 +176,7 @@ namespace TreeCadN
             }
             log.Add("Загрузим технику");
             //техника
-            OleDbDataReader reader = BD.conn("SELECT TTxPrice1.Article, TTxPrice1.TName, TTxPrice1.TKOEFGROUP_ID, TTxPrice1.TPriceID, TTxPrice1.TexID, TTxPrice1.Price, TTexnics.TexType  FROM TTxPrice1  LEFT OUTER JOIN  TTexnics ON  TTxPrice1.TexID = TTexnics.TexID  ");
+            OleDbDataReader reader = BD.execute("SELECT TTxPrice1.Article, TTxPrice1.TName, TTxPrice1.TKOEFGROUP_ID, TTxPrice1.TPriceID, TTxPrice1.TexID, TTxPrice1.Price, TTexnics.TexType  FROM TTxPrice1  LEFT OUTER JOIN  TTexnics ON  TTxPrice1.TexID = TTexnics.TexID  ");
             while (reader.Read())
             {
                 try
@@ -232,7 +232,7 @@ namespace TreeCadN
             MenuItem root = new MenuItem() { Title = "Все", type = "at*" };
             MenuItem childItem1 = new MenuItem() { Title = "Аксессуары", type = "a*" };
             log.Add("Загрузим матид");
-            OleDbDataReader readertreeeacc = BD.conn("select T.MATID,MATNAME from TMAT T, TPrice1 T1 where T1.MATID = T.MATID  group by T.MATID,T.MATNAME ORDER BY T.MATNAME ASC");
+            OleDbDataReader readertreeeacc = BD.execute("select T.MATID,MATNAME from TMAT T, TPrice1 T1 where T1.MATID = T.MATID  group by T.MATID,T.MATNAME ORDER BY T.MATNAME ASC");
 
             while (readertreeeacc.Read())
             {
@@ -248,7 +248,7 @@ namespace TreeCadN
             root.Items.Add(childItem1);
             childItem1 = new MenuItem() { Title = "Техника", type = "t*" };
             log.Add("загрузим ттехникс");
-            OleDbDataReader reader_texCB = BD.conn("select T.TexID,TexType from TTexnics T, TTxPrice1 T1 where T1.TexID=T.TexID  group by T.TEXID,T.TexType ORDER BY T.TexType ASC ");
+            OleDbDataReader reader_texCB = BD.execute("select T.TexID,TexType from TTexnics T, TTxPrice1 T1 where T1.TexID=T.TexID  group by T.TEXID,T.TexType ORDER BY T.TexType ASC ");
 
             while (reader_texCB.Read())
             {
@@ -486,6 +486,8 @@ namespace TreeCadN
 
             log.Add("установим размеры окна окна");
             Properties.Settings_AT ps = Properties.Settings_AT.Default;
+         //   MessageBox.Show(ps.Top + " " + ps.Left);..
+         //   MessageBox.Show(this.Top + " " + this.Left + " " + SystemParameters.PrimaryScreenWidth+" "+this.);
             if (ps.Top == -100)
             {
                 this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
@@ -505,6 +507,7 @@ namespace TreeCadN
                 this.Width = ps.Width;
                 this.Height = ps.Height;
             }
+
             /// string[] kolonki = ps.kolonki.Split(';');
 
            // st1.Width.Value= ps.st1;

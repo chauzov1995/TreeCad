@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "вызов", "вызов\вызов.csproj", "{410AD7CF-4C64-4F44-98E2-D25C577BF97F}"
 EndProject
@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3CF601
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "copy_treecad", "copy_treecad\copy_treecad.csproj", "{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +60,22 @@ Global
 		{ACB234D9-C181-4E6C-80AF-A774655DE338}.Release|x64.Build.0 = Release|Any CPU
 		{ACB234D9-C181-4E6C-80AF-A774655DE338}.Release|x86.ActiveCfg = Release|Any CPU
 		{ACB234D9-C181-4E6C-80AF-A774655DE338}.Release|x86.Build.0 = Release|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Debug|ARM.Build.0 = Debug|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Debug|x64.Build.0 = Debug|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Debug|x86.Build.0 = Debug|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Release|ARM.Build.0 = Release|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Release|x64.ActiveCfg = Release|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Release|x64.Build.0 = Release|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Release|x86.ActiveCfg = Release|Any CPU
+		{28A20B6D-EE66-4217-B1DD-9CE37E8B2EAB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

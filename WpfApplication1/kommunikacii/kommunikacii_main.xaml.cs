@@ -699,7 +699,7 @@ namespace TreeCadN.kommunikacii
                 string idmodel_peremech = file.id_server;
 
                 (new web_zapros()).load("peremesh", "id=" + idmodel_peremech + "&category=" + idcategor);
-                BD.conn("UPDATE `import3ds_server` SET  `category`='" + idcategor + "' WHERE id_server='" + file.id_server + "'");
+                BD.execute("UPDATE `import3ds_server` SET  `category`='" + idcategor + "' WHERE id_server='" + file.id_server + "'");
 
 
                 MessageBox.Show("Объект успешно перемещён");
@@ -828,10 +828,10 @@ namespace TreeCadN.kommunikacii
 
 
             //  BD.conn("UPDATE `import3ds_server` SET  `new`='0' ");
-            BD.conn("DELETE FROM `import3ds_server` WHERE category='" + Treespis.id_server + "'");
+            BD.execute("DELETE FROM `import3ds_server` WHERE category='" + Treespis.id_server + "'");
             foreach (Models3d elem in result)
             {
-                BD.conn("INSERT INTO  `import3ds_server` (id_server, nazv,path3ds,pathjpg,pathjpgugo,x,y,z,category,new, loc_3ds, loc_jpg, loc_ugojpg, polzgroup)  VALUES ('" +
+                BD.execute("INSERT INTO  `import3ds_server` (id_server, nazv,path3ds,pathjpg,pathjpgugo,x,y,z,category,new, loc_3ds, loc_jpg, loc_ugojpg, polzgroup)  VALUES ('" +
                     elem.id_server + "', '" +
                     elem.name + "', '" +
                     elem.path + "', '" +
@@ -1049,8 +1049,8 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
               "Вы действительно хотите очистить локальную базу данных?", "",
               MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                BD.conn("DELETE FROM `import3ds_category_server` ");
-                BD.conn("DELETE FROM `import3ds_server` ");
+                BD.execute("DELETE FROM `import3ds_category_server` ");
+                BD.execute("DELETE FROM `import3ds_server` ");
                 lb3napolnene();
                 lb4.ItemsSource = null;
             }
