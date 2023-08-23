@@ -1626,6 +1626,7 @@ namespace TreeCadN
                      reader_otd = BD.execute("UPDATE Ver_upd SET Ver = '421' ");
                      BD.Close();
                     */
+                    File.Delete(percwe_N);
                 }
             }
 

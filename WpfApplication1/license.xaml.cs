@@ -58,12 +58,12 @@ namespace TreeCadN
 
 
 
-            items.Add(new Licenz { id = "0", lic = "Основной модуль 3CAD", price = "12", modul_Act = abilitato_root });
-            items.Add(new Licenz { id = "1", lic = "Продвинутый рендеринг", price = "3", modul_Act = moduli_root[3].ToString() });
-            items.Add(new Licenz { id = "2", lic = "Экспорт в 3ds (3D Max)", price = "3", modul_Act = moduli_root[0].ToString() });
-            items.Add(new Licenz { id = "3", lic = "Экспорт в dwg (AutoCAD)", price = "4", modul_Act = moduli_root[1].ToString() });
-            items.Add(new Licenz { id = "4", lic = "Sketch Up", price = "2", modul_Act = moduli_root[8].ToString() });
-            items.Add(new Licenz { id = "5", lic = "Предметы для обстановки помещений", price = "3", modul_Act = moduli_root[11].ToString() });
+            items.Add(new Licenz { id = "0", lic = "Основной модуль 3CAD", price = "13.44", modul_Act = abilitato_root });
+            items.Add(new Licenz { id = "1", lic = "Продвинутый рендеринг", price = "3.36", modul_Act = moduli_root[3].ToString() });
+            items.Add(new Licenz { id = "2", lic = "Экспорт в 3ds (3D Max)", price = "3.36", modul_Act = moduli_root[0].ToString() });
+            items.Add(new Licenz { id = "3", lic = "Экспорт в dwg (AutoCAD)", price = "3.36", modul_Act = moduli_root[1].ToString() });
+            items.Add(new Licenz { id = "4", lic = "Sketch Up", price = "2.24", modul_Act = moduli_root[8].ToString() });
+            items.Add(new Licenz { id = "5", lic = "Предметы для обстановки помещений", price = "3.36", modul_Act = moduli_root[11].ToString() });
           //  items.Add(new Licenz { id = "6", lic = "Спецэффекты (плавное открывание дверей и пр.)", price = "3", modul_Act = moduli_root[2].ToString() });
 
 
