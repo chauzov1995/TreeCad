@@ -111,12 +111,12 @@ namespace вызов
             {
                 // MessageBox.Show(ex.Message);
             }
-            MessageBox.Show("Готово");
-            File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"C:\evolution\giulianovars\TreeCadN.dll", true);
+          //  MessageBox.Show("Готово");
+            File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"C:\evolution\giulianovars\Giulianovarsa\PROCEDURE\TreeCadN.dll", true);
  
 
-            Process.Start(@"C:\evolution\giulianovars\giulianovars.exe", @"/C giulianovarsa  ");///O 45 /TAB2 
-
+            Process.Start(@"C:\evolution\giulianovars\giulianovars.exe");///O 45 /TAB2 
+            Close();
 
 
 

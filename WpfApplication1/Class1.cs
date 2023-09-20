@@ -1254,7 +1254,9 @@ namespace TreeCadN
 
           string file1= GetServ_path() + @"\Giulianovarsa\procedure\updN.ini";
           string file2= localdirr() + @"\updN.ini";
-           
+
+
+            copifileini();
             if (File.GetLastWriteTime(file1) != File.GetLastWriteTime(file2))
             {
                //  MessageBox.Show(File.GetLastWriteTime(file1) + " " + File.GetLastWriteTime(file2));
@@ -1270,16 +1272,17 @@ namespace TreeCadN
             });*/
                 
 
-                copifileini();
+              
                 regdll();
                   ecadroiniresave();
                   updatesystema();
 
                 File.Copy(file1, file2, true); //подветрждаем успех
             }
+           
             // regdll();
-          //  MessageBox.Show("asdasdaa");
-         //   ecadroiniresave();
+            //  MessageBox.Show("asdasdaa");
+            //   ecadroiniresave();
 
         }
 
@@ -1476,19 +1479,20 @@ namespace TreeCadN
         void regdll()
         {
             //string newvalue = "PATHORDINI = AddBackslash(ws.CurrentDirectory)'*!+#!@@$!";
-            string[] readText = File.ReadAllLines(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS",Encoding.Default);
+            if (File.Exists(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS")) { 
+            string[] readText = File.ReadAllLines(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS", Encoding.Default);
             for (int i = 0; i < readText.Length; i++)
             {
                 if (readText[i].Contains("'*!+#!@@$!"))
                 {
-                    readText[i] = "PATHEXE = \"" + localdirr()+ "\\TreeCadN.dll\"'*!+#!@@$!";
-                  //  MessageBox.Show(readText[i]);
-                 
+                    readText[i] = "PATHEXE = \"" + localdirr() + "\\TreeCadN.dll\"'*!+#!@@$!";
+                    //  MessageBox.Show(readText[i]);
+
                 }
-             
+
             }
             File.WriteAllLines(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS", readText, Encoding.Default);
-
+        }
 
             /*
             Process.Start(new ProcessStartInfo("regsvr32.exe", localdirr() + @"\TreeCadS.dll")

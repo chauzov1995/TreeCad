@@ -32,7 +32,16 @@ namespace TreeCadN.smarktkitchen
           new  sposobupravl(){ name="Механическая кнопка", typedev="mehbtn"},
           new  sposobupravl(){ name="ИК датчик на взмах", typedev="irsens"},
           new  sposobupravl(){ name="ИК датчик на закрытие дверцы", typedev="irsens2"},
+      //    new  sposobupravl(){ name="Датчик жестов", typedev="jest"},
       
+        };
+
+        static List<chemupravl> сhemupravlspis = new List<chemupravl>()
+        {
+          new  chemupravl(){ name="Cветильники Maxlight", typedev="maxlight"},
+          new  chemupravl(){ name="Cветильники Sky/Vela/Oda", typedev="skyvela"},
+ 
+
         };
 
         static List<sposobupravl> sposuptzapasnica = new List<sposobupravl>()
@@ -46,28 +55,47 @@ namespace TreeCadN.smarktkitchen
 
         List<typedevice> spistypedevice1= new List<typedevice>()
         {
-          new  typedevice(){ typename="Подсветка в запасницу", selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 2", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 3", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Запасница", selectedtype = sposuptzapasnica[0] , sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
-        };
+                  new  typedevice(){ typename="Запасница", type="retrotop_up", selectedtype = sposuptzapasnica[0] , sposobupravl=sposuptzapasnica,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
 
+          new  typedevice(){ typename="Подсветка в запасницу", type="svet", selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall,selectedchemurpavl=сhemupravlspis[0],chemurpavlall=сhemupravlspis},
+          new  typedevice(){ typename="Подсветка 2", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 3", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 4", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+      };
         List<typedevice> spistypedevice2 = new List<typedevice>()
         {
-          new  typedevice(){ typename="Подсветка в ретро-топ", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 2", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 3", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Ретро-топ (тип 5)",  selectedtype = sposuptzapasnica[0] ,sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
-        };
+                 new  typedevice(){ typename="Запасница", type="retrotop_up", selectedtype = sposuptzapasnica[0] , sposobupravl=sposuptzapasnica,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+
+          new  typedevice(){ typename="Подсветка в запасницу", type="svet", selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall,selectedchemurpavl=сhemupravlspis[0],chemurpavlall=сhemupravlspis},
+          new  typedevice(){ typename="Подсветка 2", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 3", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 4", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+       };
 
         List<typedevice> spistypedevice3 = new List<typedevice>()
         {
-          new  typedevice(){ typename="Подсветка 1", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 2", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 3",  selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall, visibleskyvella="Visible"},
-          new  typedevice(){ typename="Подсветка 4", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall, visibleskyvella="Visible"},
+                new  typedevice(){ typename="Ретро-топ (тип 5)", type="retrotop_up",  selectedtype = sposuptzapasnica[0] ,sposobupravl=sposuptzapasnica,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+
+          new  typedevice(){ typename="Подсветка в ретро-топ", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 2", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 3", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 4", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+       };
+
+        List<typedevice> spistypedevice4 = new List<typedevice>()
+        {
+          new  typedevice(){ typename="Подсветка 1", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 2", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 3", type="svet",  selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 4", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+         // new  typedevice(){ typename="Запасница", sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
+        };
+        List<typedevice> spistypedevice5 = new List<typedevice>()
+        {
+          new  typedevice(){ typename="Подсветка 1", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 2", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 3", type="svet",  selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
+          new  typedevice(){ typename="Подсветка 4", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
          // new  typedevice(){ typename="Запасница", sposobupravl=sposuptzapasnica, visibleskyvella="Hidden"},
         };
         bool konstruktor = false;
@@ -91,6 +119,8 @@ namespace TreeCadN.smarktkitchen
                     lv1.IsEnabled = false;
                     lv2.IsEnabled = false;
                     lv3.IsEnabled = false;
+                    lv4.IsEnabled = false;
+                    lv5.IsEnabled = false;
                 }
                 else
                 {
@@ -102,10 +132,13 @@ namespace TreeCadN.smarktkitchen
             lv1.ItemsSource = spistypedevice1;
             lv2.ItemsSource = spistypedevice2;
             lv3.ItemsSource = spistypedevice3;
+            lv4.ItemsSource = spistypedevice4;
+            lv5.ItemsSource = spistypedevice5;
         }
 
         void razobrfunc(string oldstroka)
         {
+            MessageBox.Show(oldstroka);
            List< Exportcontroller> m = JsonConvert.DeserializeObject<List<Exportcontroller>>(oldstroka);
 
             cb1.IsChecked = m[0].enable;
@@ -115,8 +148,11 @@ namespace TreeCadN.smarktkitchen
 
                 //new typedevice() { typename = "Подсветка 1", selectedtype = sposuptrall[0], sposobupravl = sposuptrall, visibleskyvella = "Visible" },
                 spistypedevice1[i].enabled = controller.type!="none";
-                spistypedevice1[i].enabledskyvella = controller.parametr.skyvella;
-                if (i == 4) { spistypedevice1[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); } else
+                spistypedevice1[i].selectedchemurpavl = сhemupravlspis[controller.parametr.skyvella ?1:0];
+
+                if (spistypedevice1[i].type == "retrotop_up") { 
+                    spistypedevice1[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); 
+                } else
                 {
                     spistypedevice1[i].selectedtype = sposuptrall.Find(x => x.typedev == controller.parametr.typeupravl);
                 }
@@ -131,8 +167,8 @@ namespace TreeCadN.smarktkitchen
 
                 //new typedevice() { typename = "Подсветка 1", selectedtype = sposuptrall[0], sposobupravl = sposuptrall, visibleskyvella = "Visible" },
                 spistypedevice2[i].enabled = controller.type != "none";
-                spistypedevice2[i].enabledskyvella = controller.parametr.skyvella;
-                if (i == 4) { spistypedevice2[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); }
+                spistypedevice2[i].selectedchemurpavl = сhemupravlspis[controller.parametr.skyvella ? 1 : 0];
+                if (spistypedevice2[i].type== "retrotop_up") { spistypedevice2[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); }
                 else
                 {
                     spistypedevice2[i].selectedtype = sposuptrall.Find(x => x.typedev == controller.parametr.typeupravl);
@@ -149,11 +185,48 @@ namespace TreeCadN.smarktkitchen
 
                 //new typedevice() { typename = "Подсветка 1", selectedtype = sposuptrall[0], sposobupravl = sposuptrall, visibleskyvella = "Visible" },
                 spistypedevice3[i].enabled = controller.type != "none";
-                spistypedevice3[i].enabledskyvella = controller.parametr.skyvella;
-                if (i == 4) { spistypedevice3[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); }
+                spistypedevice3[i].selectedchemurpavl = сhemupravlspis[controller.parametr.skyvella ? 1 : 0];
+                if (spistypedevice3[i].type == "retrotop_up") { spistypedevice3[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); }
                 else
                 {
                     spistypedevice3[i].selectedtype = sposuptrall.Find(x => x.typedev == controller.parametr.typeupravl);
+                }
+
+            }
+
+
+            cb4.IsChecked = m[3].enable;
+            lv4.IsEnabled = m[3].enable;
+            for (int i = 0; i < m[3].exportjson.Count; i++)
+            {
+                Exportjson controller = m[3].exportjson[i];
+
+                //new typedevice() { typename = "Подсветка 1", selectedtype = sposuptrall[0], sposobupravl = sposuptrall, visibleskyvella = "Visible" },
+                spistypedevice4[i].enabled = controller.type != "none";
+                spistypedevice4[i].selectedchemurpavl = сhemupravlspis[controller.parametr.skyvella ? 1 : 0];
+                if (spistypedevice4[i].type == "retrotop_up") { spistypedevice4[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); }
+                else
+                {
+                    spistypedevice4[i].selectedtype = sposuptrall.Find(x => x.typedev == controller.parametr.typeupravl);
+                }
+
+            }
+
+
+
+            cb5.IsChecked = m[4].enable;
+            lv5.IsEnabled = m[4].enable;
+            for (int i = 0; i < m[4].exportjson.Count; i++)
+            {
+                Exportjson controller = m[4].exportjson[i];
+
+                //new typedevice() { typename = "Подсветка 1", selectedtype = sposuptrall[0], sposobupravl = sposuptrall, visibleskyvella = "Visible" },
+                spistypedevice5[i].enabled = controller.type != "none";
+                spistypedevice5[i].selectedchemurpavl = сhemupravlspis[controller.parametr.skyvella ? 1 : 0];
+                if (spistypedevice5[i].type == "retrotop_up") { spistypedevice5[i].selectedtype = sposuptzapasnica.Find(x => x.typedev == controller.parametr.typeupravl); }
+                else
+                {
+                    spistypedevice5[i].selectedtype = sposuptrall.Find(x => x.typedev == controller.parametr.typeupravl);
                 }
 
             }
@@ -194,8 +267,26 @@ namespace TreeCadN.smarktkitchen
         {
             lv3.IsEnabled = false;
         }
+        private void CheckBox_Checked_3(object sender, RoutedEventArgs e)
+        {
+            lv4.IsEnabled = true;
+        }
 
-       void sobrfunk(ListView lv1istb, bool enabledctr, int nomerkontr)
+        private void CheckBox_Unchecked_3(object sender, RoutedEventArgs e)
+        {
+            lv4.IsEnabled = false;
+        }
+        private void CheckBox_Checked_4(object sender, RoutedEventArgs e)
+        {
+            lv5.IsEnabled = true;
+        }
+
+        private void CheckBox_Unchecked_4(object sender, RoutedEventArgs e)
+        {
+            lv5.IsEnabled = false;
+        }
+
+        void sobrfunk(ListView lv1istb, bool enabledctr, int nomerkontr)
         {
 
          
@@ -203,14 +294,16 @@ namespace TreeCadN.smarktkitchen
             List<Exportjson> exp1 = new List<Exportjson>();
 
             List<typedevice> typedevices = lv1istb.ItemsSource as List<typedevice>;
+
             int i = 0;
             foreach (typedevice typedevice in typedevices)
             {
                 
                 i++;
                 bool enabled = typedevice.enabled;
-                bool enabledskyvella = typedevice.enabledskyvella;
+                bool enabledskyvella = typedevice.selectedchemurpavl== сhemupravlspis[1];
                 string typedev = typedevice.selectedtype.typedev;
+            
                
                 exp1.Add(new Exportjson() { postfix = "_" + i, type = enabled ? (i >= 5 ? "retrotop_up" : "svet") : "none", parametr = new Parametr() { typeupravl = typedev, skyvella = enabledskyvella } });
 
@@ -382,13 +475,18 @@ namespace TreeCadN.smarktkitchen
     {
          
         public string typename { get; set; }
-    
+        public string type { get; set; }
+
         public bool enabled { get; set; }
-        public bool enabledskyvella { get; set; }
+      //  public bool enabledskyvella { get; set; }
         public List<sposobupravl> sposobupravl { get; set; }
         public sposobupravl selectedtype { get; set; }
-        public string visibleskyvella { get; set; }
-      
+        //  public string visibleskyvella { get; set; }
+
+
+        public List<chemupravl> chemurpavlall { get; set; }
+        public chemupravl selectedchemurpavl { get; set; }
+
 
 
     }
@@ -397,6 +495,15 @@ namespace TreeCadN.smarktkitchen
         public string name { get; set; }
    
             public string typedev { get; set; }
+
+
+    }
+
+    public class chemupravl
+    {
+        public string name { get; set; }
+
+        public string typedev { get; set; }
 
 
     }
