@@ -1037,8 +1037,11 @@ st14.Width.ToString() + ";";
                 if ((e.Row.Item as texnika).type == "a")
                 {
                     List<string> slovarb =new List<string>()  { "Примечание", "Отделка", "Цена ред." };
+               
                     if (!filtrtoko1stuk((e.Row.Item as texnika).Article)) { slovarb.Add("Кол-во"); }
-                  
+
+                  //  if ((e.Row.Item as texnika).priznsmartkitchen == 1) { slovarb = new List<string>() { "Цена ред." }; }
+
                     e.Cancel = isreadonly_forGRID(e, slovarb.ToArray());
                 }
                 if ((e.Row.Item as texnika).type == "t")
