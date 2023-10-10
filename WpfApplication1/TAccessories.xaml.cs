@@ -1314,6 +1314,10 @@ st14.Width.ToString() + ";";
                 {
                     if (contr.enable)
                     {
+
+                       
+
+
                         if (maincontr)
                         {//доп контроллер                    
                             addartsk("BUSK1");
@@ -1358,6 +1362,10 @@ st14.Width.ToString() + ";";
 
 
                         }
+
+
+
+
 
                     }
 
