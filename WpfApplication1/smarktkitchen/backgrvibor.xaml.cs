@@ -532,7 +532,9 @@ namespace TreeCadN.smarktkitchen
      
         public int nomerkontr { get; set; }
         public bool enable { get; set; }
+       
         public List<Exportjson> exportjson { get; set; }
+
     }
 
     public partial class Exportjson

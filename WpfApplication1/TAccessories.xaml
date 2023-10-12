@@ -113,6 +113,16 @@
         </Grid >
 
         <DataGrid x:Name="lb_vibr_tex" Grid.Row="3"  Margin="5" GridLinesVisibility="None" SelectionMode="Single"   AutoGenerateColumns="False"  CanUserAddRows="False" Grid.ColumnSpan="3" AllowDrop="True" CellEditEnding="g3_CellEditEnding_1" BeginningEdit="g3_BeginningEdit_1"  PreviewTextInput="g3_PreviewTextInput"  RowEditEnding="g3_RowEditEnding" CurrentCellChanged="Lb_vibr_tex_CurrentCellChanged"   >
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding priznsmartkitchen}" Value="1">
+                            <Setter Property="Background" Value="#FFE8D2FF"></Setter>
+                        </DataTrigger>
+                      
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
 
                 <DataGridTextColumn x:Name="st1"  Header="№п.п." Binding="{Binding nom_pp}" Width="60"  />

@@ -1040,7 +1040,7 @@ st14.Width.ToString() + ";";
                
                     if (!filtrtoko1stuk((e.Row.Item as texnika).Article)) { slovarb.Add("Кол-во"); }
 
-                  //  if ((e.Row.Item as texnika).priznsmartkitchen == 1) { slovarb = new List<string>() { "Цена ред." }; }
+                    if ((e.Row.Item as texnika).priznsmartkitchen == 1) { slovarb = new List<string>() { "Примечание", "Цена ред." }; }
 
                     e.Cancel = isreadonly_forGRID(e, slovarb.ToArray());
                 }
@@ -1285,9 +1285,11 @@ st14.Width.ToString() + ";";
             asdasd.priznsmartkitchen = 1;
             asdasd.gruppirovka = 1;
             asdasd.Prim = prim;
+                
 
-            var asdasd2 = array_smkitch.Find(x => x.Article.Equals(artikul));
-            if (asdasd2 != null)
+            var asdasd2 = array_smkitch.Find(x => x.Article.Equals(artikul) && x.Prim.Equals(prim));
+                
+            if (asdasd2 != null )
             {
                 asdasd2.kolvo++;
             }
@@ -1315,26 +1317,27 @@ st14.Width.ToString() + ";";
                     if (contr.enable)
                     {
 
-                       
 
+                        int kolvoprov = 0;
 
-                        if (maincontr)
-                        {//доп контроллер                    
-                            addartsk("BUSK1");
-                        }
-                        else
-                        {// первый контролллер
-                            addartsk("BUSK");
-                        }
-                        maincontr = true;
-                   
 
                     foreach (Exportjson sostav in contr.exportjson)
                     {
                             
                         if (sostav.type == "svet")
                         {
-                            addartsk("90W");
+                                if (contr.nomerkontr <= 2)
+                                {
+                                    addartsk("90W", "установить в запасницу");
+                                }else if (contr.nomerkontr == 3)
+                                {
+                                    addartsk("90W", "установить в ретротоп");
+                                }
+                                else
+                                {                                    addartsk("90W");
+                                }
+
+                                    kolvoprov++;
                             if (sostav.parametr.typeupravl == "irsens")
                             {
                               addartsk("SVMLB");
@@ -1362,6 +1365,18 @@ st14.Width.ToString() + ";";
 
 
                         }
+
+                        string kuda = contr.nomerkontr >= 4 ? ", в фурнитуру" : contr.nomerkontr == 3 ? ", в ретротоп" : ", в запасницу";
+
+                        if (maincontr)
+                        {//доп контроллер                    
+                            addartsk("BUSK1", "Комплектовать кабелем подключения к трансформатору по " + kolvoprov+" шт на контроллер" + kuda);
+                        }
+                        else
+                        {// первый контролллер
+                            addartsk("BUSK", "Комплектовать кабелем подключения к трансформатору по " + kolvoprov + " шт на контроллер" + kuda);
+                        }
+                        maincontr = true;
 
 
 
