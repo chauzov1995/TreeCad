@@ -269,6 +269,9 @@
     <Compile Include="Proxy.xaml.cs">
       <DependentUpon>Proxy.xaml</DependentUpon>
     </Compile>
+    <Compile Include="redhosts.xaml.cs">
+      <DependentUpon>redhosts.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Properties\Settings_lic.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -364,6 +367,10 @@
     <Page Include="Prim3.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="redhosts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="smarktkitchen\backgrvibor.xaml">
       <SubType>Designer</SubType>

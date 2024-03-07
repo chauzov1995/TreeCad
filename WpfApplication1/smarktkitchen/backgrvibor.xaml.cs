@@ -59,32 +59,33 @@ namespace TreeCadN.smarktkitchen
 
         List<typedevice> spistypedevice1 = new List<typedevice>()
         {
-                  new  typedevice(){ typename="Запасница", enabled=true, enabledrt=false, type="retrotop_up", selectedtype = sposuptzapasnica[0] , sposobupravl=sposuptzapasnica, visibletypesvet="Hidden"},
-
+      
           new  typedevice(){ typename="Подсветка в запасницу", type="svet", selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall,selectedchemurpavl=сhemupravlspis[0],chemurpavlall=сhemupravlspis},
           new  typedevice(){ typename="Подсветка 2", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
           new  typedevice(){ typename="Подсветка 3", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
           new  typedevice(){ typename="Подсветка 4", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
-      };
+
+                    new  typedevice(){ typename="Запасница", enabled=true, enabledrt=false, type="retrotop_up", selectedtype = sposuptzapasnica[0] , sposobupravl=sposuptzapasnica, visibletypesvet="Hidden"},
+};
         List<typedevice> spistypedevice2 = new List<typedevice>()
         {
-                 new  typedevice(){ typename="Запасница",enabled=true, enabledrt=false, type="retrotop_up", selectedtype = sposuptzapasnica[0] , sposobupravl=sposuptzapasnica, visibletypesvet="Hidden"},
-
+       
           new  typedevice(){ typename="Подсветка в запасницу", type="svet", selectedtype = sposuptrall[0] ,sposobupravl=sposuptrall,selectedchemurpavl=сhemupravlspis[0],chemurpavlall=сhemupravlspis},
           new  typedevice(){ typename="Подсветка 2", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
           new  typedevice(){ typename="Подсветка 3", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
           new  typedevice(){ typename="Подсветка 4", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
-       };
+              new  typedevice(){ typename="Запасница",enabled=true, enabledrt=false, type="retrotop_up", selectedtype = sposuptzapasnica[0] , sposobupravl=sposuptzapasnica, visibletypesvet="Hidden"},
+   };
 
         List<typedevice> spistypedevice3 = new List<typedevice>()
         {
-                new  typedevice(){ typename="Ретро-топ (тип 5)",enabled=true, enabledrt=false, type="retrotop_up",  selectedtype = sposuptzapasnica[0] ,sposobupravl=sposuptzapasnica, visibletypesvet="Hidden"},
-
+      
           new  typedevice(){ typename="Подсветка в ретро-топ", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
           new  typedevice(){ typename="Подсветка 2", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
           new  typedevice(){ typename="Подсветка 3", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
           new  typedevice(){ typename="Подсветка 4", type="svet", selectedtype = sposuptrall[0] , sposobupravl=sposuptrall,chemurpavlall=сhemupravlspis,selectedchemurpavl=сhemupravlspis[0]},
-       };
+               new  typedevice(){ typename="Ретро-топ (тип 5)",enabled=true, enabledrt=false, type="retrotop_up",  selectedtype = sposuptzapasnica[0] ,sposobupravl=sposuptzapasnica, visibletypesvet="Hidden"},
+  };
 
         List<typedevice> spistypedevice4 = new List<typedevice>()
         {
@@ -303,11 +304,23 @@ namespace TreeCadN.smarktkitchen
             List<Exportjson> exp1 = new List<Exportjson>();
 
             List<typedevice> typedevices = lv1istb.ItemsSource as List<typedevice>;
+           
+            /*MessageBox.Show(typedevices.Count.ToString());
+            if (nomerkontr <= 3)
+            {
+                var ssolk= typedevices[0];               
+                typedevices.RemoveAt(0);
+                typedevices.Insert(4, ssolk);
+               
+            }
+            
+            */
+
 
             int i = 0;
             foreach (typedevice typedevice in typedevices)
             {
-                
+              
                 i++;
                 bool enabled = typedevice.enabled;
                 bool enabledskyvella = typedevice.selectedchemurpavl== сhemupravlspis[1];
@@ -332,8 +345,9 @@ namespace TreeCadN.smarktkitchen
         {
           export = new List<Exportcontroller>();
 
-
             
+
+
 
             sobrfunk(lv1,cb1.IsChecked.Value, 1);
             sobrfunk(lv2, cb2.IsChecked.Value, 2);

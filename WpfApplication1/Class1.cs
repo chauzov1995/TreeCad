@@ -34,7 +34,7 @@ namespace TreeCadN
     }
 
 
-    [ComVisible(true)]   
+    [ComVisible(true)]
     public class neqweqe
     {
         //  public string path1 = "";
@@ -84,7 +84,7 @@ namespace TreeCadN
                         GNviewer(Environment.CurrentDirectory + @"\GIULIANOVARSA\procedure");
                         break;
                     case "smartkitchen":
-                        returnValue=smartkitchen(s);
+                        returnValue = smartkitchen(s);
                         break;
                     case "uploadPROGR":
 
@@ -120,6 +120,11 @@ namespace TreeCadN
                         returnValue = b;
                         break;
 
+                    case "redhost":
+
+                        redhosts f1 = new redhosts();
+                        f1.ShowDialog();
+                        break;
                     case "status_zakaza":
 
 
@@ -399,7 +404,7 @@ namespace TreeCadN
             {
                 if (str1 == "")
                 {
-                    str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^54";
+                    str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^62^54";
                     uslovvipol = true;
                 }
                 else
@@ -410,7 +415,7 @@ namespace TreeCadN
               MessageBoxButton.YesNo,
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
-                        str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^54";
+                        str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^62^54";
                         uslovvipol = true;
                     }
                     else
@@ -561,17 +566,17 @@ namespace TreeCadN
             try
             {
                 string Versio = getParam(info2, "Var", "Versio").ToString();
-                 intver = int.Parse(Versio.Split(',')[0]);
+                intver = int.Parse(Versio.Split(',')[0]);
             }
             catch (Exception) {
-            
+
             }
 
             //
             //MessageBox.Show(intver.ToString());
             if (intver >= 2)
             {
-                Prim3 f_prim = new Prim3(GetPathMDB(katalog), text);          
+                Prim3 f_prim = new Prim3(GetPathMDB(katalog), text);
                 f_prim.ShowDialog();
                 return f_prim.text_otvet;
             }
@@ -582,7 +587,7 @@ namespace TreeCadN
                 return f_prim.text_otvet;
             }
 
-          
+
         }
         public string TAccess(string path, int filtr, string text)
         {
@@ -594,21 +599,21 @@ namespace TreeCadN
             INIManager manager = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
             string ragsoc = manager.GetPrivateString("giulianovars", "ragsoc");//получ ключ активации
 
-          //  MessageBox.Show(ragsoc);
-            TAccessories f_TAccess = new TAccessories(path, text, this, _RIFFABRICA, ragsoc=="999");
+            //  MessageBox.Show(ragsoc);
+            TAccessories f_TAccess = new TAccessories(path, text, this, _RIFFABRICA, ragsoc == "999");
             f_TAccess.ShowDialog();
             return f_TAccess.text_otvet;
         }
         public string smartkitchen(string path)
         {
-            object xamb = getParam(Ambiente, "GetObject", "XAMB");           
+            object xamb = getParam(Ambiente, "GetObject", "XAMB");
             object info = getParamG(xamb, "INFO");
             object info2 = getParamG(info, "INFO");
             string _RIFFABRICA = getParam(info2, "Var", "_RIFFABRICA").ToString();
 
-          //  //_RIFFABRICA = "32313";
+            //  //_RIFFABRICA = "32313";
 
-                        backgrvibor f_TAccess = new smarktkitchen.backgrvibor(path, _RIFFABRICA,false);//
+            backgrvibor f_TAccess = new smarktkitchen.backgrvibor(path, _RIFFABRICA, false);//
             f_TAccess.ShowDialog();
             return f_TAccess.otvet;
             /*
@@ -629,10 +634,10 @@ namespace TreeCadN
 
             kommunikacii.kommunikacii_main f_kommunikacii = new kommunikacii.kommunikacii_main(path);
             f_kommunikacii.ShowDialog();
-         //   MessageBox.Show(Environment.CurrentDirectory);
-          //  String split = f_kommunikacii.selectedModel.Substring(0, f_kommunikacii.selectedModel.LastIndexOf(@"3dsObject"));
-            String asdasdasd = f_kommunikacii.selectedModel.Replace(Environment.CurrentDirectory+@"\", "");
-        
+            //   MessageBox.Show(Environment.CurrentDirectory);
+            //  String split = f_kommunikacii.selectedModel.Substring(0, f_kommunikacii.selectedModel.LastIndexOf(@"3dsObject"));
+            String asdasdasd = f_kommunikacii.selectedModel.Replace(Environment.CurrentDirectory + @"\", "");
+
             log.Add(f_kommunikacii.selectedModel);
             return asdasdasd;
         }
@@ -720,12 +725,16 @@ namespace TreeCadN
             open.updateTekZakaz(this, path_ordini);
         }
 
-
-
-
-        public void art_to_buf(ref object xAmbiente)
+        public void redhost(ref object xAmbiente)
         {
-            
+            redhosts f1 = new redhosts();
+            f1.ShowDialog();
+        }
+
+
+            public void art_to_buf(ref object xAmbiente)
+        {
+
             this.Ambiente = xAmbiente;
             this.xamb = getParam(Ambiente, "GetObject", "XAMB");
             string currbox = getParam(xamb, "curbox").ToString();
@@ -735,7 +744,7 @@ namespace TreeCadN
             //  cod = cod.Remove(3);
 
             Clipboard.SetText(cod);
-            
+
             /*
 
             this.Ambiente = xAmbiente;
@@ -758,7 +767,7 @@ namespace TreeCadN
 
         public void treecadtobazis(object detalirovka)
         {
-           // MessageBox.Show("asdasdasdas");
+            // MessageBox.Show("asdasdasdas");
             var typedList = (object[])detalirovka;//.Cast<string>().ToArray();
             List<del> detali = new List<del>();
 
@@ -775,14 +784,14 @@ namespace TreeCadN
                     string box = elem.GetType().InvokeMember("box", BindingFlags.GetProperty, null, elem, new object[0]).ToString();
                     string parrentid = elem.GetType().InvokeMember("parrentid", BindingFlags.GetProperty, null, elem, new object[0]).ToString();
                     string strdetal = elem.GetType().InvokeMember("strdetal", BindingFlags.GetProperty, null, elem, new object[0]).ToString();
-                 //   log.Add(strdetal);
+                    //   log.Add(strdetal);
 
 
 
 
                     foreach (string strokidetalir in strdetal.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                     {//перебор строк деталировка
-                         log.Add(strokidetalir);
+                        log.Add(strokidetalir);
                         detinpu boxterr = new detinpu();
                         boxterr.box = box;
                         boxterr.parrentid = parrentid;
@@ -830,10 +839,10 @@ namespace TreeCadN
 
                         if (boxterr.Art_Detal != "")
                         {
-                           var  materchert= zaprbazisbd(boxterr.Art_Detal);
+                            var materchert = zaprbazisbd(boxterr.Art_Detal);
                             boxterr.MaterialName = materchert.MaterialName;
                             boxterr.width = materchert.width;
-                            boxterr.OTDAName = zaprbazisbd("TOTD_"+boxterr.OTDA).MaterialName;
+                            boxterr.OTDAName = zaprbazisbd("TOTD_" + boxterr.OTDA).MaterialName;
                             boxterr.OTDFName = zaprbazisbd("TOTD_" + boxterr.OTDF).MaterialName;
                             boxterr.KR_DOPName = zaprbazisbd(boxterr.KR_DOP).MaterialName;
                         }
@@ -891,14 +900,14 @@ namespace TreeCadN
                      + "parrentid TEXT, "
                      + "width TEXT, "
                      + "MaterialName TEXT)";
-                //    log.Add(sql_command);
+                    //    log.Add(sql_command);
                     cmd.CommandText = sql_command;
                     cmd.ExecuteNonQuery();
 
 
                     sql_command = "INSERT INTO person(box, Art_Detal, Name, NNomenclature_id, OTDA, OTDF, PanDirA, PanDirF, KR_DOP, KR_DOPName, OTDAName, OTDFName, count, MaterialName, parrentid, width) "
                      + "VALUES " + zapros;
-               //     log.Add(sql_command);
+                    //     log.Add(sql_command);
                     cmd.CommandText = sql_command;
                     cmd.ExecuteNonQuery();
 
@@ -940,8 +949,8 @@ namespace TreeCadN
      "Packet Size=8192;" +
      "ServerType=0";
 
-            detinpu sasasssdds=new detinpu();
-        //    string material = "";
+            detinpu sasasssdds = new detinpu();
+            //    string material = "";
             try
             {
 
@@ -1155,14 +1164,29 @@ namespace TreeCadN
             MessageBox.Show(files.Last());
         }
 
-
+       
         public void UPDATE()
         {
+
+          
+
+
+
+
             // this.Ambiente = xAmbiente;
             //  string catalog = "Giulianovars";// getParamI(Ambiente, "xPercorso").ToString();
             log.Add("вычислим последжний заказ");
 
-
+            string asdasda=Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\giulianovars.exe";
+            if (File.Exists(asdasda))
+            {
+                DateTime asssssdasda = File.GetLastWriteTime(asdasda).AddHours(-24);
+                DateTime date1 = new DateTime(2023, 3, 7);
+                if (asssssdasda < date1)
+                {
+                    MessageBox.Show("Вы используете старый клиент программы. Программа может работать неправильно. Переустановите программу с дилерского сайта или обратитесь к программистам.");
+                }
+            }
 
 
             //upd_last_eve();
@@ -1255,11 +1279,11 @@ namespace TreeCadN
           string file1= GetServ_path() + @"\Giulianovarsa\procedure\updN.ini";
           string file2= localdirr() + @"\updN.ini";
 
-
+            log.Add("copifileini");
             copifileini();
             if (File.GetLastWriteTime(file1) != File.GetLastWriteTime(file2))
             {
-               //  MessageBox.Show(File.GetLastWriteTime(file1) + " " + File.GetLastWriteTime(file2));
+                //  MessageBox.Show(File.GetLastWriteTime(file1) + " " + File.GetLastWriteTime(file2));
 
 
 
@@ -1270,12 +1294,14 @@ namespace TreeCadN
                 MethodInfo meth = ourClass.GetMethod("GNLICENSE1"); //нужен тот Show, который не принимает параметров
                 object result = meth.Invoke(instane, new object[] {
             });*/
-                
 
-              
+
+                log.Add("regdll");
                 regdll();
-                  ecadroiniresave();
-                  updatesystema();
+                log.Add("ecadroiniresave");
+                ecadroiniresave();
+                log.Add("updatesystema");
+                updatesystema();
 
                 File.Copy(file1, file2, true); //подветрждаем успех
             }

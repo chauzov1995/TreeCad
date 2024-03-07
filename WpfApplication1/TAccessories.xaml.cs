@@ -653,6 +653,7 @@ namespace TreeCadN
 "18300124",
 "18300005",
 "18300006",
+"LKGN04PN",
 
 
 
@@ -1319,19 +1320,19 @@ st14.Width.ToString() + ";";
 
 
                         int kolvoprov = 0;
-
+                        int nomsvetdlyapodsvzap = 0;
 
                     foreach (Exportjson sostav in contr.exportjson)
                     {
                             
                         if (sostav.type == "svet")
                         {
-                                if (contr.nomerkontr <= 2)
+                                if (contr.nomerkontr <= 2 && nomsvetdlyapodsvzap==0)
                                 {
-                                    addartsk("90W", "установить в запасницу");
-                                }else if (contr.nomerkontr == 3)
+                                    addartsk("75W", "установить в запасницу");
+                                }else if (contr.nomerkontr == 3 && nomsvetdlyapodsvzap == 0)
                                 {
-                                    addartsk("90W", "установить в ретротоп");
+                                    addartsk("75W", "установить в ретротоп");
                                 }
                                 else
                                 {                                    addartsk("90W");
@@ -1348,7 +1349,22 @@ st14.Width.ToString() + ";";
                             }
                             if (sostav.parametr.typeupravl == "mehbtn")
                             {
-                               addartsk("PDKUPSK");
+                                    if (contr.nomerkontr <= 2)
+                                    {
+                                        addartsk("PDKUPSK", "установить в запасницу");
+                                    }
+                                    else if (contr.nomerkontr == 3)
+                                    {
+                                        addartsk("PDKUPSK", "установить в ретротоп");
+                                    }
+                                    else
+                                    {
+                                        addartsk("PDKUPSK");
+                                    }
+
+                                
+
+
                             }
                             if (sostav.parametr.skyvella)
                             {
@@ -1359,11 +1375,23 @@ st14.Width.ToString() + ";";
                         {
                             if (sostav.parametr.typeupravl == "mehbtn")
                             {
-                                addartsk("PDKUM");
-                            }
+                                    if (contr.nomerkontr <= 2)
+                                    {
+                                        addartsk("PDKUM", "установить в запасницу");
+                                    }
+                                    else if (contr.nomerkontr == 3)
+                                    {
+                                        addartsk("PDKUM", "установить в ретротоп");
+                                    }
+                                    else
+                                    {
+                                        addartsk("PDKUM");
+                                    }
+
+                                    }
                         }
 
-
+                            nomsvetdlyapodsvzap++;
                         }
 
                         string kuda = contr.nomerkontr >= 4 ? ", в фурнитуру" : contr.nomerkontr == 3 ? ", в ретротоп" : ", в запасницу";

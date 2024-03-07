@@ -112,12 +112,12 @@ namespace TreeCadN.uploadPROGR
 
 
 
-                // MessageBox.Show("ftp://giulianovars.ru/zakaz/" + (lb1.SelectedItem as zayavki).zakaz + ".eve");
+                // MessageBox.Show("ftp://eacd.giulianovars.ru/zakaz/" + (lb1.SelectedItem as zayavki).zakaz + ".eve");
 
 
 
 
-                var url = "ftp://giulianovars.ru/zakaz/for_spis/" + (lb1.SelectedItem as zayavki).files;
+                var url = "ftp://eacd.giulianovars.ru/zakaz/for_spis/" + (lb1.SelectedItem as zayavki).files;
                 INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
                 string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
                 string tmppath = Environment.CurrentDirectory + @"\" + path_sysdba + @"\000001.eve";
@@ -259,7 +259,7 @@ namespace TreeCadN.uploadPROGR
             
 
          //   WebClient client = new WebClient();
-            var url = "ftp://giulianovars.ru/zakaz/for_spis/" + (lb1.SelectedItem as zayavki).files.Split(',').First();
+            var url = "ftp://eacd.giulianovars.ru/zakaz/for_spis/" + (lb1.SelectedItem as zayavki).files.Split(',').First();
             INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
             string tmppath = Environment.CurrentDirectory + @"\" + path_sysdba + @"\000001.eve";
@@ -334,7 +334,7 @@ namespace TreeCadN.uploadPROGR
                     byte[] buffer = new byte[1024];
 
 
-                    Uri ulr = new Uri("ftp://giulianovars.ru/zakaz/for_spis/" + elem);
+                    Uri ulr = new Uri("ftp://eacd.giulianovars.ru/zakaz/for_spis/" + elem);
 
                     FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ulr);
                     request.Method = WebRequestMethods.Ftp.DownloadFile;

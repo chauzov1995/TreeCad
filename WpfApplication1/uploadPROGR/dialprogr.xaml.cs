@@ -33,7 +33,7 @@ namespace TreeCadN.uploadPROGR
 
 
        //     WebClient client = new WebClient();
-            var url = "ftp://giulianovars.ru/zakaz/";
+            var url = "ftp://ecad.giulianovars.ru/zakaz/";
         
 
 
@@ -94,7 +94,7 @@ namespace TreeCadN.uploadPROGR
 
           
      
-            var url = "ftp://giulianovars.ru/zakaz/" + (lb1.SelectedItem as string);
+            var url = "ftp://ecad.giulianovars.ru/zakaz/" + (lb1.SelectedItem as string);
             INIManager client_man = new INIManager(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
             string path_sysdba = client_man.GetPrivateString("Infogen", "percorsoordini");//версия клиента
             string tmppath = Environment.CurrentDirectory + @"\" + path_sysdba + @"\000001.eve";

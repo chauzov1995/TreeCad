@@ -105,18 +105,9 @@ namespace TreeCadN
             tb1.Text = t;
             tb3.Text = AUTO;
 
-            if (!AUTO.Equals("")) { 
-            string[] split_AUTO = AUTO.Split('^');
-         
-            foreach (string elem in split_AUTO)
-            {
-                  var  splitelemrech = elem.Split('#');
-                var elemnew = new btn_spis() { name = splitelemrech.Length==2? splitelemrech [1]: elem };
-                spisbtn.Add(elemnew);
-                lbbutton.Items.Add(elemnew);
-             
-            }
-        }
+            splitauto();
+
+            
 
           //  lbbutton.ItemsSource = spisbtn;
 
@@ -125,6 +116,27 @@ namespace TreeCadN
             lb2.Content = tb1.Text.Length + " символа(ов)";
         }
 
+        void splitauto()
+        {
+            
+            spisbtn.Clear();
+            lbbutton.Items.Clear();
+            if (!AUTO.Equals(""))
+            {
+                string[] split_AUTO = AUTO.Split('^');
+
+              
+
+                foreach (string elem in split_AUTO)
+                {
+                    var splitelemrech = elem.Split('#');
+                    var elemnew = new btn_spis() { name = splitelemrech.Length == 2 ? splitelemrech[1] : elem };
+                    spisbtn.Add(elemnew);
+                    lbbutton.Items.Add(elemnew);
+
+                }
+            }
+        }
 
         public static void Count(object x)
         {
@@ -468,6 +480,7 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
             //    lbbutton.IsEnabled = false;
             rectang.Visibility = Visibility.Visible;
             EDIT = "0";
+            splitauto();
         }
 
         private void grid_KeyUp(object sender, KeyEventArgs e)
