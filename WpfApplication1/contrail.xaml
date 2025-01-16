@@ -1,0 +1,53 @@
+﻿<Window x:Class="TreeCadN.contrail"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TreeCadN"
+        mc:Ignorable="d"
+        Title="Редактор пазов Contrail" Height="280" Width="670" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="160"/>
+            <RowDefinition Height="128*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="0" Orientation="Horizontal" >
+            <Border x:Name="b1" Background="#FFFBF31B"  Width="160" Height="160">
+                <Button VerticalAlignment="Top"  Margin="5" Click="Button1_Click" >
+                    <Image Height="150" Source="/TreeCadN;component/Group 178.png" Stretch="Fill" Width="150"/>
+                </Button>
+            </Border>
+            <Border x:Name="b2" Background="#FFFBF31B"  Width="160" Height="160">
+                <Button VerticalAlignment="Top"  Margin="5" Click="Button_Click_2">
+                    <Image Height="150" Source="/TreeCadN;component/Group 179.png" Stretch="Fill" Width="150"/>
+
+                </Button>
+            </Border>
+            
+            <Border x:Name="b3"  Width="160" Height="160">
+                <Button x:Name="Button1" VerticalAlignment="Top"  Click="Button_Click_3" Margin="5" >
+                    <Image Height="150" Source="/TreeCadN;component/Group 180.png" Stretch="Fill" Width="150"/>
+                </Button>
+            </Border>
+            <Border x:Name="b4"  Width="160" Height="160">
+                <Button VerticalAlignment="Top"  Margin="5" Click="Button_Click_4" >
+                    <Image Height="150" Source="/TreeCadN;component/Group 181.png" Stretch="Fill" Width="150"/>
+
+                </Button>
+            </Border>
+           
+
+
+        </StackPanel>
+        <TextBox x:Name="t1" HorizontalAlignment="Left" InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TextBox_PreviewTextInput"  Margin="164,11,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="88" TextChanged="t1_TextChanged" FontSize="18" MaxLength="6" MaxLines="1"/>
+        <TextBlock FontSize="18" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Количество пазов" VerticalAlignment="Top"/>
+        <TextBlock FontSize="18" x:Name="t2" HorizontalAlignment="Left" Margin="10,42,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Общая длина пазов" VerticalAlignment="Top"/>
+        <Button Content="Отмена" Margin="0,0,10,10" Grid.Row="1" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Click="Button_Click_1"/>
+        <Button Content="ОК" Margin="0,0,105,10" Grid.Row="1" Click="Button_Click" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90"/>
+
+
+    </Grid>
+
+</Window>

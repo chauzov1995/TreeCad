@@ -61,6 +61,10 @@ namespace TreeCadN
                     case "TAccess":
                         returnValue = TAccess(GetPathMDB(katalog), 1, s);
                         break;
+
+                    case "PasContr":
+                        returnValue = PasContr(GetPathMDB(katalog), 1, s);
+                        break;
                     case "Kommunikacii":
 
                         /*
@@ -317,6 +321,13 @@ namespace TreeCadN
 
         }
 
+        public void setParamP(object obj, string param, string value, string value1)
+        {
+            //setParam(xamb, "curbox", node.GetDisplayText(column).ToString());
+            obj.GetType().InvokeMember(param, BindingFlags.SetProperty, null, obj, new object[] { value.ToString(), value1.ToString() });
+
+        }
+
 
         #endregion
 
@@ -404,7 +415,7 @@ namespace TreeCadN
             {
                 if (str1 == "")
                 {
-                    str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^62^54";
+                    str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^62^63^54";
                     uslovvipol = true;
                 }
                 else
@@ -415,7 +426,7 @@ namespace TreeCadN
               MessageBoxButton.YesNo,
               MessageBoxImage.Error) == MessageBoxResult.Yes)
                     {
-                        str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^62^54";
+                        str1 = "0;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^37^39^40^43^46^37^56^60^61^62^63^54";
                         uslovvipol = true;
                     }
                     else
@@ -568,7 +579,8 @@ namespace TreeCadN
                 string Versio = getParam(info2, "Var", "Versio").ToString();
                 intver = int.Parse(Versio.Split(',')[0]);
             }
-            catch (Exception) {
+            catch (Exception)
+            {
 
             }
 
@@ -582,14 +594,32 @@ namespace TreeCadN
             }
             else
             {
-                Prim2 f_prim = new Prim2(GetPathMDB(katalog), text);
+                this.Ambiente = xAmbiente;
+                this.xamb = getParam(Ambiente, "GetObject", "XAMB");
+                string currbox = getParam(xamb, "curbox").ToString();
+                object box = getParamG(xamb, "box", currbox);
+                //  var istriasda = asdaad.getParam(box, "EsisteVarianteRegola", "OTDELKA" + asdasdasd);
+                string TipShk = getParamG(box, "VarRegola", "TipShk").ToString();
+              //  MessageBox.Show(TipShk);
+
+                Prim2 f_prim = new Prim2(GetPathMDB(katalog), text, TipShk);
                 f_prim.ShowDialog();
                 return f_prim.text_otvet;
             }
 
 
         }
-        public string TAccess(string path, int filtr, string text)
+
+        
+            public string PasContr(string path, int filtr, string text)
+        {
+            contrail f_TAccess = new contrail(text);
+            f_TAccess.ShowDialog();
+            return f_TAccess.text_otvet;
+
+        }
+
+            public string TAccess(string path, int filtr, string text)
         {
             object xamb = getParam(Ambiente, "GetObject", "XAMB");
             object info = getParamG(xamb, "INFO");
@@ -732,7 +762,7 @@ namespace TreeCadN
         }
 
 
-            public void art_to_buf(ref object xAmbiente)
+        public void art_to_buf(ref object xAmbiente)
         {
 
             this.Ambiente = xAmbiente;
@@ -753,6 +783,49 @@ namespace TreeCadN
 
             MessageBox.Show(currbox);
            // ambiente.GetObject("REMOTO").RichiediPreventivo()*/
+        }
+
+        public void zam_otd(ref object xAmbiente)
+        {
+            //обучение трикаду
+            /*
+             * 
+             * 	
+	Dim xamb,i,box
+    Set xamb = Ambiente.GetObject("XAMB")
+    For i = 0 To xamb.nBox-1        
+      set box  = xamb.BOX(i) 
+
+      if box.EsisteVarianteRegola("OTDELKA010") then
+       box.VarRegola("OTDELKA010") = "343;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^39^40^37^43^54^56^60^61^62"
+      end if
+      
+      
+    next 
+        ambiente.RivalutaOrdine
+             */
+            /*
+                        this.Ambiente = xAmbiente;
+                        this.xamb = getParam(Ambiente, "GetObject", "XAMB");// Set xamb = Ambiente.GetObject("XAMB")
+                        int currbox = (int)getParamG(xamb, "nBox");//    For i = 0 To xamb.nBox-1 
+                        for (int i = 0; i < currbox; i++)
+                        {
+                            var box = getParamG(xamb, "BOX", i.ToString());  // set box  = xamb.BOX(i)
+                            var istriasda = getParam(box, "EsisteVarianteRegola", "OTDELKA010");
+                            if ((bool)istriasda)//  if box.EsisteVarianteRegola("OTDELKA010") then
+                            {
+                                setParamP(box, "VarRegola", "OTDELKA010", "343;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^39^40^37^43^54^56^60^61^62");//       box.VarRegola("OTDELKA010") = "343;0;1;1;0;1;0;;;1^2^3^4^5^6^7^22^33^39^40^37^43^54^56^60^61^62"
+                            }
+                        }
+
+                        */
+
+
+
+
+            zamena_otd f1 = new zamena_otd(ref xAmbiente, this);
+            f1.ShowDialog();
+
         }
 
 
@@ -1164,12 +1237,24 @@ namespace TreeCadN
             MessageBox.Show(files.Last());
         }
 
-       
+
         public void UPDATE()
         {
 
-          
+            var asdasd = new redhosts();
+            bool chek = asdasd.checkIsEstbzapSERV();
+            if (!chek)
+            {
+                if (asdasd.ElevateToAdmin("Программа работает на СТАРОМ сервере.\r\nДля перехода на НОВЫЙ сервер нажмите «ОК»."))
+                {
 
+                    asdasd.vklvikl(true);
+                }
+
+            }
+
+            INIManager client_mans = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");
+            client_mans.WritePrivateString("giulianovars", "servergn", chek ? "1" : "0");
 
 
 
@@ -1177,9 +1262,15 @@ namespace TreeCadN
             //  string catalog = "Giulianovars";// getParamI(Ambiente, "xPercorso").ToString();
             log.Add("вычислим последжний заказ");
 
-            string asdasda=Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\giulianovars.exe";
-            if (File.Exists(asdasda))
+            string asdasda = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\giulianovars.exe";
+            object catalogo = getParam(Ambiente, "GetObject", "CATALOGO");
+            object IsLocale = getParamG(catalogo, "IsLocale");
+            bool asdad = (bool)IsLocale;
+            // MessageBox.Show(asdad.ToString());
+
+            if (File.Exists(asdasda) && asdad == false)
             {
+
                 DateTime asssssdasda = File.GetLastWriteTime(asdasda).AddHours(-24);
                 DateTime date1 = new DateTime(2023, 3, 7);
                 if (asssssdasda < date1)
@@ -1210,10 +1301,11 @@ namespace TreeCadN
                 //   Obnov_dll_N.Create(catalog, authotiz_root);//обновление dll treecadN ред
 
                 WebClient client = new WebClient();
-                WebProxy myProxy = new proxy_LPS().init();
-                client.Proxy = myProxy;
+               // WebProxy myProxy = new proxy_LPS().init();
+               // client.Proxy = myProxy;
                 string path = Environment.CurrentDirectory + @"\" + catalog + @"\procedure\updN.ini";
                 FileInfo fileInf = new FileInfo(path);
+             
                 if (fileInf.Exists)//если файл существет
                 {
                     log.Add("updN.ini файл существет");
@@ -1232,7 +1324,7 @@ namespace TreeCadN
 
 
                         url = "http://ecad.giulianovars.ru/php/upd/dll_prov_ver.php?upd_time=" + client_ver + "&attivazione=" + authotiz_root + "&yadisk=" + ps.OAuth;
-
+                        log.Add(url);
                         response = client.DownloadData(url);
                         last_upd = System.Text.Encoding.UTF8.GetString(response);
                         ////   MessageBox.Show(last_upd);
@@ -1273,11 +1365,11 @@ namespace TreeCadN
             }
             catch (Exception e)
             {
-                 // MessageBox.Show(e.Message);
+                // MessageBox.Show(e.Message);
             }
 
-          string file1= GetServ_path() + @"\Giulianovarsa\procedure\updN.ini";
-          string file2= localdirr() + @"\updN.ini";
+            string file1 = GetServ_path() + @"\Giulianovarsa\procedure\updN.ini";
+            string file2 = localdirr() + @"\updN.ini";
 
             log.Add("copifileini");
             copifileini();
@@ -1304,8 +1396,9 @@ namespace TreeCadN
                 updatesystema();
 
                 File.Copy(file1, file2, true); //подветрждаем успех
+
             }
-           
+
             // regdll();
             //  MessageBox.Show("asdasdaa");
             //   ecadroiniresave();
@@ -1391,8 +1484,8 @@ namespace TreeCadN
             {
 
                 case "GIULIANOVARSA":
-                    if(local)
-                    return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\systema.mdb";
+                    if (local)
+                        return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\systema.mdb";
                     else
                         return Environment.CurrentDirectory + @"\GIULIANOVARSA\procedure\systema.mdb";
                 default:
@@ -1430,36 +1523,35 @@ namespace TreeCadN
         void ecadroiniresave()
         {
 
-
-          
-
-
-
-            //var parser = new FileIniDataParser();
-            IniFile data = new IniFile(Environment.CurrentDirectory + @"\Giulianovarsa\PROCEDURE\ecadpro.ini");
-           // var parser2 = new FileIniDataParser();
-            IniFile data2 = new IniFile(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
-            foreach (string section in data.GetAllSections())
+            if (File.Exists(Environment.CurrentDirectory + @"\Giulianovarsa\PROCEDURE\ecadpro.ini"))
             {
-                Console.WriteLine("[" + section + "]");
 
-                //Iterate through all the keys in the current section
-                //printing the values
-               
 
-                foreach (string key in data.GetAllDataSection(section))
+                //var parser = new FileIniDataParser();
+                IniFile data = new IniFile(Environment.CurrentDirectory + @"\Giulianovarsa\PROCEDURE\ecadpro.ini");
+                // var parser2 = new FileIniDataParser();
+                IniFile data2 = new IniFile(Environment.CurrentDirectory + @"\_ecadpro\ecadpro.ini");
+                foreach (string section in data.GetAllSections())
                 {
-                    var splitvalue=key.Split('=');
-                   // MessageBox.Show(key+" "+section);
-                    Console.WriteLine(splitvalue[0] + " = " + splitvalue[1]);
-                    data2.Write(splitvalue[0], splitvalue[1], section);
-                 
-                 
+                    Console.WriteLine("[" + section + "]");
+
+                    //Iterate through all the keys in the current section
+                    //printing the values
+
+
+                    foreach (string key in data.GetAllDataSection(section))
+                    {
+                        var splitvalue = key.Split('=');
+                        // MessageBox.Show(key+" "+section);
+                        Console.WriteLine(splitvalue[0] + " = " + splitvalue[1]);
+                        data2.Write(splitvalue[0], splitvalue[1], section);
+
+
+                    }
+
                 }
-                   
             }
-           
-         
+
         }
         void copifileini()
         {
@@ -1473,23 +1565,33 @@ namespace TreeCadN
 
                 //Iterate through all the keys in the current section
                 //printing the values
-               foreach(string key in data.GetAllDataSection(section))
+                foreach (string key in data.GetAllDataSection(section))
                 {
                     var splitvalue = key.Split('=');
                     log.Add(splitvalue[0] + " = " + splitvalue[1]);
                     try
                     {
+                        
                         if (section == "*")
                         {
-                            File.Copy(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1], localdirr() + @"\" + splitvalue[1], true);
+                            if (File.GetLastWriteTime(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1]) > File.GetLastWriteTime(localdirr() + @"\" + splitvalue[1]))
+                            {
+                                File.Copy(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1], localdirr() + @"\" + splitvalue[1], true);
+                            }
                         }
                         else
                         {
                             if (Path.GetFullPath(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1]).ToLower() != Path.GetFullPath(GetServ_path() + @"\" + section + @"\" + splitvalue[1]).ToLower())
-                                File.Copy(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1], GetServ_path() + @"\" + section + @"\" + splitvalue[1], true);
+                            {
+                                if (File.GetLastWriteTime(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1]) > File.GetLastWriteTime(GetServ_path() + @"\" + section + @"\" + splitvalue[1]))
+                                {
+                                    File.Copy(GetServ_path() + @"\Giulianovarsa\PROCEDURE\" + splitvalue[1], GetServ_path() + @"\" + section + @"\" + splitvalue[1], true);
+                                }
+                            }
                         }
 
-                    }catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
 
                         log.Add(ex.Message);
@@ -1505,20 +1607,21 @@ namespace TreeCadN
         void regdll()
         {
             //string newvalue = "PATHORDINI = AddBackslash(ws.CurrentDirectory)'*!+#!@@$!";
-            if (File.Exists(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS")) { 
-            string[] readText = File.ReadAllLines(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS", Encoding.Default);
-            for (int i = 0; i < readText.Length; i++)
+            if (File.Exists(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS"))
             {
-                if (readText[i].Contains("'*!+#!@@$!"))
+                string[] readText = File.ReadAllLines(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS", Encoding.Default);
+                for (int i = 0; i < readText.Length; i++)
                 {
-                    readText[i] = "PATHEXE = \"" + localdirr() + "\\TreeCadN.dll\"'*!+#!@@$!";
-                    //  MessageBox.Show(readText[i]);
+                    if (readText[i].Contains("'*!+#!@@$!"))
+                    {
+                        readText[i] = "PATHEXE = \"" + localdirr() + "\\TreeCadN.dll\"'*!+#!@@$!";
+                        //  MessageBox.Show(readText[i]);
+
+                    }
 
                 }
-
+                File.WriteAllLines(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS", readText, Encoding.Default);
             }
-            File.WriteAllLines(GetServ_path() + @"\_ecadpro\procedure\GIULIANOVARS.VBS", readText, Encoding.Default);
-        }
 
             /*
             Process.Start(new ProcessStartInfo("regsvr32.exe", localdirr() + @"\TreeCadS.dll")
@@ -1540,7 +1643,7 @@ namespace TreeCadN
 
         }
 
-        void  updatesystema()
+        void updatesystema()
         {
             BD_Connect BD;
             OleDbDataReader reader_otd;
@@ -1836,7 +1939,7 @@ namespace TreeCadN
 
 
 
- 
+
 
     public static class log
     {

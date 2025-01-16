@@ -34,6 +34,7 @@ namespace TreeCadN.smarktkitchen
           new  sposobupravl(){ name="Механическая кнопка", typedev="mehbtn"},
           new  sposobupravl(){ name="ИК датчик на взмах", typedev="irsens"},
           new  sposobupravl(){ name="ИК датчик на закрытие дверцы", typedev="irsens2"},
+          new  sposobupravl(){ name="Датчик жестов тип 2 круглый", typedev="jest"},
       //    new  sposobupravl(){ name="Датчик жестов", typedev="jest"},
       
         };
@@ -52,7 +53,7 @@ namespace TreeCadN.smarktkitchen
         {
           new  sposobupravl(){ name="Без дублирующего управления", typedev="none"},
           new  sposobupravl(){ name="Механическая кнопка", typedev="mehbtn"},
-         
+            new  sposobupravl(){ name="Датчик жестов тип 2 круглый", typedev="jest"},
 
         };
 

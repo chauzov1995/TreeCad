@@ -1321,34 +1321,35 @@ st14.Width.ToString() + ";";
 
                         int kolvoprov = 0;
                         int nomsvetdlyapodsvzap = 0;
+                        bool is_jestdat = false;
 
-                    foreach (Exportjson sostav in contr.exportjson)
-                    {
-                            
-                        if (sostav.type == "svet")
+                        foreach (Exportjson sostav in contr.exportjson)
                         {
-                                if (contr.nomerkontr <= 2 && nomsvetdlyapodsvzap==0)
+
+                            if (sostav.type == "svet")
+                            {
+                                if (contr.nomerkontr <= 2 && nomsvetdlyapodsvzap == 0)
                                 {
                                     addartsk("75W", "установить в запасницу");
-                                }else if (contr.nomerkontr == 3 && nomsvetdlyapodsvzap == 0)
+                                } else if (contr.nomerkontr == 3 && nomsvetdlyapodsvzap == 0)
                                 {
                                     addartsk("75W", "установить в ретротоп");
                                 }
                                 else
-                                {                                    addartsk("90W");
+                                { addartsk("90W");
                                 }
 
-                                    kolvoprov++;
-                            if (sostav.parametr.typeupravl == "irsens")
-                            {
-                              addartsk("SVMLB");
-                            }
-                            if (sostav.parametr.typeupravl == "irsens2")
-                            {
-                                addartsk("SVMLG");
-                            }
-                            if (sostav.parametr.typeupravl == "mehbtn")
-                            {
+                                kolvoprov++;
+                                if (sostav.parametr.typeupravl == "irsens")
+                                {
+                                    addartsk("SVMLB");
+                                }
+                                if (sostav.parametr.typeupravl == "irsens2")
+                                {
+                                    addartsk("SVMLG");
+                                }
+                                if (sostav.parametr.typeupravl == "mehbtn")
+                                {
                                     if (contr.nomerkontr <= 2)
                                     {
                                         addartsk("PDKUPSK", "установить в запасницу");
@@ -1362,19 +1363,19 @@ st14.Width.ToString() + ";";
                                         addartsk("PDKUPSK");
                                     }
 
-                                
 
 
+
+                                }
+                                if (sostav.parametr.skyvella)
+                                {
+                                    addartsk("1T30021");
+                                }
                             }
-                            if (sostav.parametr.skyvella)
+                            if (sostav.type == "retrotop_up")
                             {
-                                addartsk("1T30021");                                                         
-                            }
-                            }
-                        if (sostav.type == "retrotop_up")
-                        {
-                            if (sostav.parametr.typeupravl == "mehbtn")
-                            {
+                                if (sostav.parametr.typeupravl == "mehbtn")
+                                {
                                     if (contr.nomerkontr <= 2)
                                     {
                                         addartsk("PDKUM", "установить в запасницу");
@@ -1388,9 +1389,12 @@ st14.Width.ToString() + ";";
                                         addartsk("PDKUM");
                                     }
 
-                                    }
-                        }
+                                }
+                            }
 
+                            if (sostav.parametr.typeupravl == "jest") { 
+                            is_jestdat =true;
+                        }
                             nomsvetdlyapodsvzap++;
                         }
 
@@ -1398,13 +1402,17 @@ st14.Width.ToString() + ";";
 
                         if (maincontr)
                         {//доп контроллер                    
-                            addartsk("BUSK1", "Комплектовать кабелем подключения к трансформатору по " + kolvoprov+" шт на контроллер" + kuda);
+                            addartsk("BUSK1", "Комплектовать кабелем подключения к трансформатору по " + kolvoprov+" шт" + kuda);
                         }
                         else
                         {// первый контролллер
-                            addartsk("BUSK", "Комплектовать кабелем подключения к трансформатору по " + kolvoprov + " шт на контроллер" + kuda);
+                            addartsk("BUSK", "Комплектовать кабелем подключения к трансформатору по " + kolvoprov + " шт" + kuda);
                         }
                         maincontr = true;
+                        if (is_jestdat)
+                        {
+                            addartsk("PDDHDMN");
+                        }
 
 
 

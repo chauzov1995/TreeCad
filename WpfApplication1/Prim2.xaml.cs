@@ -28,9 +28,11 @@ namespace TreeCadN
         bool zakrit_ok = false;
         static BD_Connect BD = new BD_Connect();
         List<MyTable> result = new List<MyTable>();
-        public Prim2(string path, string text)
+        string TipShk;
+        public Prim2(string path, string text, string TipShk)
         {
             InitializeComponent();
+            this.TipShk = TipShk;
             BD.path = path; //укажем файл бд
             this.text_otvet = text.Trim();
            // MessageBox.Show(this.text_otvet);
@@ -73,6 +75,13 @@ namespace TreeCadN
             }
 
 
+            int izmfocus=-1;
+            if (PRIM=="" && TipShk=="574")
+            {
+                PRIM = "Глубина мм.";
+                izmfocus = 8;
+            }
+
 
 
             if (EDIT.Equals("1")) {
@@ -98,7 +107,7 @@ namespace TreeCadN
 
             loadpage();//загрузка полож окна
             proverka_uhoda_za_granicu(); //проверка ухода за границу
-            tb2.Focus();
+           
 
             string t = PRIM.Replace('#', '"').Replace('$', ';').Replace('@', ',').Replace('№', '/').Replace('^', ' ').Replace('|', ';');
 
@@ -107,12 +116,22 @@ namespace TreeCadN
 
             splitauto();
 
-            
-
-          //  lbbutton.ItemsSource = spisbtn;
 
 
-            tb1.CaretIndex = tb1.Text.Length;
+            //  lbbutton.ItemsSource = spisbtn;
+
+            if (izmfocus>=0)
+            {
+                tb1.Focus();
+                tb1.CaretIndex = izmfocus;
+               
+            }
+            else
+            {
+                tb2.Focus();
+                tb1.CaretIndex = tb1.Text.Length;
+               
+            }
             lb2.Content = tb1.Text.Length + " символа(ов)";
         }
 

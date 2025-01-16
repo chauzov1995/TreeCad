@@ -266,22 +266,22 @@ namespace TreeCadN.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=TERMINAL2008;Initial Catalog=Giulianovarsa;Persist Security Info=True" +
-            ";User ID=sa;Password=eCadPro2008")]
-        public string GiulianovarsaConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=TERMINAL2008;Initial Catalog=Ecadmaster;Persist Security Info=True;Us" +
+            "er ID=sa;Password=eCadPro2008")]
+        public string EcadmasterConnectionString {
             get {
-                return ((string)(this["GiulianovarsaConnectionString"]));
+                return ((string)(this["EcadmasterConnectionString"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=TERMINAL2008;Initial Catalog=Ecadmaster;Persist Security Info=True;Us" +
-            "er ID=sa;Password=eCadPro2008")]
-        public string EcadmasterConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=TERMINAL2008;Initial Catalog=Giulianovarsa;Persist Security Info=True" +
+            ";User ID=sa;Password=eCadPro2008")]
+        public string GiulianovarsaConnectionString {
             get {
-                return ((string)(this["EcadmasterConnectionString"]));
+                return ((string)(this["GiulianovarsaConnectionString"]));
             }
         }
     }

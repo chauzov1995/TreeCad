@@ -231,6 +231,7 @@ namespace TreeCadN
             });
 
 
+            bool inrazrgroiup1 = TekOtdelka.index1 == "0", inrazrgroiup2 = TekOtdelka.index2 == "0";
 
             while (reader.Read())
             {
@@ -240,6 +241,14 @@ namespace TreeCadN
                 if (!File.Exists(textura_otris1)) textura_otris1 = @"/TreeCadN;component/Foto/Net_Tekst.jpg";
                 if (reader["Name"].ToString() != "")
                 {
+                    if(reader["id"].ToString()== TekOtdelka.index1)
+                    {
+                        inrazrgroiup1 = true;
+                    }
+                    if (reader["id"].ToString() == TekOtdelka.index2)
+                    {
+                        inrazrgroiup2 = true;
+                    }
 
                     idselect.Add(new Person()
                     {
@@ -255,6 +264,12 @@ namespace TreeCadN
                 }
 
 
+
+            }
+
+            if(!inrazrgroiup2 || !inrazrgroiup2)
+            {
+                MessageBox.Show("Текущая отделка НЕ разрешена для этой детали. (Её в нет в списке разрешённых групп)");
             }
 
         }

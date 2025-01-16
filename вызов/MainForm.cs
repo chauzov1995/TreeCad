@@ -139,15 +139,15 @@ namespace вызов
             {
                 // MessageBox.Show(ex.Message);
             }
-            MessageBox.Show("Готово");
-            File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"C:\evolution\eCadPro\TreeCadN.dll", true);
+          //  MessageBox.Show("Готово");
+            File.Copy(Directory.GetCurrentDirectory() + @"\TreeCadN.dll", @"W:\eCadPro\Giulianovarsa\PROCEDURE\TreeCadN.dll", true);
             
           //  Process.Start(@"C:\evolution\eCadPro\eCadPro.exe", " /O 13218 /TAB2 ");
-            ProcessStartInfo startInfo = new ProcessStartInfo(@"C:\evolution\eCadPro\eCadPro.exe", " /O 13218 /TAB2 ");
+            ProcessStartInfo startInfo = new ProcessStartInfo(@"C:\evolution\eCadPro\eCadPro.exe");
             startInfo.WorkingDirectory = @"W:\eCadPro";
            // startInfo.Arguments = "1";
             Process.Start(startInfo);
-
+            Close();
         }
 
         private void button6_Click(object sender, EventArgs e)

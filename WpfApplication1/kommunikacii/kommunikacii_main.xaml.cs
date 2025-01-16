@@ -963,12 +963,26 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             log.Add("Отправляем заказ на фабрику: " + path3ds + "  " + pathjpg);
 
 
-            (new FTP()).otprav(zipPath, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + path3ds);
+            using (var client = new System.Net.WebClient())
+            {
+                MessageBox.Show(zipPath);
+                //   client.Headers.Add("Content-Type", "multipart/form-data");
+                var asdasdasd = client.UploadFile(@"https://ecad.giulianovars.ru/zakaz/uploadzakaz.php", "POST", zipPath);
+                string download = Encoding.UTF8.GetString(asdasdasd);
+
+                  MessageBox.Show(download);
+
+            }
+            
+            //(new FTP()).otprav(zipPath, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + path3ds);
             if (File.Exists(file.jpg_path))
             {
-                (new FTP()).otprav(file.jpg_path, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + pathjpg);
-            }
+                //  (new FTP()).otprav(file.jpg_path, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + pathjpg);
 
+              
+
+            }
+           
 
             string categoryuser = (lb2.SelectedItem as treespis).name;
 
