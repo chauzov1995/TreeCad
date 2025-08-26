@@ -266,6 +266,17 @@ namespace TreeCadN.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=TERMINAL2008;Initial Catalog=Giulianovarsa;Persist Security Info=True" +
+            ";User ID=sa;Password=eCadPro2008")]
+        public string GiulianovarsaConnectionString {
+            get {
+                return ((string)(this["GiulianovarsaConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=TERMINAL2008;Initial Catalog=Ecadmaster;Persist Security Info=True;Us" +
             "er ID=sa;Password=eCadPro2008")]
         public string EcadmasterConnectionString {
@@ -274,14 +285,15 @@ namespace TreeCadN.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=TERMINAL2008;Initial Catalog=Giulianovarsa;Persist Security Info=True" +
-            ";User ID=sa;Password=eCadPro2008")]
-        public string GiulianovarsaConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double heightlist4 {
             get {
-                return ((string)(this["GiulianovarsaConnectionString"]));
+                return ((double)(this["heightlist4"]));
+            }
+            set {
+                this["heightlist4"] = value;
             }
         }
     }

@@ -277,27 +277,88 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
         void loadpage()
         {
             Properties.Settings ps = Properties.Settings.Default;
-            if (ps.Top4 == -100)
+            double left = ps.Left4;
+            double top = ps.Top4;
+            double width = ps.Width4;
+            double height = ps.Height4;
+            bool flag = false;
+            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
             {
-                this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-
+                System.Drawing.Rectangle workingArea = screen.WorkingArea;
+                if (left + width > (double)workingArea.Left && left < (double)workingArea.Right && top + height > (double)workingArea.Top && top < (double)workingArea.Bottom)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                base.WindowStartupLocation = WindowStartupLocation.Manual;
+                base.Left = left;
+                base.Top = top;
+                base.Width = width;
+                base.Height = height;
             }
             else
             {
-                this.Top = ps.Top4;
-                this.Left = ps.Left4;
+                base.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                base.Width = 600.0;
+                base.Height = 400.0;
+            }
+            base.SourceInitialized += delegate (object s, EventArgs e)
+            {
+                if (ps.SizeToContent4 == 1)
+                {
+                    this.WindowState = WindowState.Maximized;
+                }
+            };
+            double heightlist = ps.heightlist4;
+            if (heightlist > 0.0)
+            {
+                this.mainGrid.RowDefinitions[3].Height = new GridLength(heightlist, GridUnitType.Pixel);
+            }
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            Properties.Settings ps = Properties.Settings.Default;
+            double left = ps.Left4;
+            double top = ps.Top4;
+            double width = ps.Width4;
+            double height = ps.Height4;
+            bool flag = false;
+            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
+            {
+                System.Drawing.Rectangle workingArea = screen.WorkingArea;
+                if (left + width > (double)workingArea.Left && left < (double)workingArea.Right && top + height > (double)workingArea.Top && top < (double)workingArea.Bottom)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                base.Left = left;
+                base.Top = top;
+                base.Width = width;
+                base.Height = height;
+            }
+            else
+            {
+                base.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                base.Width = 600.0;
+                base.Height = 500.0;
             }
             if (ps.SizeToContent4 == 1)
             {
-                this.WindowState = WindowState.Maximized;
+                base.WindowState = WindowState.Maximized;
             }
-            else
+            double heightlist = ps.heightlist4;
+            if (heightlist > 0.0)
             {
-                this.Width = ps.Width4;
-                this.Height = ps.Height4;
+                this.mainGrid.RowDefinitions[3].Height = new GridLength(heightlist, GridUnitType.Pixel);
             }
-
-
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -317,7 +378,8 @@ MessageBoxImage.Question) == MessageBoxResult.Yes)
                 ps.Width4 = this.Width;
                 ps.Height4 = this.Height;
             }
-
+            double actualHeight = this.mainGrid.RowDefinitions[3].ActualHeight;
+            ps.heightlist4 = actualHeight;
 
 
             ps.Save();

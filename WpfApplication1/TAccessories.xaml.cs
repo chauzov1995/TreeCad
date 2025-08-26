@@ -40,6 +40,8 @@ namespace TreeCadN
         String ismanager;
         List<texnika> array_vibr_tex = new List<texnika>();
         List<texnika> array_smkitch = new List<texnika>();
+        List<texnika> array_for_scanse = new List<texnika>();
+        
         public int redakilidob = 0;
         int nom_PP = 0;
         bool g1_KeyUp_bool = false;
@@ -273,7 +275,14 @@ namespace TreeCadN
         void pars(string vh_str)
         {
 
-            array_vibr_tex = new List<texnika>();
+            array_vibr_tex = accizscense();
+
+
+
+
+
+
+
 
             string[] skrazdel= vh_str.Split(new string[]{"`S"},StringSplitOptions.None);
          //   MessageBox.Show(skrazdel.Length+"");
@@ -443,29 +452,31 @@ namespace TreeCadN
             string t = "";
             for (int i = 0; i < array_vibr_tex.Count; i++)
             {
-                texnika otvet_massiv = (array_vibr_tex[i]);
+            
+                    texnika otvet_massiv = (array_vibr_tex[i]);
+                if (otvet_massiv.gruppirovka != 2)
+                {
+                    string name = "";
 
-                string name = "";
-
-                if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@').Replace(';', '$');
+                    if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@').Replace(';', '$');
 
 
 
-                t += otvet_massiv.type.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.Article.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.kolvo.ToString().Replace(',', '.').Replace(';', '$') + "~" +
-                otvet_massiv.OTD.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.Prim.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.GROUP_dlyaspicif.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.nom_pp.ToString().Replace(',', '@').Replace(';', '$') + "~" +
-                name + "~" +
-                otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + "~" +
-                otvet_massiv.gruppirovka.ToString() + "~" +
-                otvet_massiv.priznsmartkitchen.ToString() + 
-                ";";
-                //      MessageBox.Show(text_otvet);
-
+                    t += otvet_massiv.type.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.Article.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.kolvo.ToString().Replace(',', '.').Replace(';', '$') + "~" +
+                    otvet_massiv.OTD.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.Prim.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.GROUP_dlyaspicif.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.nom_pp.ToString().Replace(',', '@').Replace(';', '$') + "~" +
+                    name + "~" +
+                    otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + "~" +
+                    otvet_massiv.gruppirovka.ToString() + "~" +
+                    otvet_massiv.priznsmartkitchen.ToString() +
+                    ";";
+                    //      MessageBox.Show(text_otvet);
+                }
             }
             t += smartkitchenvh_str==""?"":"`S" +smartkitchenvh_str;
         //MessageBox.Show(t);
@@ -1042,6 +1053,7 @@ st14.Width.ToString() + ";";
                     if (!filtrtoko1stuk((e.Row.Item as texnika).Article)) { slovarb.Add("Кол-во"); }
 
                     if ((e.Row.Item as texnika).priznsmartkitchen == 1) { slovarb = new List<string>() { "Примечание", "Цена ред." }; }
+                    if ((e.Row.Item as texnika).priznforscense == 1) { slovarb = new List<string>() {  }; }
 
                     e.Cancel = isreadonly_forGRID(e, slovarb.ToArray());
                 }
@@ -1330,13 +1342,14 @@ st14.Width.ToString() + ";";
                             {
                                 if (contr.nomerkontr <= 2 && nomsvetdlyapodsvzap == 0)
                                 {
-                                    addartsk("75W", "установить в запасницу");
+                                    addartsk("90WL5", "установить в запасницу, если потребляемая мощность < 40 ВТ замени на 40WL5");
                                 } else if (contr.nomerkontr == 3 && nomsvetdlyapodsvzap == 0)
                                 {
-                                    addartsk("75W", "установить в ретротоп");
+                                    addartsk("90WL5", "установить в ретротоп, если потребляемая мощность < 40 ВТ замени на 40WL5");
                                 }
                                 else
-                                { addartsk("90W");
+                                {
+                                    addartsk("90WL5", "");
                                 }
 
                                 kolvoprov++;
@@ -1363,7 +1376,10 @@ st14.Width.ToString() + ";";
                                         addartsk("PDKUPSK");
                                     }
 
-
+                                    if (sostav.parametr.skyvella)
+                                    {
+                                        this.addartsk("1T30025", "");
+                                    }
 
 
                                 }
@@ -1455,6 +1471,133 @@ st14.Width.ToString() + ";";
                 // return f_TAccess.otvet;
             }
         }
+
+        private void btnaccfind_Click(object sender, RoutedEventArgs e)
+        {
+          var array_for_scanse=  accizscense();
+
+              array_vibr_tex.AddRange(array_for_scanse);
+             lb_vibr_tex.ItemsSource = null;
+            lb_vibr_tex.ItemsSource = array_vibr_tex;
+        }
+
+        List<texnika> accizscense(){
+            object param = this.neqqqqq.getParam(this.neqqqqq.Ambiente, "GetObject", "XAMB");
+            object paramI = this.neqqqqq.getParamI(param, "EPROPrepara");
+            array_for_scanse = new List<texnika>();
+            foreach (string str in paramI.ToString().Split(new string[]
+            {
+                "\r\n"
+            }, StringSplitOptions.None))
+            {
+                object param2 = this.neqqqqq.getParam(this.neqqqqq.Ambiente, "GetObject", "GG," + str);
+                object param3 = this.neqqqqq.getParam(param2, "riga");
+                object livello = this.neqqqqq.getParam(param2, "livello");
+                object codice = this.neqqqqq.getParam(param2, "codice");
+                object param6 = this.neqqqqq.getParam(param2, "pr");
+                object param7 = this.neqqqqq.getParam(param2, "pr1");
+                object param8 = this.neqqqqq.getParam(param2, "pr2");
+                object param9 = this.neqqqqq.getParam(param2, "sc1");
+                object param10 = this.neqqqqq.getParam(param2, "sc2");
+                object param11 = this.neqqqqq.getParam(param2, "sc3");
+                object param12 = this.neqqqqq.getParam(param2, "sc4");
+                object param13 = this.neqqqqq.getParam(param2, "dl");
+                object param14 = this.neqqqqq.getParam(param2, "da");
+                object param15 = this.neqqqqq.getParam(param2, "dp");
+                object param16 = this.neqqqqq.getParam(param2, "mat");
+                object param17 = this.neqqqqq.getParam(param2, "flmis");
+                object param18 = this.neqqqqq.getParam(param2, "qtatop");
+                object param19 = this.neqqqqq.getParam(param2, "flMis");
+                object param20 = this.neqqqqq.getParam(param2, "volume");
+                object peson = this.neqqqqq.getParam(param2, "peson");
+                object pesol = this.neqqqqq.getParam(param2, "pesol");
+                object saltaordine = this.neqqqqq.getParam(param2, "saltaordine");
+                object xbox = this.neqqqqq.getParam(param2, "xbox");
+                object xBox2 = this.neqqqqq.getParam(xbox, "xBox");
+                object Regola = this.neqqqqq.getParam(xBox2, "Regola");
+                object xid = this.neqqqqq.getParam(xBox2, "xid");
+                object idunico = this.neqqqqq.getParam(xBox2, "idunico");
+              /*  string text = string.Concat(new string[]
+                {
+                    string.Format("riga: {0}\n", param3),
+                    string.Format("livello: {0}\n", livello),
+                    string.Format("codice: {0}\n", codice),
+                    string.Format("pr: {0}\n", param6),
+                    string.Format("sc1: {0}\n", param9),
+                    string.Format("sc2: {0}\n", param10),
+                    string.Format("sc3: {0}\n", param11),
+                    string.Format("sc4: {0}\n", param12),
+                    string.Format("dl: {0}\n", param13),
+                    string.Format("da: {0}\n", param14),
+                    string.Format("dp: {0}\n", param15),
+                    string.Format("mat: {0}\n", param16),
+                    string.Format("flmis: {0}\n", param17),
+                    string.Format("qtatop: {0}\n", param18),
+                    string.Format("flMis: {0}\n", param19),
+                    string.Format("volume: {0}\n", param20),
+                    string.Format("peson: {0}\n", peson),
+                    string.Format("pesol: {0}\n", pesol),
+                    string.Format("saltaordine: {0}\n", saltaordine),
+                    string.Format("Regola: {0}\n", Regola),
+                    string.Format("xid: {0}\n", xid),
+                    string.Format("idunico: {0}\n", idunico),
+                });
+
+                */
+
+
+                if (!Regola.ToString().StartsWith("#TAccessories.erg"))//не является обьектом из кубика
+                {
+                    if (livello.ToString() == "3") {
+
+                       string artikul= codice.ToString();
+                        
+
+                        var asdasd = new texnika(array_spis_tex.Find(x => x.Article.Equals(artikul)));
+                        if (asdasd == null)
+                        {
+                            MessageBox.Show("Артикул " + artikul + " не найден в базе данных");
+                            //  return;
+                        }
+                        else
+                        {
+                            nom_PP++;
+                            asdasd.nom_pp = nom_PP;
+                            asdasd.priznforscense = 1;
+                            asdasd.gruppirovka = 2;
+                            asdasd.Prim = "Аксессуар на сцене поз. "+ xid;
+
+
+                            var asdasd2 = array_for_scanse.Find(x => x.Article.Equals(artikul));
+
+                            if (asdasd2 != null)
+                            {
+                                asdasd2.kolvo++;
+                                asdasd2.Prim += ","+ xid;
+                            }
+                            else
+                            {
+                                array_for_scanse.Add(asdasd);
+                            }
+
+                        }
+
+
+                
+
+
+                       // MessageBox.Show(text.ToString());
+                }
+                }
+            }
+
+            return array_for_scanse;
+          //  array_vibr_tex.AddRange(array_for_scanse);
+          // lb_vibr_tex.ItemsSource = null;
+          //lb_vibr_tex.ItemsSource = array_vibr_tex;
+
+
+        }
     }
 
     public class texnika
@@ -1506,6 +1649,7 @@ st14.Width.ToString() + ";";
         public string GRAFIKA { get; set; }
         public int gruppirovka { get; set; }
         public int priznsmartkitchen { get; set; }
+        public int priznforscense { get; set; }
 
         
     }
