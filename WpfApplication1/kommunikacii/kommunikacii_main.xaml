@@ -45,7 +45,8 @@
             <TabItem x:Name="item1" Header="С сервера">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="87.89"/>
+                        <ColumnDefinition Width="162.11"/>
                         <ColumnDefinition Width="31*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -53,7 +54,7 @@
                         <RowDefinition Height="367*"/>
                     </Grid.RowDefinitions>
                     <!--SelectionChanged="lb3_SelectionChanged"!-->
-                    <TreeView   x:Name="lb3"  Margin="0,0,5,0" Grid.Row="1" VerticalContentAlignment="Stretch" TreeViewItem.Expanded="trw_Products_Expanded" SelectedItemChanged="Lb3_SelectedItemChanged">
+                    <TreeView   x:Name="lb3"  Margin="0,0,5,0" Grid.Row="1" VerticalContentAlignment="Stretch" TreeViewItem.Expanded="trw_Products_Expanded" SelectedItemChanged="Lb3_SelectedItemChanged" Grid.ColumnSpan="2">
                         <!-- <TreeView.ItemTemplate>
                
                                 <HierarchicalDataTemplate ItemsSource="{Binding Path=Nodes}">
@@ -61,7 +62,7 @@
                                 </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>!-->
                     </TreeView>
-                    <ListBox  Style="{StaticResource myListboxStyle}" x:Name="lb4" Margin="0" SelectionChanged="lb4_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" RenderTransformOrigin="0.066,0.51" VerticalContentAlignment="Stretch" Background="White" MouseDoubleClick="lb1_MouseDoubleClick" Grid.Column="1" Grid.Row="1">
+                    <ListBox  Style="{StaticResource myListboxStyle}" x:Name="lb4" SelectionChanged="lb4_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" RenderTransformOrigin="0.066,0.51" VerticalContentAlignment="Stretch" Background="White" MouseDoubleClick="lb1_MouseDoubleClick" Grid.Column="2" Grid.Row="1">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical" Width="160" Background="{Binding zvetbg}">
@@ -104,9 +105,9 @@
                             </ContextMenu>
                         </ListBox.ContextMenu>
                     </ListBox>
-                    <Grid Grid.Column="1" Margin="5">
+                    <Grid Grid.Column="2" Margin="5,5,5,5">
                         <Label x:Name="label1" HorizontalAlignment="Left"  />
-                        
+
                     </Grid>
                 </Grid>
             </TabItem>

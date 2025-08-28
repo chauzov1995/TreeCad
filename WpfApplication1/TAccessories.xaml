@@ -120,7 +120,7 @@
                             <Setter Property="Background" Value="#FFE8D2FF"></Setter>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding priznforscense}" Value="1">
-                            <Setter Property="Background" Value="#FFFBF447"></Setter>
+                            <Setter Property="Background" Value="#FFD4FF7C"></Setter>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
