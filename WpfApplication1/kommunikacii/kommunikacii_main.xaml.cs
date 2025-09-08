@@ -22,6 +22,7 @@ using System.Windows.Shapes;
 using Path = System.IO.Path;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace TreeCadN.kommunikacii
 {
@@ -273,8 +274,8 @@ namespace TreeCadN.kommunikacii
 
             server = JsonConvert.DeserializeObject<List<treespis>>(json);
 
-
-
+            lb3.Items.Clear();
+            peremestitb_serv.Items.Clear(); // очищаем меню перед заполнением
 
 
             foreach (treespis drive in server)
@@ -288,6 +289,23 @@ namespace TreeCadN.kommunikacii
                     item.Items.Add("*");
                 }
                 lb3.Items.Add(item);
+
+
+                // ===== Заполнение MenuItem =====
+                System.Windows.Controls.MenuItem menuItem = new System.Windows.Controls.MenuItem
+                {
+                    Tag = drive,
+                    Header = drive.name
+                };
+
+                // Можно подписать обработчик клика
+                menuItem.Click += (s, e) =>
+                {
+                    peremestitb_serv_event(drive);// MessageBox.Show($"Нажали на {drive.name} (id={drive.id_server})");
+                };
+
+                peremestitb_serv.Items.Add(menuItem);
+
             }
 
 
@@ -689,12 +707,12 @@ namespace TreeCadN.kommunikacii
 
         }
 
-        private void peremestitb_serv_event(object sender, RoutedEventArgs e)
+        private void peremestitb_serv_event(treespis selcat)
         {
 
             try
             {
-                string idcategor = ((sender as System.Windows.Controls.MenuItem).Header as treespis).id_server;
+                string idcategor = selcat.id_server;
                 var file = lb4.SelectedValue as Models3d;
                 string idmodel_peremech = file.id_server;
 
@@ -936,77 +954,107 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             }
         }
 
-
-        private void MenuItem_Click_7(object sender, RoutedEventArgs e)
+        async Task UploadFileAsync(string url, string filePath)
         {
-            if (!(lb2.SelectedIndex > -1)) { MessageBox.Show("Сначала выберите категорию"); return; }
-            if (!(lb1.SelectedIndex > -1)) { MessageBox.Show("Сначала выберите объект"); return; }
-            var file = lb1.SelectedValue as Models3d;
-            if (!(MessageBox.Show(
-         "Вы действительно хотите отправить \"" + file.name + "\" на сервер?", "",
-         MessageBoxButton.YesNo) == MessageBoxResult.Yes)) return;
-
-            if (!(File.Exists(file.path))) { MessageBox.Show("3ds файл на Вашем компьютере не обнаружен"); return; }
-                      
-            string startPath = file.pathcategory;
-            string zipPath = Path.GetTempPath() + "3ds_to_server_TreeCadN.zip";
-          
-            if (File.Exists(zipPath)) File.Delete(zipPath);
-            log.Add("zipPath - " + zipPath);
-            ZipFile.CreateFromDirectory(startPath, zipPath);
-
-            string time = DateTime.Now.ToFileTimeUtc().ToString();
-            string path3ds = Tr2(file.name).Replace(' ', '_') + "_" + time + ".zip";
-            string pathjpg = Tr2(file.name).Replace(' ', '_') + "_" + time + ".jpg";
-
-
-            log.Add("Отправляем заказ на фабрику: " + path3ds + "  " + pathjpg);
-
-
-            using (var client = new System.Net.WebClient())
+            using (var httpClient = new HttpClient())
             {
-                MessageBox.Show(zipPath);
-                //   client.Headers.Add("Content-Type", "multipart/form-data");
-                var asdasdasd = client.UploadFile(@"https://ecad.giulianovars.ru/zakaz/uploadzakaz.php", "POST", zipPath);
-                string download = Encoding.UTF8.GetString(asdasdasd);
+                using (var content = new MultipartFormDataContent())
+                {
+                    var fileContent = new ByteArrayContent(File.ReadAllBytes(filePath));
+                    fileContent.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/octet-stream");
+                    content.Add(fileContent, "file", Path.GetFileName(filePath));
 
-                  MessageBox.Show(download);
-
+                    var response = await httpClient.PostAsync(url, content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseString = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Upload successful: " + responseString);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: " + response.StatusCode);
+                    }
+                }
             }
-            
-            //(new FTP()).otprav(zipPath, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + path3ds);
-            if (File.Exists(file.jpg_path))
+        }
+        private async void MenuItem_Click_7(object sender, RoutedEventArgs e)
+        {
+            if (this.lb2.SelectedIndex <= -1)
             {
-                //  (new FTP()).otprav(file.jpg_path, "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + pathjpg);
-
-              
-
+                MessageBox.Show("Сначала выберите категорию");
+                return;
             }
-           
-
-            string categoryuser = (lb2.SelectedItem as treespis).name;
-
-
-            //Создание объекта, для работы с файлом
-            INIManager manager = new INIManager(GetEcadProIni());
-            string authotiz_root = manager.GetPrivateString("giulianovars", "attivazione");//получ ключ активации
-
-
-
-            (new web_zapros()).load("new3ds",
-                "filename=" + file.name +
-                "&filename3ds=" + path3ds +
-                "&filenamejpg=" + pathjpg +
-                "&idclienta=" + authotiz_root +
-                "&x=" + file.x +
-                "&y=" + file.y +
-                "&z=" + file.z +
-                "&categoryuser=" + categoryuser);
+            if (this.lb1.SelectedIndex <= -1)
+            {
+                MessageBox.Show("Сначала выберите объект");
+                return;
+            }
+            Models3d models3d = this.lb1.SelectedValue as Models3d;
+            if (MessageBox.Show("Вы действительно хотите отправить \"" + models3d.name + "\" на сервер?", "", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+            if (!File.Exists(models3d.path))
+            {
+                MessageBox.Show("3ds файл на Вашем компьютере не обнаружен");
+                return;
+            }
+            string text = DateTime.Now.ToFileTimeUtc().ToString();
+            string text2 = kommunikacii_main.Tr2(models3d.name).Replace(' ', '_') + "_" + text + ".zip";
+            string text3 = kommunikacii_main.Tr2(models3d.name).Replace(' ', '_') + "_" + text + ".jpg";
+            string pathcategory = models3d.pathcategory;
+            string text4 = string.Concat(new string[]
+            {
+                Path.GetTempPath(),
+                kommunikacii_main.Tr2(models3d.name).Replace(' ', '_'),
+                "_",
+                text,
+                ".zip"
+            });
+            if (File.Exists(text4))
+            {
+                File.Delete(text4);
+            }
+            log.Add("zipPath - " + text4);
+            ZipFile.CreateFromDirectory(pathcategory, text4);
+            log.Add("Отправляем заказ на фабрику: " + text2 + "  " + text3);
+          await  UploadFileAsync("https://ecad.giulianovars.ru/3dmodels/upload3d.php", text4);
+            if (File.Exists(models3d.jpg_path))
+            {
+                string text5 = string.Concat(new string[]
+                {
+                    Path.GetTempPath(),
+                    kommunikacii_main.Tr2(models3d.name).Replace(' ', '_'),
+                    "_",
+                    text,
+                    ".jpg"
+                });
+                File.Copy(models3d.jpg_path, text5);
+                await UploadFileAsync("https://ecad.giulianovars.ru/3dmodels/upload3d.php", text5);
+            }
+            string name = (this.lb2.SelectedItem as treespis).name;
+            INIManager inimanager = new INIManager(this.GetEcadProIni());
+            string privateString = inimanager.GetPrivateString("giulianovars", "attivazione");
+            new web_zapros().load("new3ds", string.Concat(new string[]
+            {
+                "filename=",
+                models3d.name,
+                "&filename3ds=",
+                text2,
+                "&filenamejpg=",
+                text3,
+                "&idclienta=",
+                privateString,
+                "&x=",
+                models3d.x,
+                "&y=",
+                models3d.y,
+                "&z=",
+                models3d.z,
+                "&categoryuser=",
+                name
+            }));
             MessageBox.Show("Объект успешно отправлен");
-
-
-
-
         }
 
         string GetEcadProIni()

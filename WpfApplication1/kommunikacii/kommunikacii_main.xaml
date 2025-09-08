@@ -45,8 +45,7 @@
             <TabItem x:Name="item1" Header="С сервера">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="87.89"/>
-                        <ColumnDefinition Width="162.11"/>
+                        <ColumnDefinition Width="250"/>
                         <ColumnDefinition Width="31*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -54,7 +53,7 @@
                         <RowDefinition Height="367*"/>
                     </Grid.RowDefinitions>
                     <!--SelectionChanged="lb3_SelectionChanged"!-->
-                    <TreeView   x:Name="lb3"  Margin="0,0,5,0" Grid.Row="1" VerticalContentAlignment="Stretch" TreeViewItem.Expanded="trw_Products_Expanded" SelectedItemChanged="Lb3_SelectedItemChanged" Grid.ColumnSpan="2">
+                    <TreeView   x:Name="lb3"  Margin="0,0,5,0" Grid.Row="1" VerticalContentAlignment="Stretch" TreeViewItem.Expanded="trw_Products_Expanded" SelectedItemChanged="Lb3_SelectedItemChanged">
                         <!-- <TreeView.ItemTemplate>
                
                                 <HierarchicalDataTemplate ItemsSource="{Binding Path=Nodes}">
@@ -62,7 +61,7 @@
                                 </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>!-->
                     </TreeView>
-                    <ListBox  Style="{StaticResource myListboxStyle}" x:Name="lb4" SelectionChanged="lb4_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" RenderTransformOrigin="0.066,0.51" VerticalContentAlignment="Stretch" Background="White" MouseDoubleClick="lb1_MouseDoubleClick" Grid.Column="2" Grid.Row="1">
+                    <ListBox  Style="{StaticResource myListboxStyle}" x:Name="lb4" Margin="0" SelectionChanged="lb4_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" RenderTransformOrigin="0.066,0.51" VerticalContentAlignment="Stretch" Background="White" MouseDoubleClick="lb1_MouseDoubleClick" Grid.Column="1" Grid.Row="1">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical" Width="160" Background="{Binding zvetbg}">
@@ -75,7 +74,14 @@
                                     </Grid>
 
 
-                                    <TextBlock Text="{Binding name}" Margin="2"/>
+                                    <TextBlock
+										Margin="2"
+										TextWrapping="Wrap"
+										LineHeight="16"
+										Height="48"
+										TextTrimming="CharacterEllipsis"
+										Width="150"
+										Text="{Binding name}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -88,26 +94,16 @@
                             <ContextMenu >
                                 <MenuItem   Header="Очистить базу данных" Click="MenuItem_Click_8"  />
                                 <MenuItem   Header="Новая категория" Click="MenuItem_Click_3"  />
-                                <MenuItem   Header="Удалить категорию" Click="MenuItem_Click_4"  />
-                                <MenuItem   Header="Удалить объект" Click="MenuItem_Click_5" />
-                                <MenuItem x:Name="peremestitb_serv"   Header="Переместить" >
-                                    <MenuItem.Resources>
-                                        <Style TargetType="{x:Type MenuItem}">
-                                            <EventSetter Event="MenuItem.Click" Handler="peremestitb_serv_event" />
-                                        </Style>
-                                    </MenuItem.Resources>
-                                    <MenuItem.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding name}" />
-                                        </DataTemplate>
-                                    </MenuItem.ItemTemplate>
+                                <MenuItem x:Name="peremestitb_serv" Header="Переместить">                                   
                                 </MenuItem>
+
+                               
                             </ContextMenu>
                         </ListBox.ContextMenu>
                     </ListBox>
-                    <Grid Grid.Column="2" Margin="5,5,5,5">
+                    <Grid Grid.Column="1" Margin="5">
                         <Label x:Name="label1" HorizontalAlignment="Left"  />
-
+                        
                     </Grid>
                 </Grid>
             </TabItem>
@@ -139,7 +135,15 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical" Width="160">
                                     <Image Width="150" Height="150" Source="{Binding bitmap_prev}"  Margin="5"/>
-                                    <TextBlock Text="{Binding name}" Margin="2"/>
+                               
+                                    <TextBlock
+										Margin="2"
+										TextWrapping="Wrap"
+										LineHeight="16"
+										Height="48"
+										TextTrimming="CharacterEllipsis"
+										Width="150"
+										Text="{Binding name}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
