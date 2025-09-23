@@ -281,7 +281,7 @@ namespace TreeCadN
 
 
 
-
+            ///
 
 
             string[] skrazdel= vh_str.Split(new string[]{"`S"},StringSplitOptions.None);
@@ -1126,25 +1126,29 @@ st14.Width.ToString() + ";";
             for (int i = 0; i < array_vibr_tex.Count; i++)
             {
                 texnika otvet_massiv = ((texnika)array_vibr_tex[i]);
-
-                string name = "";
-
-                if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@').Replace(';', '$');
-
+                if (otvet_massiv.gruppirovka == 0)
+                {
+                   
 
 
-                t += otvet_massiv.type.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.Article.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.kolvo.ToString().Replace(',', '.').Replace(';', '$') + "~" +
-                otvet_massiv.OTD.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.Prim.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.GROUP_dlyaspicif.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.nom_pp.ToString().Replace(',', '@').Replace(';', '$') + "~" +
-                name + "~" +
-                otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
-                otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + ";";
-                //      MessageBox.Show(text_otvet);
+                    string name = "";
 
+                    if (otvet_massiv.Article == "***" || otvet_massiv.Article == "15R***" || otvet_massiv.Article == "SAD***" || otvet_massiv.Article == "*") name = otvet_massiv.TName.Replace(',', '@').Replace(';', '$');
+
+
+
+                    t += otvet_massiv.type.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.Article.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.kolvo.ToString().Replace(',', '.').Replace(';', '$') + "~" +
+                    otvet_massiv.OTD.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.Prim.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.GROUP_dlyaspicif.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.nom_pp.ToString().Replace(',', '@').Replace(';', '$') + "~" +
+                    name + "~" +
+                    otvet_massiv.UnitsName.Replace(',', '@').Replace(';', '$') + "~" +
+                    otvet_massiv.priceredak.ToString().Replace(',', '.').Replace(';', '$') + ";";
+                    //      MessageBox.Show(text_otvet);
+                }
             }
 
 
@@ -1343,13 +1347,16 @@ st14.Width.ToString() + ";";
                                 if (contr.nomerkontr <= 2 && nomsvetdlyapodsvzap == 0)
                                 {
                                     addartsk("90WL5", "установить в запасницу, если потребляемая мощность < 40 ВТ замени на 40WL5");
+                                    addartsk("83377833", "установить в запасницу");
                                 } else if (contr.nomerkontr == 3 && nomsvetdlyapodsvzap == 0)
                                 {
                                     addartsk("90WL5", "установить в ретротоп, если потребляемая мощность < 40 ВТ замени на 40WL5");
+                                    addartsk("83377833", "установить в ретротоп");
                                 }
                                 else
                                 {
                                     addartsk("90WL5", "");
+                                    addartsk("83377833");
                                 }
 
                                 kolvoprov++;
@@ -1375,12 +1382,9 @@ st14.Width.ToString() + ";";
                                     {
                                         addartsk("PDKUPSK");
                                     }
+                                   
 
-                                    if (sostav.parametr.skyvella)
-                                    {
-                                        this.addartsk("1T30025", "");
-                                    }
-
+                           
 
                                 }
                                 if (sostav.parametr.skyvella)
