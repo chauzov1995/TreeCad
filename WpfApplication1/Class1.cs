@@ -405,7 +405,7 @@ namespace TreeCadN
             string str2 = str;
             string path1 = path;
             bool uslovvipol = false;
-            String grotd = "1^2^3^4^5^6^7^22^33^39^40^37^43^54^56^60^61^62^63^68^69";
+            String grotd = "1^2^3^4^5^6^7^22^33^39^40^37^43^54^56^60^61^62^63^66^68^69";
 
 
             if (prov_vh_str_na_prigodnostb(str1) == 9)
