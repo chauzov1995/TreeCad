@@ -405,7 +405,7 @@ namespace TreeCadN
             string str2 = str;
             string path1 = path;
             bool uslovvipol = false;
-            String grotd = "1^2^3^4^5^6^7^22^33^39^40^37^43^54^56^60^61^62^63^66^68^69";
+            String grotd = "1^2^3^4^5^6^7^22^33^39^40^37^43^54^56^60^61^62^63^66^68^69^70^71";
 
 
             if (prov_vh_str_na_prigodnostb(str1) == 9)
@@ -1243,10 +1243,15 @@ namespace TreeCadN
         {
 
             var asdasd = new redhosts();
-            bool chek = asdasd.checkIsEstbzapSERV();
+            bool chek = asdasd.CheckIsEstbzapSERV();
             if (!chek)
             {
-                if (asdasd.ElevateToAdmin("Программа работает на СТАРОМ сервере.\r\nДля перехода на НОВЫЙ сервер нажмите «ОК»."))
+                if (asdasd.ElevateToAdmin(
+ "Для продолжения работы необходимо перейти\r\n" +
+ "на новый сервер до 31 марта 2026.\r\n\r\n" +
+ "Нажмите «ОК», чтобы выполнить переключение.\r\n\r\n" +
+ "Если Windows попросит пароль администратора\r\n" +
+ "и вы его не знаете — обратитесь к системному администратору."))
                 {
 
                     asdasd.vklvikl(true);
