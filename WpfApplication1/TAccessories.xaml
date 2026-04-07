@@ -134,16 +134,22 @@
                 <DataGridTemplateColumn Width="150" Header="Отделка" x:Name="otdelka">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding OTD}" />
+                            <TextBlock Text="{Binding OTDName}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <ComboBox
-                ItemsSource="{Binding FilteredOtdelka}"
-                SelectedValue="{Binding OTD, UpdateSourceTrigger=PropertyChanged}"
-                SelectedValuePath="ID"
-                DisplayMemberPath="nameotd" />
+    x:Name="cbOtd"
+    ItemsSource="{Binding FilteredOtdelka}"
+    SelectedValue="{Binding OTD, UpdateSourceTrigger=PropertyChanged}"
+    SelectedValuePath="ID"
+    DisplayMemberPath="nameotd"
+    IsEditable="True"
+    StaysOpenOnEdit="True"
+    IsTextSearchEnabled="False"
+                                IsTextSearchCaseSensitive="False"
+    Loaded="cbOtd_Loaded" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>

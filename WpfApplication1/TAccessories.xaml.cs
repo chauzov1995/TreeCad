@@ -1094,13 +1094,10 @@ st14.Width.ToString() + ";";
         {
             bool otvet = true;
             bool integer = "0123456789".IndexOf(e.Text) < 0;
-
-
-
             bool floate = @"0123456789.".IndexOf(e.Text) < 0;
             string b = (sender as DataGrid).CurrentCell.Column.Header.ToString();
 
-            if (b == "Название" || b == "Примечание") otvet = false;
+            if (b == "Название" || b == "Примечание" || b == "Отделка") otvet = false;
             if (b == "Базовая цена" || b == "Цена ред.") otvet = floate;
             if (((sender as DataGrid).CurrentItem as texnika).type == "a" && b == "Кол-во") otvet = floate;
             if (((sender as DataGrid).CurrentItem as texnika).type == "t" && b == "Кол-во") otvet = integer;
@@ -1497,6 +1494,43 @@ st14.Width.ToString() + ";";
             }
         }
 
+        private void CbOtd_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            if (cb == null) return;
+
+            TextBox tb = e.OriginalSource as TextBox;
+            if (tb == null) return;
+
+            var row = cb.DataContext as texnika;
+            if (row == null) return;
+
+            string text = tb.Text == null ? "" : tb.Text.ToLower();
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                cb.ItemsSource = row.FilteredOtdelka;
+            }
+            else
+            {
+                cb.ItemsSource = row.FilteredOtdelka
+                    .Where(x => !string.IsNullOrEmpty(x.nameotd) &&
+                                x.nameotd.ToLower().Contains(text))
+                    .ToList();
+            }
+
+            cb.IsDropDownOpen = true;
+        }
+        private void cbOtd_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            if (cb == null) return;
+
+            cb.IsEditable = true;
+            cb.StaysOpenOnEdit = true;
+
+            cb.AddHandler(TextBox.TextChangedEvent, new TextChangedEventHandler(CbOtd_TextChanged));
+        }
         private void btnaccfind_Click(object sender, RoutedEventArgs e)
         {
           var array_for_scanse=  accizscense();
@@ -1650,6 +1684,17 @@ st14.Width.ToString() + ";";
 
     public class texnika
     {
+        public string OTDName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(OTD) || TAccessories.otdelka_array == null)
+                    return "";
+
+                var found = TAccessories.otdelka_array.FirstOrDefault(x => x.ID == OTD);
+                return found != null ? found.nameotd : "";
+            }
+        }
         public texnika() { }
         public texnika(texnika previousTexnika) {
             type = previousTexnika.type;
