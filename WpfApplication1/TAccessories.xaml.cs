@@ -80,27 +80,25 @@ namespace TreeCadN
 
             //отделка
             log.Add("Подключимся к бд");
-            OleDbDataReader reader_otd = BD.execute("SELECT Id, Name FROM TOtdelka order by Name ASC");
+            OleDbDataReader reader_otd = BD.execute("SELECT Id, Name, IDGroup FROM TOtdelka order by Name ASC");
 
             otdelka_array = new List<todelka>();
-            otdelka_array.Add(new todelka() { ID = "", nameotd = "" });
+            otdelka_array.Add(new todelka() { ID = "", nameotd = "", IDGroup = "" });
+
             while (reader_otd.Read())
             {
                 if (reader_otd["Name"].ToString() != "")
                 {
-
                     otdelka_array.Add(new todelka()
                     {
                         ID = reader_otd["Id"].ToString(),
                         nameotd = reader_otd["Name"].ToString(),
-
+                        IDGroup = reader_otd["IDGroup"].ToString(),
                     });
-
-
                 }
             }
             log.Add("установим отделку");
-            otdelka.ItemsSource = otdelka_array;
+       //     otdelka.ItemsSource = otdelka_array;
             //.ItemsSource = todelka;
             //ед изм
             OleDbDataReader reader_izmer = BD.execute("SELECT UnitsID, UnitsName FROM TUnits order by UnitsName ASC");
@@ -170,8 +168,7 @@ namespace TreeCadN
                     sort = sort,
                     GROUP_dlyaspicif = reader_GRACC["TKOEFGROUP_ID"].ToString(),
                     GRAFIKA = reader_GRACC["GRAFIKA"].ToString(),
-
-
+                    FilteredOtdelka = GetFilteredOtdelkaByArticle(reader_GRACC["Articul"].ToString()),
                 });
 
                 sort_forg1++;
@@ -201,7 +198,6 @@ namespace TreeCadN
 
                     array_spis_tex.Add(new texnika()
                     {
-
                         type = "t",
                         ID = reader["TPriceID"].ToString(),
                         TName = reader["TName"].ToString(),
@@ -217,7 +213,8 @@ namespace TreeCadN
                         OTD = "",
                         sort = sort,
                         GROUP_dlyaspicif = reader["TKOEFGROUP_ID"].ToString(),
-                        GRAFIKA = "0"
+                        GRAFIKA = "0",
+                        FilteredOtdelka = GetFilteredOtdelkaByArticle(reader["Article"].ToString()),
                     });
                 }
                 catch
@@ -389,6 +386,7 @@ namespace TreeCadN
 
                     }
 
+                    poluch.FilteredOtdelka = GetFilteredOtdelkaByArticle(poluch.Article);
                     array_vibr_tex.Add(poluch);
 
                 }
@@ -538,6 +536,27 @@ namespace TreeCadN
 
         }
 
+
+        private List<todelka> GetFilteredOtdelkaByArticle(string article)
+        {
+            if (string.IsNullOrWhiteSpace(article))
+                return new List<todelka>(otdelka_array);
+
+            int pos = article.LastIndexOf('_');
+            if (pos < 0 || pos == article.Length - 1)
+                return new List<todelka>(otdelka_array);
+
+            string groupPart = article.Substring(pos + 1);
+
+            int groupId;
+            if (!int.TryParse(groupPart, out groupId))
+                return new List<todelka>(otdelka_array);
+
+            return otdelka_array
+                .Where(x => string.IsNullOrEmpty(x.ID) || x.IDGroup == groupId.ToString())
+                .ToList();
+        }
+
         private bool FindComputer(texnika bk)
         {
 
@@ -595,6 +614,7 @@ namespace TreeCadN
                 //добавить новую строку
                 nom_PP++;
                 poluch.nom_pp = nom_PP;
+                poluch.FilteredOtdelka = GetFilteredOtdelkaByArticle(poluch.Article);
                 array_vibr_tex.Add(poluch);
                 lb_vibr_tex.ItemsSource = null;
                 lb_vibr_tex.ItemsSource = array_vibr_tex;
@@ -622,6 +642,7 @@ namespace TreeCadN
                     //добавить новую строку
                     nom_PP++;
                     poluch.nom_pp = nom_PP;
+                    poluch.FilteredOtdelka = GetFilteredOtdelkaByArticle(poluch.Article);
                     array_vibr_tex.Add(poluch);
                     lb_vibr_tex.ItemsSource = null;
                     lb_vibr_tex.ItemsSource = array_vibr_tex;
@@ -1651,9 +1672,13 @@ st14.Width.ToString() + ";";
             GRAFIKA = previousTexnika.GRAFIKA;
             gruppirovka = previousTexnika.gruppirovka;
             priznsmartkitchen = previousTexnika.priznsmartkitchen;
-           
-     
-    }
+            priznforscense = previousTexnika.priznforscense;
+            FilteredOtdelka = previousTexnika.FilteredOtdelka == null
+                ? new List<todelka>()
+                : new List<todelka>(previousTexnika.FilteredOtdelka);
+
+
+        }
 
         public string type { get; set; }
         public string ID { get; set; }
@@ -1677,14 +1702,16 @@ st14.Width.ToString() + ";";
         public int gruppirovka { get; set; }
         public int priznsmartkitchen { get; set; }
         public int priznforscense { get; set; }
+        public List<todelka> FilteredOtdelka { get; set; }
 
-        
+
     }
 
     public class todelka
     {
         public string ID { get; set; }
         public string nameotd { get; set; }
+        public string IDGroup { get; set; }
         public string Gender { get; set; }
     }
 

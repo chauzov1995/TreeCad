@@ -1243,20 +1243,27 @@ namespace TreeCadN
         {
 
             var asdasd = new redhosts();
-            bool chek = asdasd.CheckIsEstbzapSERV();
-            if (!chek)
+
+            string exePath = Process.GetCurrentProcess().MainModule.FileName;
+            bool ignoreServerSwitch = exePath.Equals(@"C:\Evolution\eCadPro\ecadpro.exe", StringComparison.OrdinalIgnoreCase);
+
+            bool chek = ignoreServerSwitch || asdasd.CheckIsEstbzapSERV();
+
+            if (!ignoreServerSwitch)
             {
-                if (asdasd.ElevateToAdmin(
- "Для продолжения работы необходимо перейти\r\n" +
- "на новый сервер до 31 марта 2026.\r\n\r\n" +
- "Нажмите «ОК», чтобы выполнить переключение.\r\n\r\n" +
- "Если Windows попросит пароль администратора\r\n" +
- "и вы его не знаете — обратитесь к системному администратору."))
+                if (!chek)
                 {
-
-                    asdasd.vklvikl(true);
+                    if (asdasd.ElevateToAdmin(
+            "Для продолжения работы необходимо перейти\r\n" +
+            "на новый сервер до 31 марта 2026.\r\n\r\n" +
+            "Нажмите «ОК», чтобы выполнить переключение.\r\n\r\n" +
+            "Если Windows попросит пароль администратора\r\n" +
+            "и вы его не знаете — обратитесь к системному администратору."))
+                    {
+                        asdasd.vklvikl(true);
+                        chek = true;
+                    }
                 }
-
             }
 
             INIManager client_mans = new INIManager(Environment.CurrentDirectory + @"\ecadpro.ini");

@@ -131,10 +131,22 @@
                 <DataGridTextColumn x:Name="st2" Header="Артикул" Binding="{Binding Article}" Width="60" />
                 <DataGridTextColumn x:Name="st3" Header="Название"  Binding="{Binding TName}"  Width="*"/>
                 <DataGridTextColumn x:Name="st4" Header="Примечание"  Binding="{Binding Prim}"  Width="*" />
-                <DataGridComboBoxColumn  Width="150" x:Name="otdelka"  Header="Отделка" 
-                         SelectedValueBinding="{Binding OTD}" 
-                    SelectedValuePath="ID"
-                    DisplayMemberPath="nameotd"  />
+                <DataGridTemplateColumn Width="150" Header="Отделка" x:Name="otdelka">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding OTD}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox
+                ItemsSource="{Binding FilteredOtdelka}"
+                SelectedValue="{Binding OTD, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValuePath="ID"
+                DisplayMemberPath="nameotd" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
                 <DataGridComboBoxColumn Width="60" x:Name="edizmer"  Header="Ед. изм."
                          SelectedValueBinding="{Binding UnitsName}"
                     SelectedValuePath="ID"
