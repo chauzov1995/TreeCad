@@ -148,6 +148,9 @@ namespace TreeCadN
             {
                 MessageBox.Show(e.Message);
             }
+
+            log.Add("строка на выходе3");
+            log.Add(returnValue);
             return returnValue;
         }
         public void SetAmbiente(ref object x)
@@ -632,7 +635,10 @@ namespace TreeCadN
 
             //  MessageBox.Show(ragsoc);
             TAccessories f_TAccess = new TAccessories(path, text, this, _RIFFABRICA, ragsoc == "999");
+       
             f_TAccess.ShowDialog();
+            log.Add("строка на выходе 2");
+            log.Add(f_TAccess.text_otvet);
             return f_TAccess.text_otvet;
         }
         public string smartkitchen(string path)

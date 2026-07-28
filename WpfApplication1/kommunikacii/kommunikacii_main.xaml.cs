@@ -269,52 +269,63 @@ namespace TreeCadN.kommunikacii
 
         async void lb3napolnene()
         {
-
-            var json = await Task.Run(() => loadsinch("load_categor"));                            // выполняется асинхронно
-
-            server = JsonConvert.DeserializeObject<List<treespis>>(json);
-
-            lb3.Items.Clear();
-            peremestitb_serv.Items.Clear(); // очищаем меню перед заполнением
-
-
-            foreach (treespis drive in server)
+            try
             {
-                TreeViewItem item = new TreeViewItem();
-                item.Tag = drive;
-                item.Header = drive.name;
+                var json = await Task.Run(() => loadsinch("load_categor"));
 
-                if (server.FindAll(x => x.owner.Equals(drive.id)).Count > 0 && drive.owner.Equals("0"))
+                if (string.IsNullOrWhiteSpace(json))
                 {
-                    item.Items.Add("*");
+                    MessageBox.Show("Сервер не вернул список категорий");
+                    return;
                 }
-                lb3.Items.Add(item);
 
+                server = JsonConvert.DeserializeObject<List<treespis>>(json);
 
-                // ===== Заполнение MenuItem =====
-                System.Windows.Controls.MenuItem menuItem = new System.Windows.Controls.MenuItem
+                if (server == null)
                 {
-                    Tag = drive,
-                    Header = drive.name
-                };
+                    MessageBox.Show("Не удалось прочитать категории с сервера");
+                    return;
+                }
 
-                // Можно подписать обработчик клика
-                menuItem.Click += (s, e) =>
+                lb3.Items.Clear();
+                peremestitb_serv.Items.Clear();
+
+                foreach (treespis drive in server)
                 {
-                    peremestitb_serv_event(drive);// MessageBox.Show($"Нажали на {drive.name} (id={drive.id_server})");
-                };
+                    if (drive == null) continue;
 
-                peremestitb_serv.Items.Add(menuItem);
+                    string owner = drive.owner ?? "0";
+                    string id = drive.id ?? "";
 
+                    TreeViewItem item = new TreeViewItem();
+                    item.Tag = drive;
+                    item.Header = drive.name ?? "Без названия";
+
+                    if (server.Any(x => (x.owner ?? "").Equals(id)) && owner.Equals("0"))
+                    {
+                        item.Items.Add("*");
+                    }
+
+                    lb3.Items.Add(item);
+
+                    System.Windows.Controls.MenuItem menuItem = new System.Windows.Controls.MenuItem
+                    {
+                        Tag = drive,
+                        Header = drive.name ?? "Без названия"
+                    };
+
+                    menuItem.Click += (s, e) =>
+                    {
+                        peremestitb_serv_event(drive);
+                    };
+
+                    peremestitb_serv.Items.Add(menuItem);
+                }
             }
-
-
-
-
-
-
-
-
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Ошибка lb3napolnene");
+            }
         }
 
         private void trw_Products_Expanded(object sender, RoutedEventArgs e)
@@ -325,7 +336,11 @@ namespace TreeCadN.kommunikacii
             //MessageBox.Show((item.Tag as treespis).name.ToString());
 
 
-            List<treespis> asdjasdaa = server.FindAll(x => x.owner.Equals((item.Tag as treespis).id));
+            var tag = item.Tag as treespis;
+            if (tag == null || server == null) return;
+
+            List<treespis> asdjasdaa = server
+                .FindAll(x => (x.owner ?? "").Equals(tag.id ?? ""));
 
 
 

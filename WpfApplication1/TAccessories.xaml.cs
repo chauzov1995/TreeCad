@@ -404,10 +404,12 @@ namespace TreeCadN
 
 
             this.Hide();
-          
-            
+
+           
 
             string t = str_sobr(array_vibr_tex);
+            log.Add("строка на выходе");
+            log.Add(t);
 
 
             if (zakrit_ok)
