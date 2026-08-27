@@ -562,6 +562,8 @@ namespace TreeCadN.kommunikacii
 
             log.Add("чандж");
 
+            UpdateServerDeleteMenuVisibility();
+
             lb4_napolnenie();
 
 
@@ -918,39 +920,94 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 
         }
 
-        private void MenuItem_Click_5(object sender, RoutedEventArgs e)//удалить объект
+        private treespis GetSelectedServerCategory()
         {
-            /*
-                        if (lb3.SelectedIndex > -1)
-                        {
-                            if (lb4.SelectedIndex > -1)
-                            {
-                                var file = lb4.SelectedValue as Models3d;
-                                if (MessageBox.Show(
-                             "Вы действительно хотите удалить \"" + file.name + "\"?", "",
-                             MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                                {
+            TreeViewItem selectedItem = lb3.SelectedItem as TreeViewItem;
+            return selectedItem == null ? null : selectedItem.Tag as treespis;
+        }
 
-                                    (new web_zapros()).load("delete_obj", "id=" + file.id_server);
-                                    BD.conn("DELETE FROM `import3ds_server` WHERE id_server='" + file.id_server + "'");
+        private bool CanDeleteSelectedServerObject()
+        {
+            treespis category = GetSelectedServerCategory();
+            return admin == "1"
+                && category != null
+                && string.Equals(category.name, "!Удалить!", StringComparison.Ordinal);
+        }
 
+        private void UpdateServerDeleteMenuVisibility()
+        {
+            Visibility visibility = CanDeleteSelectedServerObject()
+                ? Visibility.Visible
+                : Visibility.Collapsed;
 
-                                    MessageBox.Show("Объект успешно удалён");
-                                    lb4_napolnenie();
+            delete_server_object.Visibility = visibility;
+            delete_server_object_separator.Visibility = visibility;
+        }
 
+        private async void MenuItem_Click_5(object sender, RoutedEventArgs e)//удалить объект с сервера
+        {
+            if (!CanDeleteSelectedServerObject())
+            {
+                MessageBox.Show("Удалять объекты с сервера можно только администратору из папки !Удалить!.",
+                    "Удаление объекта", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("Сначала выберите объект для редактирования");
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Сначала выберите категорию");
-                        }
-                        */
+            Models3d file = lb4.SelectedValue as Models3d;
+            if (file == null)
+            {
+                MessageBox.Show("Сначала выберите объект для удаления.", "Удаление объекта");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(file.id_server))
+            {
+                MessageBox.Show("Сервер не передал идентификатор выбранного объекта.",
+                    "Удаление объекта", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (MessageBox.Show(
+                "Вы действительно хотите безвозвратно удалить с сервера \"" + file.name + "\"?",
+                "Удаление объекта", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            string result;
+            try
+            {
+                result = await Task.Run(() => DeleteServerObject(file.id_server));
+            }
+            catch (Exception ex)
+            {
+                log.Add("Ошибка удаления объекта с сервера: " + ex.Message);
+                MessageBox.Show("Не удалось связаться с сервером. Объект не удалён.",
+                    "Удаление объекта", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (string.Equals(result.Trim(), "FAIL", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Не удалось удалить объект с сервера.",
+                    "Удаление объекта", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            MessageBox.Show("Объект успешно удалён с сервера.", "Удаление объекта");
+            lb4_napolnenie();
+        }
+
+        private static string DeleteServerObject(string id)
+        {
+            string url = "https://ecad.giulianovars.ru/php/3dsobject/3ds.php?command=delete_obj&id="
+                + Uri.EscapeDataString(id);
+
+            using (WebClient client = new WebClient())
+            {
+                byte[] response = client.DownloadData(url);
+                return Encoding.UTF8.GetString(response);
+            }
         }
 
         //

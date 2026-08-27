@@ -96,6 +96,8 @@
                                 <MenuItem   Header="Новая категория" Click="MenuItem_Click_3"  />
                                 <MenuItem x:Name="peremestitb_serv" Header="Переместить">                                   
                                 </MenuItem>
+                                <Separator x:Name="delete_server_object_separator" Visibility="Collapsed" />
+                                <MenuItem x:Name="delete_server_object" Header="Удалить с сервера" Click="MenuItem_Click_5" Visibility="Collapsed" />
 
                                
                             </ContextMenu>
