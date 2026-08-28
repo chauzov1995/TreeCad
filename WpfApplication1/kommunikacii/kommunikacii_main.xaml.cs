@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
@@ -31,12 +32,20 @@ namespace TreeCadN.kommunikacii
     /// </summary>
     public partial class kommunikacii_main : Window
     {
+        private static readonly HttpClient httpClient = new HttpClient
+        {
+            Timeout = TimeSpan.FromMinutes(5)
+        };
+
         public string pathBD = "";
         public string selectedModel = "";
         BD_Connect BD = new BD_Connect();
         int lb1_selitem, lb4_selitem;
-
-
+        private CancellationTokenSource serverModelsLoadCancellation;
+        private CancellationTokenSource localModelsLoadCancellation;
+        private CancellationTokenSource actionCancellation;
+        private bool isBusy;
+        private bool initialLoadCompleted;
         List<Models3d> server_obj = new List<Models3d>();
         string dir3ds, dir3ds_user;
         string admin;
@@ -44,13 +53,6 @@ namespace TreeCadN.kommunikacii
         {
             InitializeComponent();
             log.Add("старт диалог моделей");
-            lb4.Visibility = Visibility.Collapsed;
-            lb1.Visibility = Visibility.Collapsed;
-            //  stpan.Visibility = Visibility.Collapsed;
-            //btnserv.Visibility = Visibility.Collapsed;
-
-
-
             dir3ds = Environment.CurrentDirectory + @"\3dsObject\Web";
             dir3ds_user = Environment.CurrentDirectory + @"\3dsObject\User";
 
@@ -79,14 +81,132 @@ namespace TreeCadN.kommunikacii
 
 
             move_to_new_41();
-
             loadpage();
-            log.Add("lb3napolnene");
-            lb3napolnene();
             lb2napolnene();
+            RestoreLocalCategorySelection();
+            UpdateActionStates();
+        }
 
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (initialLoadCompleted)
+            {
+                return;
+            }
 
+            initialLoadCompleted = true;
+            await LoadServerCategoriesAsync();
+        }
 
+        private void RestoreLocalCategorySelection()
+        {
+            int index = kommunikacii_Set.Default.lb2sel;
+            if (index >= 0 && index < lb2.Items.Count)
+            {
+                lb2.SelectedIndex = index;
+            }
+        }
+
+        private void SetBusy(bool value, string message)
+        {
+            isBusy = value;
+            busyProgress.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+            statusText.Text = string.IsNullOrWhiteSpace(message) ? "Готово" : message;
+            UpdateActionStates();
+        }
+
+        private void UpdateActionStates()
+        {
+            if (okButton == null)
+            {
+                return;
+            }
+
+            bool hasServerModel = lb4 != null && lb4.SelectedItem is Models3d;
+            treespis localCategory = lb2 == null ? null : lb2.SelectedItem as treespis;
+            bool hasLocalCategory = localCategory != null;
+            bool hasSpecificLocalCategory = hasLocalCategory && !localCategory.is_all;
+            bool hasLocalModel = lb1 != null && lb1.SelectedItem is Models3d;
+            bool serverTabSelected = item1 != null && item1.IsSelected;
+
+            okButton.IsEnabled = !isBusy && (serverTabSelected ? hasServerModel : hasLocalModel);
+            addLocalModelButton.IsEnabled = !isBusy && hasSpecificLocalCategory;
+            editLocalModelButton.IsEnabled = !isBusy && hasSpecificLocalCategory && hasLocalModel;
+            allnaserver.IsEnabled = !isBusy && hasSpecificLocalCategory && lb1.Items.Count > 0;
+            deleteLocalCategoryMenuItem.IsEnabled = !isBusy && hasSpecificLocalCategory;
+            peremestitb_serv.IsEnabled = !isBusy && hasServerModel;
+            delete_server_object.IsEnabled = !isBusy && hasServerModel;
+            sendLocalModelMenuItem.IsEnabled = !isBusy && hasSpecificLocalCategory && hasLocalModel;
+            editLocalModelMenuItem.IsEnabled = !isBusy && hasSpecificLocalCategory && hasLocalModel;
+            deleteLocalModelMenuItem.IsEnabled = !isBusy && hasLocalModel;
+        }
+
+        private void ListBox_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ListBox listBox = sender as ListBox;
+            DependencyObject source = e.OriginalSource as DependencyObject;
+            if (listBox == null || source == null)
+            {
+                return;
+            }
+
+            ListBoxItem item = ItemsControl.ContainerFromElement(listBox, source) as ListBoxItem;
+            if (item != null)
+            {
+                item.IsSelected = true;
+                item.Focus();
+            }
+            else
+            {
+                listBox.SelectedItem = null;
+            }
+        }
+
+        private static bool ModelMatchesSearch(object value, string searchText)
+        {
+            Models3d model = value as Models3d;
+            if (model == null)
+            {
+                return true;
+            }
+
+            return (model.name ?? string.Empty).IndexOf(searchText,
+                StringComparison.CurrentCultureIgnoreCase) >= 0;
+        }
+
+        private void serverSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ApplyModelFilter(lb4, serverSearchBox.Text);
+        }
+
+        private void localSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ApplyModelFilter(lb1, localSearchBox.Text);
+        }
+
+        private static void ApplyModelFilter(ListBox listBox, string searchText)
+        {
+            if (listBox == null || listBox.ItemsSource == null)
+            {
+                return;
+            }
+
+            ICollectionView view = CollectionViewSource.GetDefaultView(listBox.ItemsSource);
+            string normalizedSearchText = (searchText ?? string.Empty).Trim();
+            if (normalizedSearchText.Length < 2)
+            {
+                if (view.Filter == null)
+                {
+                    return;
+                }
+
+                view.Filter = null;
+                view.Refresh();
+                return;
+            }
+
+            view.Filter = delegate(object value) { return ModelMatchesSearch(value, normalizedSearchText); };
+            view.Refresh();
         }
 
 
@@ -96,313 +216,415 @@ namespace TreeCadN.kommunikacii
         }
         void lb2napolnene()
         {
-
-
-
-            List<treespis> spisvategor = new List<treespis>();
-
-            foreach (string elem in Directory.GetDirectories(dir3ds_user, "*", SearchOption.TopDirectoryOnly))
+            List<treespis> spisvategor = new List<treespis>
             {
-                spisvategor.Add(new treespis() { name = elem.Split('\\').Last() });
+                new treespis { name = "Все", is_all = true }
+            };
+
+            foreach (string elem in Directory.GetDirectories(dir3ds_user, "*", SearchOption.TopDirectoryOnly)
+                .OrderBy(delegate(string path) { return Path.GetFileName(path); }, StringComparer.CurrentCultureIgnoreCase))
+            {
+                spisvategor.Add(new treespis { name = Path.GetFileName(elem) });
             }
 
             lb2.ItemsSource = spisvategor;
-            //  peremestitb.ItemsSource = spisvategor;
         }
 
 
 
-        public void lb1_napolnenie()//наполнение листбокса
+        public async void lb1_napolnenie()//наполнение листбокса
         {
+            treespis category = lb2.SelectedItem as treespis;
+            if (category == null)
+            {
+                lb1.ItemsSource = null;
+                selectedModel = string.Empty;
+                UpdateActionStates();
+                return;
+            }
+
+            if (localModelsLoadCancellation != null)
+            {
+                localModelsLoadCancellation.Cancel();
+            }
+
+            CancellationTokenSource cancellation = new CancellationTokenSource();
+            localModelsLoadCancellation = cancellation;
+            string completionMessage = "Готово";
+            SetBusy(true, "Загрузка пользовательских объектов…");
+
             try
             {
+                List<Models3d> models = await Task.Run(
+                    delegate { return LoadLocalModels(category, cancellation.Token); },
+                    cancellation.Token);
 
-                log.Add("lb1_napolnenie старт");
-                treespis Treespis = lb2.SelectedItem as treespis;
-                List<Models3d> modeli = new List<Models3d>();
-                log.Add("Преобразовали в класс");
-                foreach (string elem in Directory.GetDirectories(dir3ds_user + "\\" + Treespis.name, "*", SearchOption.TopDirectoryOnly))
+                cancellation.Token.ThrowIfCancellationRequested();
+                treespis selectedCategory = lb2.SelectedItem as treespis;
+                if (selectedCategory == null || !string.Equals(selectedCategory.name, category.name, StringComparison.Ordinal))
                 {
-                    try
-                    {
-                        string name = elem.Split('\\').Last();
-                        log.Add("парсим элемент " + name);
-                        var asdasd = Directory.GetFiles(elem, "*.3ds", SearchOption.TopDirectoryOnly);
-                        if (!(asdasd.Length > 0)) return;
-                        string path = asdasd.First();
-                        string jpg_path = elem + "\\teh\\prev.jpg";
-                        string jpg_ugo = elem + "\\teh\\ugo.jpg";
-                        string pathcategory = elem;
-                        string confjson = elem + "\\teh\\conf.json";
-
-
-
-                        Models3dJSON zyx;
-
-
-                        if (File.Exists(confjson))
-                        {
-                            using (StreamReader fstream = new StreamReader(confjson, System.Text.Encoding.Default))
-                            {
-                                zyx = JsonConvert.DeserializeObject<Models3dJSON>(fstream.ReadToEnd());
-                            }
-                        }
-                        else
-                        {
-
-
-
-                            try
-                            {
-
-                                Model3D dmodel3ds = (new HelixToolkit.Wpf.ModelImporter()).Load(path);
-
-                                zyx = new Models3dJSON()
-                                {
-                                    x = dmodel3ds.Bounds.SizeX.ToString("0"),
-                                    z = dmodel3ds.Bounds.SizeY.ToString("0"),
-                                    y = dmodel3ds.Bounds.SizeZ.ToString("0")
-                                };
-
-                            }
-                            catch
-                            {
-                                zyx = new Models3dJSON() { x = "100", y = "100", z = "100" };
-                            }
-
-
-
-
-
-                            //генерируем JSON файл
-                            string output = JsonConvert.SerializeObject(zyx);
-                            using (FileStream fs = new FileStream(confjson, FileMode.OpenOrCreate))
-                            {
-                                // преобразуем строку в байты
-                                byte[] array = System.Text.Encoding.Default.GetBytes(output);
-                                // запись массива байтов в файл
-
-                                fs.Write(array, 0, array.Length);
-                            }
-                        }
-
-
-
-
-
-                        BitmapImage btmap;
-
-
-
-
-
-
-
-                        if (!File.Exists(jpg_path))
-                        {
-                            jpg_path = "/TreeCadN;component/Foto/nofoto.jpg";
-
-                            btmap = new BitmapImage(new Uri(jpg_path, UriKind.RelativeOrAbsolute));
-                        }
-                        else
-                        {
-                            btmap = new BitmapImage();
-                            btmap.BeginInit();
-                            btmap.UriSource = new Uri(jpg_path);
-                            btmap.CacheOption = BitmapCacheOption.OnLoad;
-                            btmap.EndInit();
-                        }
-
-
-
-                        // img.Source = btmap;
-
-
-
-                        modeli.Add(new Models3d
-                        {
-                            name = name,
-                            path = path,
-                            jpg_path = jpg_path,
-                            jpg_ugo = jpg_ugo,
-                            pathcategory = pathcategory,
-                            x = zyx.x,
-                            y = zyx.y,
-                            z = zyx.z,
-                            bitmap_prev = btmap
-
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        log.Add("фатал ошибка: " + ex.Message);
-                    }
-                }
-                log.Add("Закончили цикл");
-
-                //test
-                lb1.ItemsSource = modeli;
-                lb1.Items.Refresh();
-
-                try
-                {
-                    object selitem = lb1.Items[lb1_selitem];
-
-
-                    lb1.ScrollIntoView(selitem);
-                    lb1.SelectedItem = (selitem);
-                }
-                catch
-                {
-                    lb1.ScrollIntoView(null);
-                    lb1.SelectedItem = (null);
+                    return;
                 }
 
+                lb1.ItemsSource = models;
+                ApplyModelFilter(lb1, localSearchBox.Text);
+
+                if (lb1_selitem >= 0 && lb1_selitem < lb1.Items.Count)
+                {
+                    object selectedItem = lb1.Items[lb1_selitem];
+                    lb1.SelectedItem = selectedItem;
+                    lb1.ScrollIntoView(selectedItem);
+                }
+                else
+                {
+                    lb1.SelectedItem = null;
+                }
+
+                completionMessage = models.Count == 0
+                    ? "В категории нет 3DS-объектов"
+                    : "Загружено объектов: " + models.Count;
+            }
+            catch (OperationCanceledException)
+            {
+                return;
             }
             catch (Exception ex)
             {
-                log.Add("фатал ошибка: " + ex.Message);
+                log.Add("Ошибка загрузки пользовательских объектов: " + ex.Message);
+                completionMessage = "Не удалось загрузить пользовательские объекты";
+                MessageBox.Show(completionMessage + ".\n" + ex.Message,
+                    "3D объекты", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            finally
+            {
+                if (ReferenceEquals(localModelsLoadCancellation, cancellation))
+                {
+                    localModelsLoadCancellation = null;
+                    cancellation.Dispose();
+                    SetBusy(false, completionMessage);
+                }
+            }
+        }
+
+        private List<Models3d> LoadLocalModels(treespis category, CancellationToken cancellationToken)
+        {
+            List<Models3d> models = new List<Models3d>();
+            IEnumerable<string> categoryPaths = category.is_all
+                ? Directory.GetDirectories(dir3ds_user, "*", SearchOption.TopDirectoryOnly)
+                : new[] { Path.Combine(dir3ds_user, category.name) };
+
+            foreach (string categoryPath in categoryPaths)
+            {
+                foreach (string modelDirectory in Directory.GetDirectories(categoryPath, "*", SearchOption.TopDirectoryOnly))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    try
+                    {
+                        string name = Path.GetFileName(modelDirectory);
+                        string[] modelFiles = Directory.GetFiles(modelDirectory, "*.3ds", SearchOption.TopDirectoryOnly);
+                        if (modelFiles.Length == 0)
+                        {
+                            continue;
+                        }
+
+                        string modelPath = modelFiles[0];
+                        string technicalDirectory = Path.Combine(modelDirectory, "teh");
+                        string previewPath = Path.Combine(technicalDirectory, "prev.jpg");
+                        string anglePreviewPath = Path.Combine(technicalDirectory, "ugo.jpg");
+                        string configPath = Path.Combine(technicalDirectory, "conf.json");
+                        Models3dJSON dimensions = null;
+
+                        if (File.Exists(configPath))
+                        {
+                            dimensions = JsonConvert.DeserializeObject<Models3dJSON>(
+                                File.ReadAllText(configPath, Encoding.Default));
+                        }
+
+                        if (dimensions == null)
+                        {
+                            try
+                            {
+                                cancellationToken.ThrowIfCancellationRequested();
+                                Model3D model = (new HelixToolkit.Wpf.ModelImporter()).Load(modelPath);
+                                dimensions = new Models3dJSON
+                                {
+                                    x = model.Bounds.SizeX.ToString("0"),
+                                    z = model.Bounds.SizeY.ToString("0"),
+                                    y = model.Bounds.SizeZ.ToString("0")
+                                };
+                            }
+                            catch
+                            {
+                                dimensions = new Models3dJSON { x = "100", y = "100", z = "100" };
+                            }
+
+                            Directory.CreateDirectory(technicalDirectory);
+                            File.WriteAllText(configPath, JsonConvert.SerializeObject(dimensions), Encoding.Default);
+                        }
+
+                        models.Add(new Models3d
+                        {
+                            name = name,
+                            path = modelPath,
+                            jpg_path = previewPath,
+                            jpg_ugo = anglePreviewPath,
+                            pathcategory = modelDirectory,
+                            x = dimensions.x,
+                            y = dimensions.y,
+                            z = dimensions.z,
+                            bitmap_prev = LoadThumbnail(previewPath)
+                        });
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        throw;
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Add("Ошибка чтения объекта " + modelDirectory + ": " + ex.Message);
+                    }
+                }
+            }
+
+            return models;
+        }
+
+        private static BitmapImage LoadThumbnail(string filePath)
+        {
+            Uri source = File.Exists(filePath)
+                ? new Uri(filePath, UriKind.Absolute)
+                : new Uri("pack://application:,,,/TreeCadN;component/Foto/nofoto.jpg", UriKind.Absolute);
+
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.DecodePixelWidth = 150;
+            image.UriSource = source;
+            image.EndInit();
+            if (image.CanFreeze)
+            {
+                image.Freeze();
+            }
+
+            return image;
         }
 
         List<treespis> server;
 
-        async void lb3napolnene()
+        private async Task LoadServerCategoriesAsync()
         {
+            SetBusy(true, "Загрузка категорий с сервера…");
             try
             {
-                var json = await Task.Run(() => loadsinch("load_categor"));
-
+                string json = await Task.Run(delegate { return loadsinch("load_categor"); });
                 if (string.IsNullOrWhiteSpace(json))
                 {
-                    MessageBox.Show("Сервер не вернул список категорий");
-                    return;
+                    throw new InvalidOperationException("Сервер не вернул список категорий.");
                 }
 
-                server = JsonConvert.DeserializeObject<List<treespis>>(json);
-
-                if (server == null)
+                List<treespis> loadedCategories = JsonConvert.DeserializeObject<List<treespis>>(json);
+                if (loadedCategories == null)
                 {
-                    MessageBox.Show("Не удалось прочитать категории с сервера");
-                    return;
+                    throw new InvalidOperationException("Не удалось прочитать список категорий.");
                 }
 
-                lb3.Items.Clear();
+                server = loadedCategories.Where(delegate(treespis item) { return item != null; }).ToList();
                 peremestitb_serv.Items.Clear();
-
-                foreach (treespis drive in server)
+                List<treespis> displayedCategories = new List<treespis>
                 {
-                    if (drive == null) continue;
+                    new treespis { name = "Все", is_all = true }
+                };
+                displayedCategories.AddRange(server.OrderBy(
+                    delegate(treespis item) { return item.name ?? string.Empty; },
+                    StringComparer.CurrentCultureIgnoreCase));
+                lb3.ItemsSource = displayedCategories;
 
-                    string owner = drive.owner ?? "0";
-                    string id = drive.id ?? "";
-
-                    TreeViewItem item = new TreeViewItem();
-                    item.Tag = drive;
-                    item.Header = drive.name ?? "Без названия";
-
-                    if (server.Any(x => (x.owner ?? "").Equals(id)) && owner.Equals("0"))
-                    {
-                        item.Items.Add("*");
-                    }
-
-                    lb3.Items.Add(item);
-
+                foreach (treespis category in server)
+                {
                     System.Windows.Controls.MenuItem menuItem = new System.Windows.Controls.MenuItem
                     {
-                        Tag = drive,
-                        Header = drive.name ?? "Без названия"
+                        Tag = category,
+                        Header = category.name ?? "Без названия"
                     };
-
-                    menuItem.Click += (s, e) =>
-                    {
-                        peremestitb_serv_event(drive);
-                    };
-
+                    menuItem.Click += delegate { peremestitb_serv_event(category); };
                     peremestitb_serv.Items.Add(menuItem);
                 }
+
+                statusText.Text = server.Count == 0
+                    ? "Категории на сервере не найдены"
+                    : "Загружено категорий: " + server.Count;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Ошибка lb3napolnene");
+                log.Add("Ошибка загрузки категорий: " + ex.Message);
+                MessageBox.Show("Не удалось загрузить категории с сервера.\n" + ex.Message,
+                    "3D объекты", MessageBoxButton.OK, MessageBoxImage.Error);
+                statusText.Text = "Ошибка загрузки категорий";
+            }
+            finally
+            {
+                SetBusy(false, statusText.Text);
             }
         }
 
-        private void trw_Products_Expanded(object sender, RoutedEventArgs e)
+        private async void lb3napolnene()
         {
-            TreeViewItem item = (TreeViewItem)e.OriginalSource;
-            item.Items.Clear();
+            await LoadServerCategoriesAsync();
+        }
 
-            //MessageBox.Show((item.Tag as treespis).name.ToString());
+        private async void lb4_napolnenie()//наполнение листбокса
+        {
+            treespis category = lb3.SelectedItem as treespis;
+            if (category == null)
+            {
+                lb4.ItemsSource = null;
+                label1.Content = "Выберите категорию";
+                selectedModel = string.Empty;
+                UpdateActionStates();
+                return;
+            }
 
+            if (serverModelsLoadCancellation != null)
+            {
+                serverModelsLoadCancellation.Cancel();
+            }
 
-            var tag = item.Tag as treespis;
-            if (tag == null || server == null) return;
-
-            List<treespis> asdjasdaa = server
-                .FindAll(x => (x.owner ?? "").Equals(tag.id ?? ""));
-
-
+            CancellationTokenSource cancellation = new CancellationTokenSource();
+            serverModelsLoadCancellation = cancellation;
+            string completionMessage = "Готово";
+            SetBusy(true, "Загрузка объектов с сервера…");
 
             try
             {
-                foreach (treespis subDir in asdjasdaa)
+                List<Models3d> models = await Task.Run(
+                    delegate { return LoadServerModels(category, cancellation.Token); },
+                    cancellation.Token);
+
+                cancellation.Token.ThrowIfCancellationRequested();
+                foreach (Models3d model in models)
                 {
-                    TreeViewItem newItem = new TreeViewItem();
-                    newItem.Tag = subDir;
-                    newItem.Header = subDir.name;
-                    if (server.FindAll(x => x.owner.Equals(subDir.id)).Count > 0)
+                    cancellation.Token.ThrowIfCancellationRequested();
+                    if (model != null && Uri.IsWellFormedUriString(model.jpg_path, UriKind.Absolute))
                     {
-                        newItem.Items.Add("*");
+                        BitmapImage preview = new BitmapImage();
+                        preview.BeginInit();
+                        preview.DecodePixelWidth = 150;
+                        preview.UriSource = new Uri(model.jpg_path, UriKind.Absolute);
+                        preview.EndInit();
+                        model.jpgsource = preview;
                     }
-                    item.Items.Add(newItem);
+                    else if (model != null)
+                    {
+                        model.jpgsource = LoadThumbnail(null);
+                    }
                 }
+
+                treespis currentCategory = lb3.SelectedItem as treespis;
+                if (currentCategory == null || currentCategory.is_all != category.is_all
+                    || (!category.is_all && !string.Equals(currentCategory.id_server,
+                        category.id_server, StringComparison.Ordinal)))
+                {
+                    return;
+                }
+
+                lb4.ItemsSource = models;
+                ApplyModelFilter(lb4, serverSearchBox.Text);
+                if (lb4_selitem >= 0 && lb4_selitem < lb4.Items.Count)
+                {
+                    object selectedItem = lb4.Items[lb4_selitem];
+                    lb4.SelectedItem = selectedItem;
+                    lb4.ScrollIntoView(selectedItem);
+                }
+
+                completionMessage = models.Count == 0
+                    ? "В категории нет объектов"
+                    : "Загружено объектов: " + models.Count;
             }
-            catch
-            { }
-        }
-
-
-
-        async void lb4_napolnenie()//наполнение листбокса
-        {
-            log.Add("наполнение старт");
-            treespis Treespis = (lb3.SelectedItem as TreeViewItem).Tag as treespis;
-            var json = await Task.Run(() => loadsinch("load_object", "category=" + Treespis.id_server));                            // выполняется асинхронно
-            log.Add("получили джсон ");
-            List<Models3d> server = JsonConvert.DeserializeObject<List<Models3d>>(json);
-
-
-            log.Add("преобразовани жсон в класс ");
-            foreach (var elam in server)
+            catch (OperationCanceledException)
             {
-
-                if (Uri.IsWellFormedUriString(elam.jpg_path, UriKind.Absolute))
-                {
-
-                    BitmapImage bi3 = new BitmapImage();
-                    bi3.BeginInit();
-                    bi3.UriSource = new Uri(elam.jpg_path);
-                    bi3.EndInit();
-
-                    elam.jpgsource = bi3;
-                    //   img_inp.Source =
-                }
-                else
-                {
-                    elam.jpgsource = null;
-                }
-
+                return;
             }
-
-            log.Add("закончили цикл");
-
-
-            lb4.ItemsSource = null;
-            lb4.ItemsSource = (server);
-
+            catch (Exception ex)
+            {
+                log.Add("Ошибка загрузки серверных объектов: " + ex.Message);
+                completionMessage = "Не удалось загрузить объекты с сервера";
+                MessageBox.Show(completionMessage + ".\n" + ex.Message,
+                    "3D объекты", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                if (ReferenceEquals(serverModelsLoadCancellation, cancellation))
+                {
+                    serverModelsLoadCancellation = null;
+                    cancellation.Dispose();
+                    SetBusy(false, completionMessage);
+                }
+            }
         }
 
+        private List<Models3d> LoadServerModels(treespis category, CancellationToken cancellationToken)
+        {
+            if (!category.is_all)
+            {
+                string categoryId = Uri.EscapeDataString(category.id_server ?? string.Empty);
+                string json = loadsinch("load_object", "category=" + categoryId);
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    throw new InvalidOperationException("Сервер не вернул список объектов.");
+                }
+
+                return JsonConvert.DeserializeObject<List<Models3d>>(json) ?? new List<Models3d>();
+            }
+
+            List<Models3d> result = new List<Models3d>();
+            HashSet<string> addedModels = new HashSet<string>(StringComparer.Ordinal);
+            IEnumerable<string> categoryIds = server
+                .Where(delegate(treespis item) { return item != null && !string.IsNullOrWhiteSpace(item.id_server); })
+                .Select(delegate(treespis item) { return item.id_server; })
+                .Distinct(StringComparer.Ordinal);
+
+            foreach (string id in categoryIds)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                string json = loadsinch("load_object", "category=" + Uri.EscapeDataString(id));
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    continue;
+                }
+
+                List<Models3d> categoryModels;
+                try
+                {
+                    categoryModels = JsonConvert.DeserializeObject<List<Models3d>>(json) ?? new List<Models3d>();
+                }
+                catch (JsonException ex)
+                {
+                    log.Add("Не удалось прочитать объекты категории " + id + ": " + ex.Message);
+                    continue;
+                }
+
+                foreach (Models3d model in categoryModels)
+                {
+                    if (model == null)
+                    {
+                        continue;
+                    }
+
+                    string key = !string.IsNullOrWhiteSpace(model.id_server)
+                        ? "server:" + model.id_server
+                        : !string.IsNullOrWhiteSpace(model.id)
+                            ? "id:" + model.id
+                            : "path:" + (model.path ?? string.Empty) + "|" + (model.name ?? string.Empty);
+                    if (addedModels.Add(key))
+                    {
+                        result.Add(model);
+                    }
+                }
+            }
+
+            return result;
+        }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
@@ -411,6 +633,13 @@ namespace TreeCadN.kommunikacii
 
         void lb1_redak()
         {
+            treespis selectedCategory = lb2.SelectedItem as treespis;
+            if (selectedCategory != null && selectedCategory.is_all)
+            {
+                MessageBox.Show("Для редактирования выберите конкретную категорию.");
+                return;
+            }
+
             if (lb2.SelectedIndex > -1)
             {
                 if (lb1.SelectedIndex > -1)
@@ -446,6 +675,13 @@ namespace TreeCadN.kommunikacii
         }
         void dob_new3ds()
         {
+            treespis selectedCategory = lb2.SelectedItem as treespis;
+            if (selectedCategory != null && selectedCategory.is_all)
+            {
+                MessageBox.Show("Для добавления объекта выберите конкретную категорию.");
+                return;
+            }
+
             if (lb2.SelectedIndex > -1)
             {
                 //  var model = (lb2.SelectedItem as treespis).id;
@@ -468,64 +704,160 @@ namespace TreeCadN.kommunikacii
         {
             if (lb1.SelectedItem != null)
             {
-                //  selectedModel = (lb1.SelectedValue as Models3d).path;
                 var file = lb1.SelectedValue as Models3d;
-                selectedModel = (file.path + @"^" + file.name + "^" + file.jpg_ugo + "^" + file.x + "^" + file.y + "^" + file.z);
-                // MessageBox.Show(file.path);
+                SetSelectedLocalModel(file);
                 lb1_selitem = lb1.SelectedIndex;
             }
+            else if (item2.IsSelected)
+            {
+                selectedModel = string.Empty;
+            }
+
+            UpdateActionStates();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            close_server();
-            Close();
+            if (isBusy)
+            {
+                return;
+            }
+
+            Models3d selected = item1.IsSelected
+                ? lb4.SelectedItem as Models3d
+                : lb1.SelectedItem as Models3d;
+            if (selected == null)
+            {
+                MessageBox.Show("Сначала выберите 3D-объект.", "3D объекты");
+                return;
+            }
+
+            actionCancellation = new CancellationTokenSource();
+            try
+            {
+                SetBusy(true, item1.IsSelected ? "Скачивание выбранного объекта…" : "Подготовка объекта…");
+                if (item1.IsSelected)
+                {
+                    await PrepareServerModelAsync(selected, actionCancellation.Token);
+                }
+                else
+                {
+                    SetSelectedLocalModel(selected);
+                }
+
+                Close();
+            }
+            catch (OperationCanceledException)
+            {
+                SetBusy(false, "Операция отменена");
+            }
+            catch (Exception ex)
+            {
+                log.Add("Ошибка подготовки выбранного объекта: " + ex.Message);
+                SetBusy(false, "Не удалось подготовить объект");
+                MessageBox.Show("Не удалось подготовить выбранный объект.\n" + ex.Message,
+                    "3D объекты", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                if (actionCancellation != null)
+                {
+                    actionCancellation.Dispose();
+                    actionCancellation = null;
+                }
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-
+            if (actionCancellation != null)
+            {
+                actionCancellation.Cancel();
+            }
             Close();
         }
 
 
 
 
-        void close_server()
+        private void SetSelectedLocalModel(Models3d model)
         {
-
-
-
-
-            if (item1.IsSelected)
-            {
-
-                var model = (lb4.SelectedItem as Models3d);
-
-
-                //    var json = await Task.Run(() => loadsinch("load_categor"));                            // выполняется асинхронно
-
-                string remoteUri = "https://ecad.giulianovars.ru/php/3dsobject/3ds.php?command=getZip&id=" + model.id;
-                WebClient myWebClient = new WebClient();
-                string url_zip = myWebClient.DownloadString(remoteUri);
-                File.Delete(Path.GetTempPath() + "3ds_load_TreeCadN.zip");
-                myWebClient.DownloadFile(url_zip, Path.GetTempPath() + "3ds_load_TreeCadN.zip");
-                string zelev_path = dir3ds + "\\" + model.category + "\\" + model.name;
-                Directory.CreateDirectory(zelev_path);
-                string[] file3dssservera_arr = Directory.GetFiles(zelev_path, "*.3ds", SearchOption.TopDirectoryOnly);
-                if (file3dssservera_arr.Length == 0)
-                {
-                    ZipFile.ExtractToDirectory(Path.GetTempPath() + "3ds_load_TreeCadN.zip", zelev_path);
-                    file3dssservera_arr = Directory.GetFiles(zelev_path, "*.3ds", SearchOption.TopDirectoryOnly);
-                }
-                string file3dssservera = file3dssservera_arr.First();
-                selectedModel = (file3dssservera + @"^" + model.name + "^" + model.loc_ugojpg + "^" + model.x + "^" + model.y + "^" + model.z);
-            }
+            selectedModel = model.path + "^" + model.name + "^" + model.jpg_ugo + "^"
+                + model.x + "^" + model.y + "^" + model.z;
         }
 
+        private async Task PrepareServerModelAsync(Models3d model, CancellationToken cancellationToken)
+        {
+            if (model == null)
+            {
+                throw new InvalidOperationException("Объект не выбран.");
+            }
 
+            string targetDirectory = Path.Combine(dir3ds, model.category ?? string.Empty, model.name ?? string.Empty);
+            Directory.CreateDirectory(targetDirectory);
+            string[] modelFiles = Directory.GetFiles(targetDirectory, "*.3ds", SearchOption.TopDirectoryOnly);
+            string temporaryArchive = null;
 
+            try
+            {
+                if (modelFiles.Length == 0)
+                {
+                    string metadataUrl = "https://ecad.giulianovars.ru/php/3dsobject/3ds.php?command=getZip&id="
+                        + Uri.EscapeDataString(model.id ?? string.Empty);
+                    using (HttpResponseMessage metadataResponse = await httpClient.GetAsync(metadataUrl, cancellationToken))
+                    {
+                        metadataResponse.EnsureSuccessStatusCode();
+                        string archiveUrl = (await metadataResponse.Content.ReadAsStringAsync()).Trim();
+                        Uri parsedArchiveUrl;
+                        if (!Uri.TryCreate(archiveUrl, UriKind.Absolute, out parsedArchiveUrl))
+                        {
+                            throw new InvalidDataException("Сервер вернул некорректный адрес архива.");
+                        }
 
+                        using (HttpResponseMessage archiveResponse = await httpClient.GetAsync(parsedArchiveUrl, cancellationToken))
+                        {
+                            archiveResponse.EnsureSuccessStatusCode();
+                            byte[] archiveBytes = await archiveResponse.Content.ReadAsByteArrayAsync();
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            temporaryArchive = Path.Combine(Path.GetTempPath(),
+                                "3ds_load_TreeCadN_" + Guid.NewGuid().ToString("N") + ".zip");
+                            await Task.Run(delegate
+                            {
+                                cancellationToken.ThrowIfCancellationRequested();
+                                File.WriteAllBytes(temporaryArchive, archiveBytes);
+                                ZipFile.ExtractToDirectory(temporaryArchive, targetDirectory);
+                            }, cancellationToken);
+                        }
+                    }
+
+                    modelFiles = Directory.GetFiles(targetDirectory, "*.3ds", SearchOption.TopDirectoryOnly);
+                }
+
+                if (modelFiles.Length == 0)
+                {
+                    throw new FileNotFoundException("В архиве не найден 3DS-файл.");
+                }
+
+                string anglePreview = model.loc_ugojpg;
+                string localAnglePreview = Directory.GetFiles(targetDirectory, "ugo.jpg", SearchOption.AllDirectories)
+                    .FirstOrDefault();
+                if (!string.IsNullOrEmpty(localAnglePreview))
+                {
+                    anglePreview = localAnglePreview;
+                }
+
+                selectedModel = modelFiles[0] + "^" + model.name + "^" + anglePreview + "^"
+                    + model.x + "^" + model.y + "^" + model.z;
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(temporaryArchive) && File.Exists(temporaryArchive))
+                {
+                    File.Delete(temporaryArchive);
+                }
+            }
+        }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
@@ -555,18 +887,11 @@ namespace TreeCadN.kommunikacii
 
         }
 
-        private void Lb3_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void Lb3_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
-
-
             log.Add("чандж");
-
             UpdateServerDeleteMenuVisibility();
-
             lb4_napolnenie();
-
-
         }
 
         private void lb2_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -575,6 +900,16 @@ namespace TreeCadN.kommunikacii
             {
                 lb1_napolnenie();
             }
+            else
+            {
+                if (localModelsLoadCancellation != null)
+                {
+                    localModelsLoadCancellation.Cancel();
+                }
+                lb1.ItemsSource = null;
+            }
+
+            UpdateActionStates();
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -582,11 +917,20 @@ namespace TreeCadN.kommunikacii
             string otv = new dialuni().Show("Отмена", null, "Создать", "Добавление новой категории", "Укажите название новой категории", 3, 170);
             if (otv != "CANCEL")
             {
-                //    BD.conn("INSERT INTO  `import3ds_category` (nazv)  VALUES ('" + otv + "')");
-                //   MessageBox.Show("Категория успешно создана");
-                Directory.CreateDirectory(dir3ds_user + "\\" + otv);
+                string categoryName = (otv ?? string.Empty).Trim();
+                if (categoryName.Length == 0 || categoryName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
+                    || categoryName == "." || categoryName == "..")
+                {
+                    MessageBox.Show("Название категории содержит недопустимые символы.",
+                        "Новая категория", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
+                Directory.CreateDirectory(Path.Combine(dir3ds_user, categoryName));
                 lb2napolnene();
+                treespis createdCategory = lb2.Items.Cast<treespis>()
+                    .FirstOrDefault(delegate(treespis item) { return item.name == categoryName; });
+                lb2.SelectedItem = createdCategory;
             }
 
         }
@@ -596,6 +940,11 @@ namespace TreeCadN.kommunikacii
             if (!(lb2.SelectedIndex > -1)) { MessageBox.Show("Выберите категорию для удаления"); return; }
 
             var Treespis = (lb2.SelectedItem as treespis);
+            if (Treespis != null && Treespis.is_all)
+            {
+                MessageBox.Show("Системную категорию «Все» удалить нельзя.");
+                return;
+            }
             if (Directory.GetDirectories(dir3ds_user + "\\" + Treespis.name, "*", SearchOption.TopDirectoryOnly).Length > 0)
             { MessageBox.Show("Сначала удалите все модели, удалить категорию нельзя, пока в ней существуют модели"); return; }
             if (MessageBox.Show(
@@ -610,6 +959,18 @@ namespace TreeCadN.kommunikacii
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (serverModelsLoadCancellation != null)
+            {
+                serverModelsLoadCancellation.Cancel();
+            }
+            if (localModelsLoadCancellation != null)
+            {
+                localModelsLoadCancellation.Cancel();
+            }
+            if (actionCancellation != null)
+            {
+                actionCancellation.Cancel();
+            }
 
             kommunikacii_Set ps = kommunikacii_Set.Default;
             ps.Top = this.Top;
@@ -640,7 +1001,7 @@ namespace TreeCadN.kommunikacii
             {
                 kommunikacii_Set ps = kommunikacii_Set.Default;
 
-                if (ps.Top == -100)
+                if (ps.Top == -100 || !IsSavedWindowPositionVisible(ps.Left, ps.Top, ps.Width, ps.Height))
                 {
                     this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
 
@@ -686,6 +1047,22 @@ namespace TreeCadN.kommunikacii
 
         }
 
+        private static bool IsSavedWindowPositionVisible(double left, double top, double width, double height)
+        {
+            if (double.IsNaN(left) || double.IsNaN(top) || double.IsInfinity(left) || double.IsInfinity(top))
+            {
+                return false;
+            }
+
+            double effectiveWidth = width > 0 ? width : 760;
+            double effectiveHeight = height > 0 ? height : 500;
+            Rect savedBounds = new Rect(left, top, effectiveWidth, effectiveHeight);
+            Rect virtualScreen = new Rect(SystemParameters.VirtualScreenLeft, SystemParameters.VirtualScreenTop,
+                SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight);
+            Rect intersection = Rect.Intersect(savedBounds, virtualScreen);
+            return !intersection.IsEmpty && intersection.Width >= 100 && intersection.Height >= 60;
+        }
+
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)
         {
             lb1_redak();
@@ -698,12 +1075,17 @@ namespace TreeCadN.kommunikacii
 
         private void lb1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                close_server();
-                Close();
-            }
+            ListBox listBox = sender as ListBox;
+            DependencyObject source = e.OriginalSource as DependencyObject;
+            ListBoxItem item = listBox == null || source == null
+                ? null
+                : ItemsControl.ContainerFromElement(listBox, source) as ListBoxItem;
 
+            if (e.ChangedButton == MouseButton.Left && item != null)
+            {
+                item.IsSelected = true;
+                Button_Click_1(sender, e);
+            }
         }
 
 
@@ -724,29 +1106,38 @@ namespace TreeCadN.kommunikacii
 
         }
 
-        private void peremestitb_serv_event(treespis selcat)
+        private async void peremestitb_serv_event(treespis selcat)
         {
+            Models3d file = lb4.SelectedValue as Models3d;
+            if (selcat == null || file == null)
+            {
+                MessageBox.Show("Сначала выберите объект для перемещения.");
+                return;
+            }
 
             try
             {
-                string idcategor = selcat.id_server;
-                var file = lb4.SelectedValue as Models3d;
-                string idmodel_peremech = file.id_server;
-
-                (new web_zapros()).load("peremesh", "id=" + idmodel_peremech + "&category=" + idcategor);
+                SetBusy(true, "Перемещение объекта…");
+                string idcategor = selcat.id_server ?? string.Empty;
+                string idmodel_peremech = file.id_server ?? string.Empty;
+                string parameters = "id=" + Uri.EscapeDataString(idmodel_peremech)
+                    + "&category=" + Uri.EscapeDataString(idcategor);
+                await Task.Run(delegate { return (new web_zapros()).load("peremesh", parameters); });
                 BD.execute("UPDATE `import3ds_server` SET  `category`='" + idcategor + "' WHERE id_server='" + file.id_server + "'");
-
-
+                SetBusy(false, "Объект перемещён");
                 MessageBox.Show("Объект успешно перемещён");
                 lb4_napolnenie();
             }
             catch (Exception err)
             {
-                //   MessageBox.Show(err.Message.ToString());
+                log.Add("Ошибка перемещения объекта: " + err.Message);
+                SetBusy(false, "Ошибка перемещения объекта");
+                MessageBox.Show("Не удалось переместить объект.\n" + err.Message,
+                    "3D объекты", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         //добавление новой категории на сервер
-        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
+        private async void MenuItem_Click_3(object sender, RoutedEventArgs e)
         {
 
 
@@ -754,10 +1145,24 @@ namespace TreeCadN.kommunikacii
             string otv = new dialuni().Show("Отмена", null, "Создать", "Добавление новой категории НА СЕРВЕР", "Укажите название новой категории", 3, 170);
             if (otv != "CANCEL")
             {
-
-                (new web_zapros()).load("create_categ", "nazv=" + otv);
-                MessageBox.Show("Категория успешно создана");
-                lb3napolnene();
+                try
+                {
+                    SetBusy(true, "Создание категории…");
+                    string parameters = "nazv=" + Uri.EscapeDataString(otv ?? string.Empty);
+                    await Task.Run(delegate { return (new web_zapros()).load("create_categ", parameters); });
+                    MessageBox.Show("Категория успешно создана");
+                    await LoadServerCategoriesAsync();
+                }
+                catch (Exception ex)
+                {
+                    log.Add("Ошибка создания категории: " + ex.Message);
+                    MessageBox.Show("Не удалось создать категорию.\n" + ex.Message,
+                        "3D объекты", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    SetBusy(false, "Готово");
+                }
             }
         }
 
@@ -922,8 +1327,7 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 
         private treespis GetSelectedServerCategory()
         {
-            TreeViewItem selectedItem = lb3.SelectedItem as TreeViewItem;
-            return selectedItem == null ? null : selectedItem.Tag as treespis;
+            return lb3.SelectedItem as treespis;
         }
 
         private bool CanDeleteSelectedServerObject()
@@ -1015,118 +1419,148 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             if (lb4.SelectedItem != null)
             {
-
-                //  selectedModel = (lb1.SelectedValue as Models3d).path;
                 var file = lb4.SelectedValue as Models3d;
-                //    MessageBox.Show(file.loc_3ds);
                 label1.Content = "Группа у пользователя - " + file.polzgroup;
-
-                // MessageBox.Show(file.path);
                 lb4_selitem = lb4.SelectedIndex;
             }
+            else
+            {
+                label1.Content = lb3.SelectedItem == null ? "Выберите категорию" : "Выберите объект";
+            }
+
+            UpdateActionStates();
         }
 
         async Task UploadFileAsync(string url, string filePath)
         {
-            using (var httpClient = new HttpClient())
+            using (FileStream fileStream = File.OpenRead(filePath))
+            using (var content = new MultipartFormDataContent())
+            using (var fileContent = new StreamContent(fileStream))
             {
-                using (var content = new MultipartFormDataContent())
-                {
-                    var fileContent = new ByteArrayContent(File.ReadAllBytes(filePath));
-                    fileContent.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/octet-stream");
-                    content.Add(fileContent, "file", Path.GetFileName(filePath));
+                fileContent.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/octet-stream");
+                content.Add(fileContent, "file", Path.GetFileName(filePath));
 
-                    var response = await httpClient.PostAsync(url, content);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseString = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("Upload successful: " + responseString);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Error: " + response.StatusCode);
-                    }
+                using (HttpResponseMessage response = await httpClient.PostAsync(url, content))
+                {
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    log.Add("Upload successful: " + responseString);
                 }
             }
         }
         private async void MenuItem_Click_7(object sender, RoutedEventArgs e)
         {
-            if (this.lb2.SelectedIndex <= -1)
+            treespis category = lb2.SelectedItem as treespis;
+            Models3d model = lb1.SelectedItem as Models3d;
+            if (category == null)
             {
-                MessageBox.Show("Сначала выберите категорию");
+                MessageBox.Show("Сначала выберите категорию.");
                 return;
             }
-            if (this.lb1.SelectedIndex <= -1)
+            if (category.is_all)
             {
-                MessageBox.Show("Сначала выберите объект");
+                MessageBox.Show("Для отправки выберите конкретную категорию.");
                 return;
             }
-            Models3d models3d = this.lb1.SelectedValue as Models3d;
-            if (MessageBox.Show("Вы действительно хотите отправить \"" + models3d.name + "\" на сервер?", "", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (model == null)
+            {
+                MessageBox.Show("Сначала выберите объект.");
+                return;
+            }
+            if (!File.Exists(model.path))
+            {
+                MessageBox.Show("3DS-файл на компьютере не обнаружен.");
+                return;
+            }
+            if (MessageBox.Show("Отправить \"" + model.name + "\" на сервер?", "Отправка объекта",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
                 return;
             }
-            if (!File.Exists(models3d.path))
+
+            actionCancellation = new CancellationTokenSource();
+            try
             {
-                MessageBox.Show("3ds файл на Вашем компьютере не обнаружен");
-                return;
+                SetBusy(true, "Отправка объекта " + model.name + "…");
+                await UploadSingleUserModelAsync(model, category, actionCancellation.Token);
+                SetBusy(false, "Объект успешно отправлен");
+                MessageBox.Show("Объект успешно отправлен.", "Отправка объекта");
             }
-            string text = DateTime.Now.ToFileTimeUtc().ToString();
-            string text2 = kommunikacii_main.Tr2(models3d.name).Replace(' ', '_') + "_" + text + ".zip";
-            string text3 = kommunikacii_main.Tr2(models3d.name).Replace(' ', '_') + "_" + text + ".jpg";
-            string pathcategory = models3d.pathcategory;
-            string text4 = string.Concat(new string[]
+            catch (OperationCanceledException)
             {
-                Path.GetTempPath(),
-                kommunikacii_main.Tr2(models3d.name).Replace(' ', '_'),
-                "_",
-                text,
-                ".zip"
-            });
-            if (File.Exists(text4))
-            {
-                File.Delete(text4);
+                SetBusy(false, "Отправка отменена");
             }
-            log.Add("zipPath - " + text4);
-            ZipFile.CreateFromDirectory(pathcategory, text4);
-            log.Add("Отправляем заказ на фабрику: " + text2 + "  " + text3);
-          await  UploadFileAsync("https://ecad.giulianovars.ru/3dmodels/upload3d.php", text4);
-            if (File.Exists(models3d.jpg_path))
+            catch (Exception ex)
             {
-                string text5 = string.Concat(new string[]
+                log.Add("Ошибка отправки объекта: " + ex.Message);
+                SetBusy(false, "Ошибка отправки объекта");
+                MessageBox.Show("Не удалось отправить объект.\n" + ex.Message,
+                    "Отправка объекта", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                if (actionCancellation != null)
                 {
-                    Path.GetTempPath(),
-                    kommunikacii_main.Tr2(models3d.name).Replace(' ', '_'),
-                    "_",
-                    text,
-                    ".jpg"
-                });
-                File.Copy(models3d.jpg_path, text5);
-                await UploadFileAsync("https://ecad.giulianovars.ru/3dmodels/upload3d.php", text5);
+                    actionCancellation.Dispose();
+                    actionCancellation = null;
+                }
             }
-            string name = (this.lb2.SelectedItem as treespis).name;
-            INIManager inimanager = new INIManager(this.GetEcadProIni());
-            string privateString = inimanager.GetPrivateString("giulianovars", "attivazione");
-            new web_zapros().load("new3ds", string.Concat(new string[]
+        }
+
+        private async Task UploadSingleUserModelAsync(Models3d model, treespis category,
+            CancellationToken cancellationToken)
+        {
+            string time = DateTime.Now.ToFileTimeUtc().ToString();
+            string safeName = Tr2(model.name).Replace(' ', '_');
+            if (string.IsNullOrWhiteSpace(safeName))
             {
-                "filename=",
-                models3d.name,
-                "&filename3ds=",
-                text2,
-                "&filenamejpg=",
-                text3,
-                "&idclienta=",
-                privateString,
-                "&x=",
-                models3d.x,
-                "&y=",
-                models3d.y,
-                "&z=",
-                models3d.z,
-                "&categoryuser=",
-                name
-            }));
-            MessageBox.Show("Объект успешно отправлен");
+                safeName = "model";
+            }
+
+            string archiveName = safeName + "_" + time + ".zip";
+            string previewName = safeName + "_" + time + ".jpg";
+            string archivePath = Path.Combine(Path.GetTempPath(), archiveName);
+            string previewPath = Path.Combine(Path.GetTempPath(), previewName);
+
+            try
+            {
+                await Task.Run(delegate
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (File.Exists(archivePath)) File.Delete(archivePath);
+                    ZipFile.CreateFromDirectory(model.pathcategory, archivePath);
+                    if (File.Exists(model.jpg_path))
+                    {
+                        if (File.Exists(previewPath)) File.Delete(previewPath);
+                        File.Copy(model.jpg_path, previewPath);
+                    }
+                }, cancellationToken);
+
+                await UploadFileAsync("https://ecad.giulianovars.ru/3dmodels/upload3d.php", archivePath);
+                cancellationToken.ThrowIfCancellationRequested();
+                if (File.Exists(previewPath))
+                {
+                    await UploadFileAsync("https://ecad.giulianovars.ru/3dmodels/upload3d.php", previewPath);
+                }
+
+                INIManager manager = new INIManager(GetEcadProIni());
+                string activationKey = manager.GetPrivateString("giulianovars", "attivazione");
+                string parameters = "filename=" + Uri.EscapeDataString(model.name ?? string.Empty)
+                    + "&filename3ds=" + Uri.EscapeDataString(archiveName)
+                    + "&filenamejpg=" + Uri.EscapeDataString(previewName)
+                    + "&idclienta=" + Uri.EscapeDataString(activationKey ?? string.Empty)
+                    + "&x=" + Uri.EscapeDataString(model.x ?? string.Empty)
+                    + "&y=" + Uri.EscapeDataString(model.y ?? string.Empty)
+                    + "&z=" + Uri.EscapeDataString(model.z ?? string.Empty)
+                    + "&categoryuser=" + Uri.EscapeDataString(category.name ?? string.Empty);
+                await Task.Run(delegate { return (new web_zapros()).load("new3ds", parameters); },
+                    cancellationToken);
+            }
+            finally
+            {
+                if (File.Exists(archivePath)) File.Delete(archivePath);
+                if (File.Exists(previewPath)) File.Delete(previewPath);
+            }
         }
 
         string GetEcadProIni()
@@ -1167,7 +1601,7 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             }
             catch (Exception err)
             {
-                //  MessageBox.Show(err.Message); 
+                log.Add("Ошибка запроса к серверу: " + err.Message);
             }
             return otvet;
         }
@@ -1234,7 +1668,123 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             //   lb2napolnene();
         }
 
-        private void Button_Click_7(object sender, RoutedEventArgs e)
+        private async void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            treespis selectedCategory = lb2.SelectedItem as treespis;
+            IEnumerable<Models3d> source = lb1.ItemsSource as IEnumerable<Models3d>;
+            List<Models3d> models = source == null ? new List<Models3d>() : source.ToList();
+
+            if (selectedCategory == null)
+            {
+                MessageBox.Show("Сначала выберите категорию.");
+                return;
+            }
+            if (selectedCategory.is_all)
+            {
+                MessageBox.Show("Для массовой отправки выберите конкретную категорию.");
+                return;
+            }
+            if (models.Count == 0)
+            {
+                MessageBox.Show("В выбранной категории нет объектов.");
+                return;
+            }
+            if (MessageBox.Show("Отправить всю категорию на сервер?", "Отправка объектов",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            actionCancellation = new CancellationTokenSource();
+            try
+            {
+                SetBusy(true, "Подготовка отправки…");
+                INIManager manager = new INIManager(GetEcadProIni());
+                string activationKey = manager.GetPrivateString("giulianovars", "attivazione");
+
+                for (int index = 0; index < models.Count; index++)
+                {
+                    Models3d model = models[index];
+                    actionCancellation.Token.ThrowIfCancellationRequested();
+                    if (!File.Exists(model.path))
+                    {
+                        throw new FileNotFoundException("3DS-файл не найден: " + model.name, model.path);
+                    }
+
+                    statusText.Text = "Отправка " + (index + 1) + " из " + models.Count + ": " + model.name;
+                    string temporaryZip = Path.Combine(Path.GetTempPath(),
+                        "3ds_to_server_TreeCadN_" + Guid.NewGuid().ToString("N") + ".zip");
+
+                    try
+                    {
+                        string time = DateTime.Now.ToFileTimeUtc().ToString();
+                        string safeName = Tr2(model.name).Replace(' ', '_');
+                        if (string.IsNullOrWhiteSpace(safeName))
+                        {
+                            safeName = "model";
+                        }
+                        string archiveName = safeName + "_" + time + ".zip";
+                        string previewName = safeName + "_" + time + ".jpg";
+
+                        await Task.Run(delegate
+                        {
+                            actionCancellation.Token.ThrowIfCancellationRequested();
+                            ZipFile.CreateFromDirectory(model.pathcategory, temporaryZip);
+                            (new FTP()).otprav(temporaryZip,
+                                "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + archiveName);
+                            if (File.Exists(model.jpg_path))
+                            {
+                                (new FTP()).otprav(model.jpg_path,
+                                    "ftp://ecad.giulianovars.ru/public/3dmodels/NEW/" + previewName);
+                            }
+                        }, actionCancellation.Token);
+
+                        string parameters = "filename=" + Uri.EscapeDataString(model.name ?? string.Empty)
+                            + "&filename3ds=" + Uri.EscapeDataString(archiveName)
+                            + "&filenamejpg=" + Uri.EscapeDataString(previewName)
+                            + "&idclienta=" + Uri.EscapeDataString(activationKey ?? string.Empty)
+                            + "&x=" + Uri.EscapeDataString(model.x ?? string.Empty)
+                            + "&y=" + Uri.EscapeDataString(model.y ?? string.Empty)
+                            + "&z=" + Uri.EscapeDataString(model.z ?? string.Empty)
+                            + "&categoryuser=" + Uri.EscapeDataString(selectedCategory.name ?? string.Empty);
+                        await Task.Run(delegate { return (new web_zapros()).load("new3ds", parameters); },
+                            actionCancellation.Token);
+                    }
+                    finally
+                    {
+                        if (File.Exists(temporaryZip))
+                        {
+                            File.Delete(temporaryZip);
+                        }
+                    }
+                }
+
+                MessageBox.Show("Отправлено объектов: " + models.Count, "Отправка объектов");
+                SetBusy(false, "Отправлено объектов: " + models.Count);
+            }
+            catch (OperationCanceledException)
+            {
+                SetBusy(false, "Отправка отменена");
+            }
+            catch (Exception ex)
+            {
+                log.Add("Ошибка отправки категории: " + ex.Message);
+                SetBusy(false, "Ошибка отправки категории");
+                MessageBox.Show("Не удалось отправить категорию.\n" + ex.Message,
+                    "Отправка объектов", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                if (actionCancellation != null)
+                {
+                    actionCancellation.Dispose();
+                    actionCancellation = null;
+                }
+            }
+        }
+
+#if false
+        private void Button_Click_7_legacy(object sender, RoutedEventArgs e)
         {
             //отправить все на фабрику
 
@@ -1320,6 +1870,7 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)) return;
 
         }
 
+#endif
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
             lb1_redak();
@@ -1329,37 +1880,55 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)) return;
 
         private void tab1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (tab1.SelectedIndex == 0)
+            if (!ReferenceEquals(e.Source, tab1))
             {
-                lb4.Visibility = Visibility.Visible;
-                lb1.Visibility = Visibility.Collapsed;
-                //    stpan.Visibility = Visibility.Collapsed;
+                return;
+            }
 
-                //   label1.Visibility = Visibility.Visible;
+            if (item2 != null && item2.IsSelected && lb1 != null && lb1.SelectedItem is Models3d)
+            {
+                SetSelectedLocalModel(lb1.SelectedItem as Models3d);
             }
             else
             {
-                lb4.Visibility = Visibility.Collapsed;
-                lb1.Visibility = Visibility.Visible;
-                //  stpan.Visibility = Visibility.Visible;
-
-                //  label1.Visibility = Visibility.Collapsed;
+                selectedModel = string.Empty;
             }
 
+            UpdateActionStates();
         }
         private static string Tr2(string s)
         {
-            StringBuilder ret = new StringBuilder();
-            string[] rus = { "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й",
-          "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц",
-          "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я" };
-            string[] eng = { "A", "B", "V", "G", "D", "E", "E", "ZH", "Z", "I", "Y",
-          "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "KH", "TS",
-          "CH", "SH", "SHCH", null, "Y", null, "E", "YU", "YA" };
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                return string.Empty;
+            }
 
-            for (int j = 0; j < s.Length; j++)
-                for (int i = 0; i < rus.Length; i++)
-                    if (s.Substring(j, 1) == rus[i]) ret.Append(eng[i]);
+            StringBuilder ret = new StringBuilder();
+            string rus = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+            string[] eng = { "A", "B", "V", "G", "D", "E", "E", "ZH", "Z", "I", "Y",
+                "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "KH", "TS",
+                "CH", "SH", "SHCH", "", "Y", "", "E", "YU", "YA" };
+
+            foreach (char character in s)
+            {
+                char upper = char.ToUpperInvariant(character);
+                int index = rus.IndexOf(upper);
+                if (index >= 0)
+                {
+                    ret.Append(eng[index]);
+                }
+                else if ((character >= 'A' && character <= 'Z')
+                    || (character >= 'a' && character <= 'z')
+                    || char.IsDigit(character))
+                {
+                    ret.Append(character);
+                }
+                else if (char.IsWhiteSpace(character) || character == '-' || character == '_')
+                {
+                    ret.Append('_');
+                }
+            }
+
             return ret.ToString();
         }
 
@@ -1438,6 +2007,8 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)) return;
         public string zvetbg { get; set; }
 
         public string owner { get; set; }
+        [JsonIgnore]
+        public bool is_all { get; set; }
         public ObservableCollection<treespis> Nodes { get; set; }
     }
     public class FTP
@@ -1487,7 +2058,7 @@ MessageBoxButton.YesNo) == MessageBoxResult.Yes)) return;
             }
             catch (Exception err)
             {
-                //  MessageBox.Show(err.Message); 
+                log.Add("Ошибка запроса к серверу: " + err.Message);
             }
             return otvet;
         }
