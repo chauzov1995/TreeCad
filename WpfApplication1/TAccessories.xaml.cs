@@ -1613,6 +1613,12 @@ st14.Width.ToString() + ";";
                       });
 
                       */
+
+                    // Regola содержит параметры родительского блока аксессуара.
+                    if (Regola.ToString().Split('\t').Any(p => p == "DELSPEC=1"))
+                    {
+                        continue;
+                    }
               
 
                     if (!Regola.ToString().StartsWith("#TAccessories.erg") )//не является обьектом из кубика
